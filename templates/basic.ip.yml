@@ -1,0 +1,24 @@
+apiVersion: '1.0'
+vlnv:
+  vendor: example.com
+  library: examples
+  name: basic_core
+  version: 1.0.0
+description: Basic IP core with clock, reset, and simple ports
+clocks:
+- name: i_clk
+  logicalName: CLK
+  direction: in
+  frequency: 100MHz
+  description: Main system clock
+resets:
+- name: i_rst_n
+  logicalName: RESET_N
+  direction: in
+  polarity: activeLow
+  description: Main system reset, active low
+ports:
+- name: o_enable
+  logicalName: enable
+  direction: out
+  description: Enable output signal

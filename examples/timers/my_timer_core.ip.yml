@@ -1,0 +1,120 @@
+apiVersion: '1.0'
+vlnv:
+  vendor: my-company.com
+  library: processing
+  name: my_timer_core
+  version: 1.2.0
+description: A 4-channel, 32-bit configurable timer IP with a separate register clock
+  domain and local RAM.
+clocks:
+- name: i_clk_sys
+  logicalName: CLK
+  direction: in
+  frequency: 100MHz
+  description: Main system clock for timer logic
+- name: i_clk_reg
+  logicalName: CLK
+  direction: in
+  frequency: 50MHz
+  description: Slower clock for the AXI-Lite register interface
+resets:
+- name: i_rst_n_sys
+  logicalName: RESET_N
+  direction: in
+  polarity: activeLow
+  description: Main system reset, active low
+- name: i_rst_p_reg
+  logicalName: RESET
+  direction: in
+  polarity: activeHigh
+  description: Register interface reset, active high
+ports:
+- name: o_global_irq
+  logicalName: o_irq
+  direction: out
+  description: Global interrupt request output (OR of all channels)
+useBusLibrary: ../../common/bus_definitions.yml
+busInterfaces:
+- name: S_AXI_LITE
+  type: AXI4L
+  mode: slave
+  physicalPrefix: s_axi_
+  associatedClock: i_clk_reg
+  associatedReset: i_rst_p_reg
+  memoryMapRef: CSR_MAP
+  useOptionalPorts:
+  - AWPROT
+  - ARPROT
+  portWidthOverrides:
+    AWADDR: 12
+    ARADDR: 12
+    WDATA: 32
+    RDATA: 32
+    WSTRB: 4
+- name: M_AXIS_EVENTS
+  type: AXIS
+  mode: master
+  array:
+    count: 4
+    indexStart: 0
+    namingPattern: M_AXIS_CH{index}_EVENTS
+    physicalPrefixPattern: m_axis_ch{index}_evt_
+  physicalPrefix: m_axis_evt_
+  associatedClock: i_clk_sys
+  associatedReset: i_rst_n_sys
+  useOptionalPorts:
+  - TLAST
+  - TUSER
+  portWidthOverrides:
+    TDATA: 64
+    TSTRB: 8
+    TKEEP: 8
+    TUSER: 4
+memoryMaps:
+  import: my_timer_core.mm.yml
+parameters:
+- name: NUM_CHANNELS
+  value: 4
+  dataType: integer
+  description: Number of timer channels (default 4)
+- name: AXI_ADDR_WIDTH
+  value: 32
+  dataType: integer
+- name: EVENT_FIFO_DEPTH
+  value: 16
+  dataType: integer
+  description: Depth of event FIFO for each AXI Stream channel
+- name: TIMESTAMP_WIDTH
+  value: 48
+  dataType: integer
+  description: Width of timestamp counter in bits
+fileSets:
+- name: RTL_Sources
+  description: RTL Sources
+  files:
+  - path: rtl/my_timer_core_pkg.vhd
+    type: vhdl
+  - path: rtl/my_timer_core_regs.vhd
+    type: vhdl
+  - path: rtl/my_timer_core_core.vhd
+    type: vhdl
+  - path: rtl/my_timer_core_axil.vhd
+    type: vhdl
+  - path: rtl/my_timer_core.vhd
+    type: vhdl
+- name: Simulation_Resources
+  description: Simulation Files
+  files:
+  - path: tb/my_timer_core_test.py
+    type: python
+  - path: tb/Makefile
+    type: unknown
+- name: Integration
+  description: Platform Integration Files
+  files:
+  - path: intel/my_timer_core_hw.tcl
+    type: tcl
+  - path: xilinx/component.xml
+    type: xml
+  - path: xilinx/xgui/my_timer_core_v1_2_0.tcl
+    type: tcl

@@ -1,0 +1,129 @@
+apiVersion: 1.0
+vlnv:
+  vendor: large.com
+  library: test
+  name: large_stress_test
+  version: 1.0.0
+description: Large IP core for stress testing with many clocks, resets, and bus interfaces
+clocks:
+- name: CLK_SYS
+  logicalName: CLK
+  direction: in
+  frequency: 100MHz
+- name: CLK_AXI
+  logicalName: CLK
+  direction: in
+  frequency: 200MHz
+- name: CLK_DDR
+  logicalName: CLK
+  direction: in
+  frequency: 400MHz
+- name: CLK_ETH
+  logicalName: CLK
+  direction: in
+  frequency: 125MHz
+- name: CLK_PCIE
+  logicalName: CLK
+  direction: in
+  frequency: 250MHz
+- name: CLK_USB
+  logicalName: CLK
+  direction: in
+  frequency: 60MHz
+- name: CLK_AUX
+  logicalName: CLK
+  direction: in
+  frequency: 50MHz
+resets:
+- name: RST_SYS
+  logicalName: RESET_N
+  direction: in
+  polarity: activeLow
+- name: RST_AXI
+  logicalName: RESET_N
+  direction: in
+  polarity: activeLow
+- name: RST_DDR
+  logicalName: RESET
+  direction: in
+  polarity: activeHigh
+- name: RST_ETH
+  logicalName: RESET_N
+  direction: in
+  polarity: activeLow
+- name: RST_PCIE
+  logicalName: RESET
+  direction: in
+  polarity: activeHigh
+ports:
+- name: IRQ_OUT
+  logicalName: irq_out
+  direction: out
+  description: Global interrupt request output
+useBusLibrary: ../../common/bus_definitions.yml
+busInterfaces:
+- name: control_reg
+  type: AXI4L
+  mode: slave
+  physicalPrefix: s_axi_ctrl_
+  associatedClock: CLK_SYS
+  associatedReset: RST_SYS
+- name: dma_control
+  type: AXI4L
+  mode: slave
+  physicalPrefix: s_axi_dma_
+  associatedClock: CLK_AXI
+  associatedReset: RST_AXI
+- name: memory_port
+  type: AXI4L
+  mode: master
+  physicalPrefix: m_axi_mem_
+  associatedClock: CLK_DDR
+  associatedReset: RST_DDR
+- name: data_stream_in
+  type: AXIS
+  mode: slave
+  physicalPrefix: s_axis_data_
+  associatedClock: CLK_ETH
+  associatedReset: RST_ETH
+- name: data_stream_out
+  type: AXIS
+  mode: master
+  physicalPrefix: m_axis_data_
+  associatedClock: CLK_ETH
+  associatedReset: RST_ETH
+- name: pcie_interface
+  type: AXI4L
+  mode: master
+  physicalPrefix: m_axi_pcie_
+  associatedClock: CLK_PCIE
+  associatedReset: RST_PCIE
+- name: usb_data_in
+  type: AXIS
+  mode: slave
+  physicalPrefix: s_axis_usb_
+  associatedClock: CLK_USB
+  associatedReset: RST_SYS
+- name: usb_data_out
+  type: AXIS
+  mode: master
+  physicalPrefix: m_axis_usb_
+  associatedClock: CLK_USB
+  associatedReset: RST_SYS
+parameters:
+- name: DATA_WIDTH
+  dataType: integer
+  value: 32
+  description: Width of data bus
+- name: ADDR_WIDTH
+  dataType: integer
+  value: 32
+  description: Width of address bus
+- name: FIFO_DEPTH
+  dataType: integer
+  value: 1024
+  description: Depth of internal FIFO
+- name: ENABLE_DMA
+  dataType: boolean
+  value: true
+  description: Enable DMA functionality

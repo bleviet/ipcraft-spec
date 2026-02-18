@@ -1,0 +1,12 @@
+apiVersion: 1.0
+vlnv:
+  vendor: my_vendor
+  library: my_library
+  name: New_IP_Core
+  version: 1.0.0
+description: A new IP Core definition
+useBusLibrary: ../../common/bus_definitions.yml
+clocks: []
+resets: []
+busInterfaces: []
+parameters: []

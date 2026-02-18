@@ -1,0 +1,22 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ipcraft-spec"
+version = "0.1.0"
+description = "Shared specifications and schemas for IPCraft"
+readme = "README.md"
+license = "MIT"
+keywords = ["fpga", "ipcore", "ipcraft"]
+classifiers = [
+  "Programming Language :: Python :: 3"
+]
+
+[tool.hatch.build.targets.wheel]
+packages = []
+
+[tool.hatch.build.targets.wheel.force-include]
+"schemas" = "ipcraft_spec/schemas"
+"common" = "ipcraft_spec/common"
+"templates" = "ipcraft_spec/templates"

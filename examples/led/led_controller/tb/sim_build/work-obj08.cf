@@ -1,0 +1,16 @@
+v 4
+file / "/home/balevision/workspace/bleviet/ipcore/ipcore_spec/examples/led/led_controller/tb/../rtl/led_controller_pkg.vhd" "9ac3cb02f46f7d380dfe48c8a2a88a495fd1ccb6" "20260209193831.119":
+  package led_controller_pkg at 8( 238) + 0 on 11 body;
+  package body led_controller_pkg at 112( 3556) + 0 on 12;
+file / "/home/balevision/workspace/bleviet/ipcore/ipcore_spec/examples/led/led_controller/tb/../rtl/led_controller_regs.vhd" "709b8c6d385692b83b6407a728138edc9a47c49b" "20260209193831.119":
+  entity led_controller_regs at 17( 588) + 0 on 13;
+  architecture rtl of led_controller_regs at 47( 1502) + 0 on 14;
+file / "/home/balevision/workspace/bleviet/ipcore/ipcore_spec/examples/led/led_controller/tb/../rtl/led_controller_core.vhd" "f47cd14ca600a4c405ac926dc86ac3c396534956" "20260209193831.119":
+  entity led_controller_core at 9( 287) + 0 on 17;
+  architecture rtl of led_controller_core at 39( 1040) + 0 on 18;
+file / "/home/balevision/workspace/bleviet/ipcore/ipcore_spec/examples/led/led_controller/tb/../rtl/led_controller_axil.vhd" "c61462856ce0f1ae6072ae6c074bfe5775a3a61f" "20260209193831.119":
+  entity led_controller_axil at 14( 419) + 0 on 15;
+  architecture rtl of led_controller_axil at 54( 1780) + 0 on 16;
+file / "/home/balevision/workspace/bleviet/ipcore/ipcore_spec/examples/led/led_controller/tb/../rtl/led_controller.vhd" "24b8e633869982a8cec6226420820881a0b712a2" "20260209193831.119":
+  entity led_controller at 9( 301) + 0 on 19;
+  architecture rtl of led_controller at 56( 1809) + 0 on 20;

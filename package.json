@@ -1,0 +1,21 @@
+{
+    "name": "ipcraft-spec",
+    "version": "0.1.0",
+    "description": "Shared specifications and schemas for IPCraft",
+    "main": "index.js",
+    "files": [
+        "schemas",
+        "common",
+        "templates"
+    ],
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "ipcore",
+        "fpga",
+        "schema",
+        "ipcraft"
+    ],
+    "license": "MIT"
+}
