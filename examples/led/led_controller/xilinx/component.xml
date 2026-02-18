@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-
 <spirit:component xmlns:xilinx="http://www.xilinx.com"
   xmlns:spirit="http://www.spiritconsortium.org/XMLSchema/SPIRIT/1685-2009"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -247,7 +245,7 @@
         <spirit:register>
           <spirit:name>CONTROL</spirit:name>
           <spirit:description>Global LED controller control register</spirit:description>
-          <spirit:addressOffset>0</spirit:addressOffset>
+          <spirit:addressOffset>0x0</spirit:addressOffset>
           <spirit:size spirit:format="long">32</spirit:size>
           <spirit:access>read-write</spirit:access>
           <spirit:field>
@@ -309,7 +307,7 @@
         <spirit:register>
           <spirit:name>STATUS</spirit:name>
           <spirit:description>LED controller status register</spirit:description>
-          <spirit:addressOffset>4</spirit:addressOffset>
+          <spirit:addressOffset>0x4</spirit:addressOffset>
           <spirit:size spirit:format="long">32</spirit:size>
           <spirit:access>read-only</spirit:access>
           <spirit:field>
@@ -349,7 +347,7 @@
         <spirit:register>
           <spirit:name>LED_OUTPUT</spirit:name>
           <spirit:description>Direct LED output control</spirit:description>
-          <spirit:addressOffset>8</spirit:addressOffset>
+          <spirit:addressOffset>0x8</spirit:addressOffset>
           <spirit:size spirit:format="long">32</spirit:size>
           <spirit:access>read-write</spirit:access>
           <spirit:field>
