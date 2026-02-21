@@ -1,7 +1,0 @@
-<testsuites name="results">
-  <testsuite name="all" package="all">
-    <property name="random_seed" value="1771440033" />
-    <testcase name="test_register_access" classname="led_controller_test" file="/home/balevision/workspace/bleviet/ipcraft/ipcraft-spec/examples/led/led_controller/tb/led_controller_test.py" lineno="11" time="0.09103918075561523" sim_time_ns="380.0" ratio_time="4174.02701612692" />
-    <testcase name="test_field_access" classname="led_controller_test" file="/home/balevision/workspace/bleviet/ipcraft/ipcraft-spec/examples/led/led_controller/tb/led_controller_test.py" lineno="103" time="0.005568265914916992" sim_time_ns="250.0" ratio_time="44897.28109612503" />
-  </testsuite>
-</testsuites>
