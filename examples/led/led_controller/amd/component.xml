@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<spirit:component xmlns:xilinx="http://www.xilinx.com"
+<spirit:component xmlns:amd="http://www.amd.com"
   xmlns:spirit="http://www.spiritconsortium.org/XMLSchema/SPIRIT/1685-2009"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <spirit:vendor>test-hardware.com</spirit:vendor>
@@ -9,8 +9,8 @@
   <spirit:busInterfaces>
     <spirit:busInterface>
       <spirit:name>S_AXI_LITE</spirit:name>
-      <spirit:busType spirit:vendor="xilinx.com" spirit:library="interface" spirit:name="aximm" spirit:version="1.0" />
-      <spirit:abstractionType spirit:vendor="xilinx.com" spirit:library="interface" spirit:name="aximm_rtl"
+      <spirit:busType spirit:vendor="amd.com" spirit:library="interface" spirit:name="aximm" spirit:version="1.0" />
+      <spirit:abstractionType spirit:vendor="amd.com" spirit:library="interface" spirit:name="aximm_rtl"
         spirit:version="1.0" />
       <spirit:slave />
       <spirit:portMaps>
@@ -184,8 +184,8 @@
     </spirit:busInterface>
     <spirit:busInterface>
       <spirit:name>clk</spirit:name>
-      <spirit:busType spirit:vendor="xilinx.com" spirit:library="signal" spirit:name="clock" spirit:version="1.0" />
-      <spirit:abstractionType spirit:vendor="xilinx.com" spirit:library="signal" spirit:name="clock_rtl"
+      <spirit:busType spirit:vendor="amd.com" spirit:library="signal" spirit:name="clock" spirit:version="1.0" />
+      <spirit:abstractionType spirit:vendor="amd.com" spirit:library="signal" spirit:name="clock_rtl"
         spirit:version="1.0" />
       <spirit:slave />
       <spirit:portMaps>
@@ -211,8 +211,8 @@
     </spirit:busInterface>
     <spirit:busInterface>
       <spirit:name>rst</spirit:name>
-      <spirit:busType spirit:vendor="xilinx.com" spirit:library="signal" spirit:name="reset" spirit:version="1.0" />
-      <spirit:abstractionType spirit:vendor="xilinx.com" spirit:library="signal" spirit:name="reset_rtl"
+      <spirit:busType spirit:vendor="amd.com" spirit:library="signal" spirit:name="reset" spirit:version="1.0" />
+      <spirit:abstractionType spirit:vendor="amd.com" spirit:library="signal" spirit:name="reset_rtl"
         spirit:version="1.0" />
       <spirit:slave />
       <spirit:portMaps>
@@ -368,13 +368,13 @@
   <spirit:model>
     <spirit:views>
       <spirit:view>
-        <spirit:name>xilinx_vhdlsynthesis</spirit:name>
+        <spirit:name>amd_vhdlsynthesis</spirit:name>
         <spirit:displayName>VHDL Synthesis</spirit:displayName>
-        <spirit:envIdentifier>vhdlSource:vivado.xilinx.com:synthesis</spirit:envIdentifier>
+        <spirit:envIdentifier>vhdlSource:vivado.amd.com:synthesis</spirit:envIdentifier>
         <spirit:language>vhdl</spirit:language>
         <spirit:modelName>led_controller</spirit:modelName>
         <spirit:fileSetRef>
-          <spirit:localName>xilinx_vhdlsynthesis_view_fileset</spirit:localName>
+          <spirit:localName>amd_vhdlsynthesis_view_fileset</spirit:localName>
         </spirit:fileSetRef>
         <spirit:parameters>
           <spirit:parameter>
@@ -384,13 +384,13 @@
         </spirit:parameters>
       </spirit:view>
       <spirit:view>
-        <spirit:name>xilinx_vhdlbehavioralsimulation</spirit:name>
+        <spirit:name>amd_vhdlbehavioralsimulation</spirit:name>
         <spirit:displayName>VHDL Simulation</spirit:displayName>
-        <spirit:envIdentifier>vhdlSource:vivado.xilinx.com:simulation</spirit:envIdentifier>
+        <spirit:envIdentifier>vhdlSource:vivado.amd.com:simulation</spirit:envIdentifier>
         <spirit:language>vhdl</spirit:language>
         <spirit:modelName>led_controller</spirit:modelName>
         <spirit:fileSetRef>
-          <spirit:localName>xilinx_vhdlbehavioralsimulation_view_fileset</spirit:localName>
+          <spirit:localName>amd_vhdlbehavioralsimulation_view_fileset</spirit:localName>
         </spirit:fileSetRef>
         <spirit:parameters>
           <spirit:parameter>
@@ -400,11 +400,11 @@
         </spirit:parameters>
       </spirit:view>
       <spirit:view>
-        <spirit:name>xilinx_xpgui</spirit:name>
+        <spirit:name>amd_xpgui</spirit:name>
         <spirit:displayName>UI Layout</spirit:displayName>
-        <spirit:envIdentifier>:vivado.xilinx.com:xgui.ui</spirit:envIdentifier>
+        <spirit:envIdentifier>:vivado.amd.com:xgui.ui</spirit:envIdentifier>
         <spirit:fileSetRef>
-          <spirit:localName>xilinx_xpgui_view_fileset</spirit:localName>
+          <spirit:localName>amd_xpgui_view_fileset</spirit:localName>
         </spirit:fileSetRef>
         <spirit:parameters>
           <spirit:parameter>
@@ -422,8 +422,8 @@
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
-              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -435,8 +435,8 @@
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
-              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -453,8 +453,8 @@
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic_vectorC_ADDR_WIDTH-1 downto 0</spirit:typeName>
-              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
-              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -466,8 +466,8 @@
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
-              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -479,8 +479,8 @@
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
-              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -496,8 +496,8 @@
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic_vector2 downto 0</spirit:typeName>
-              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
-              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -513,8 +513,8 @@
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic_vectorC_DATA_WIDTH-1 downto 0</spirit:typeName>
-              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
-              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -530,8 +530,8 @@
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic_vectorC_DATA_WIDTH/8-1 downto 0</spirit:typeName>
-              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
-              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -543,8 +543,8 @@
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
-              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -556,8 +556,8 @@
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
-              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -573,8 +573,8 @@
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic_vector1 downto 0</spirit:typeName>
-              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
-              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -586,8 +586,8 @@
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
-              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -599,8 +599,8 @@
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
-              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -616,8 +616,8 @@
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic_vectorC_ADDR_WIDTH-1 downto 0</spirit:typeName>
-              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
-              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -629,8 +629,8 @@
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
-              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -642,8 +642,8 @@
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
-              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -659,8 +659,8 @@
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic_vector2 downto 0</spirit:typeName>
-              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
-              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -676,8 +676,8 @@
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic_vectorC_DATA_WIDTH-1 downto 0</spirit:typeName>
-              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
-              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -693,8 +693,8 @@
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic_vector1 downto 0</spirit:typeName>
-              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
-              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -706,8 +706,8 @@
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
-              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -719,8 +719,8 @@
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
-              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -739,8 +739,8 @@
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic_vector              </spirit:typeName>
-              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
-              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -758,8 +758,8 @@
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic_vector              </spirit:typeName>
-              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
-              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -771,8 +771,8 @@
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic              </spirit:typeName>
-              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
-              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>amd_vhdlbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -781,7 +781,7 @@
   </spirit:model>
   <spirit:fileSets>
     <spirit:fileSet>
-      <spirit:name>xilinx_vhdlsynthesis_view_fileset</spirit:name>
+      <spirit:name>amd_vhdlsynthesis_view_fileset</spirit:name>
       <spirit:file>
         <spirit:name>../rtl/led_controller_pkg.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
@@ -815,7 +815,7 @@
       </spirit:file>
     </spirit:fileSet>
     <spirit:fileSet>
-      <spirit:name>xilinx_vhdlbehavioralsimulation_view_fileset</spirit:name>
+      <spirit:name>amd_vhdlbehavioralsimulation_view_fileset</spirit:name>
       <spirit:file>
         <spirit:name>../rtl/led_controller_pkg.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
@@ -848,7 +848,7 @@
       </spirit:file>
     </spirit:fileSet>
     <spirit:fileSet>
-      <spirit:name>xilinx_xpgui_view_fileset</spirit:name>
+      <spirit:name>amd_xpgui_view_fileset</spirit:name>
       <spirit:file>
         <spirit:name>xgui/led_controller_v1_0_0.tcl</spirit:name>
         <spirit:fileType>tclSource</spirit:fileType>
@@ -883,30 +883,30 @@
     </spirit:parameter>
   </spirit:parameters>
   <spirit:vendorExtensions>
-    <xilinx:coreExtensions>
-      <xilinx:supportedFamilies>
-        <xilinx:family xilinx:lifeCycle="Production">artix7</xilinx:family>
-        <xilinx:family xilinx:lifeCycle="Production">kintex7</xilinx:family>
-        <xilinx:family xilinx:lifeCycle="Production">virtex7</xilinx:family>
-        <xilinx:family xilinx:lifeCycle="Production">zynq</xilinx:family>
-        <xilinx:family xilinx:lifeCycle="Production">kintexu</xilinx:family>
-        <xilinx:family xilinx:lifeCycle="Production">virtexu</xilinx:family>
-        <xilinx:family xilinx:lifeCycle="Production">zynquplus</xilinx:family>
-      </xilinx:supportedFamilies>
-      <xilinx:taxonomies>
-        <xilinx:taxonomy>/UserIP</xilinx:taxonomy>
-      </xilinx:taxonomies>
-      <xilinx:displayName>Led Controller</xilinx:displayName>
-      <xilinx:coreRevision>1</xilinx:coreRevision>
-      <xilinx:coreCreationDateTime>2026-01-06T11:59:43Z</xilinx:coreCreationDateTime>
-    </xilinx:coreExtensions>
-    <xilinx:packagingInfo>
-      <xilinx:xilinxVersion>2024.2</xilinx:xilinxVersion>
-      <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="c142cef6" />
-      <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="7de88724" />
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="4835cfd2" />
-      <xilinx:checksum xilinx:scope="ports" xilinx:value="16c87ccc" />
-      <xilinx:checksum xilinx:scope="parameters" xilinx:value="6dd4074a" />
-    </xilinx:packagingInfo>
+    <amd:coreExtensions>
+      <amd:supportedFamilies>
+        <amd:family amd:lifeCycle="Production">artix7</amd:family>
+        <amd:family amd:lifeCycle="Production">kintex7</amd:family>
+        <amd:family amd:lifeCycle="Production">virtex7</amd:family>
+        <amd:family amd:lifeCycle="Production">zynq</amd:family>
+        <amd:family amd:lifeCycle="Production">kintexu</amd:family>
+        <amd:family amd:lifeCycle="Production">virtexu</amd:family>
+        <amd:family amd:lifeCycle="Production">zynquplus</amd:family>
+      </amd:supportedFamilies>
+      <amd:taxonomies>
+        <amd:taxonomy>/UserIP</amd:taxonomy>
+      </amd:taxonomies>
+      <amd:displayName>Led Controller</amd:displayName>
+      <amd:coreRevision>1</amd:coreRevision>
+      <amd:coreCreationDateTime>2026-01-06T11:59:43Z</amd:coreCreationDateTime>
+    </amd:coreExtensions>
+    <amd:packagingInfo>
+      <amd:amdVersion>2024.2</amd:amdVersion>
+      <amd:checksum amd:scope="busInterfaces" amd:value="c142cef6" />
+      <amd:checksum amd:scope="memoryMaps" amd:value="7de88724" />
+      <amd:checksum amd:scope="fileGroups" amd:value="4835cfd2" />
+      <amd:checksum amd:scope="ports" amd:value="16c87ccc" />
+      <amd:checksum amd:scope="parameters" amd:value="6dd4074a" />
+    </amd:packagingInfo>
   </spirit:vendorExtensions>
 </spirit:component>

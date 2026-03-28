@@ -90,9 +90,9 @@ fileSets:
 - name: Integration
   description: Platform Integration Files
   files:
-  - path: intel/led_controller_hw.tcl
+  - path: altera/led_controller_hw.tcl
     type: tcl
-  - path: xilinx/component.xml
+  - path: amd/component.xml
     type: xml
-  - path: xilinx/xgui/led_controller_v1_0_0.tcl
+  - path: amd/xgui/led_controller_v1_0_0.tcl
     type: tcl

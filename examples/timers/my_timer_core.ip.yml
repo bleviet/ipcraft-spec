@@ -112,9 +112,9 @@ fileSets:
 - name: Integration
   description: Platform Integration Files
   files:
-  - path: intel/my_timer_core_hw.tcl
+  - path: altera/my_timer_core_hw.tcl
     type: tcl
-  - path: xilinx/component.xml
+  - path: amd/component.xml
     type: xml
-  - path: xilinx/xgui/my_timer_core_v1_2_0.tcl
+  - path: amd/xgui/my_timer_core_v1_2_0.tcl
     type: tcl

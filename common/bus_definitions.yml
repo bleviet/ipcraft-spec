@@ -121,7 +121,7 @@ AXIS:
     presence: optional
 AVALON_MM:
   busType:
-    vendor: intel.com
+    vendor: altera.com
     library: avalon
     name: avalon_mm
     version: '1.0'
@@ -174,7 +174,7 @@ AVALON_MM:
     presence: optional
 AVALON_ST:
   busType:
-    vendor: intel.com
+    vendor: altera.com
     library: avalon
     name: avalon_st
     version: '1.0'
