@@ -414,12 +414,17 @@
       "additionalProperties": false,
       "description": "File reference within a file set.\n\nRepresents a file that is part of the IP core (source, constraint, doc, etc.).",
       "properties": {
+        "managed": {
+          "default": true,
+          "description": "Whether the file should be overwritten on generation",
+          "title": "Managed",
+          "type": "boolean"
+        },
         "path": {
           "description": "Relative or absolute file path",
           "title": "Path",
           "type": "string"
-        },
-        "type": {
+        },        "type": {
           "$ref": "#/$defs/FileType",
           "description": "File type"
         },

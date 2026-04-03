@@ -61,6 +61,7 @@ fileSets:
     type: vhdl
   - path: rtl/basic_peripheral_core.vhd
     type: vhdl
+    managed: false
   - path: rtl/basic_peripheral_axil.vhd
     type: vhdl
   - path: rtl/basic_peripheral.vhd

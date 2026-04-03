@@ -77,3 +77,4 @@ fileSets:
   files:
   - path: rtl/accelerator_top.vhd
     type: vhdl
+    managed: false

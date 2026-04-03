@@ -216,10 +216,13 @@ parameters:
 fileSets:
   - name: RTL_Sources
     files:
-      - path: rtl/core.vhd
+      - path: rtl/core_pkg.vhd
         type: vhdl
-      - path: rtl/pkg.vhd
+      - path: rtl/core.vhd         # managed: true (default) — regenerated each time
         type: vhdl
+      - path: rtl/core_core.vhd    # user implementation — never overwritten
+        type: vhdl
+        managed: false
 
   - name: Simulation
     files:
@@ -227,9 +230,50 @@ fileSets:
         type: python
 ```
 
+### File Properties
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `path` | string | required | File path relative to the `.ip.yml` |
+| `type` | string | required | File type (see below) |
+| `managed` | boolean | `true` | Whether `ipcraft generate` may overwrite this file |
+| `description` | string | `""` | Human-readable description |
+| `isIncludeFile` | boolean | `false` | Mark as a VHDL/Verilog include file |
+| `logicalName` | string | `""` | Library name (e.g. VHDL work library) |
+
+### The `managed` flag
+
+The `managed` flag controls whether `ipcraft generate` will overwrite a file
+that already exists on disk.
+
+| `managed` | File exists on disk | Behaviour |
+|-----------|---------------------|-----------|
+| `true` (default) | no | File is **created** |
+| `true` (default) | yes | File is **overwritten** |
+| `false` | no | File is **created** (first run only) |
+| `false` | yes | File is **skipped** — your edits are preserved |
+
+`ipcraft generate` automatically sets `managed: false` on `{name}_core.vhd`
+(the bus-agnostic core logic stub) so user implementations are never
+overwritten when registers or bus widths change.
+
+You can protect any other file the same way — for example, if you have
+hand-edited the generated AXI-Lite wrapper:
+
+```yaml
+fileSets:
+  - name: RTL_Sources
+    files:
+      - path: rtl/my_core_axil.vhd
+        type: vhdl
+        managed: false   # customised — preserve across regeneration
+```
+
 ### Supported File Types
 
-`vhdl`, `verilog`, `systemverilog`, `xdc`, `sdc`, `ucf`, `cHeader`, `cSource`, `cppHeader`, `cppSource`, `python`, `makefile`, `pdf`, `markdown`, `text`, `tcl`, `yaml`, `json`, `xml`.
+`vhdl`, `verilog`, `systemverilog`, `xdc`, `sdc`, `ucf`, `cHeader`, `cSource`,
+`cppHeader`, `cppSource`, `python`, `makefile`, `pdf`, `markdown`, `text`,
+`tcl`, `yaml`, `json`, `xml`.
 
 ---
 
@@ -265,7 +309,5 @@ ipcraft generate my_core.ip.yml --output ./generated
 ipcraft parse entity.vhd
 
 # List available bus types
-ipcraft list-buses
-```
 ipcraft list-buses
 ```
