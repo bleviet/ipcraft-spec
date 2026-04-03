@@ -5,8 +5,9 @@
     "main": "index.js",
     "files": [
         "schemas",
-        "common",
-        "templates"
+        "bus_definitions",
+        "templates",
+        "index.js"
     ],
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"

@@ -1,4 +1,4 @@
-# IPCraft Specifications
+# ipcraft-spec
 
 YAML specifications for FPGA IP cores and memory maps.
 
@@ -6,12 +6,16 @@ YAML specifications for FPGA IP cores and memory maps.
 
 ```
 ipcraft-spec/
-├── schemas/        # JSON schemas (auto-generated)
+├── schemas/        # JSON schemas
 │   ├── ip_core.schema.json
 │   └── memory_map.schema.json
 ├── templates/      # Starter templates
-├── examples/       # Real-world examples
-└── common/         # Shared definitions (bus types)
+├── examples/       # Reference implementations
+│   ├── minimal/    # Bare minimum IP core
+│   ├── basic_peripheral/ # AXI4L + Simple Memory Map
+│   ├── multi_interface_accelerator/ # AXI4L + AXIS + Complex Memory Map
+│   └── system_controller/ # Many clocks/resets/interfaces
+└── bus_definitions/ # Shared definitions (bus types)
 ```
 
 ## Quick Start
@@ -21,7 +25,8 @@ ipcraft-spec/
 
 ## Documentation
 
-📘 **[IP YAML Specification](docs/IP_YAML_SPEC.md)** - Complete format reference
+📘 **[IP Core Specification](docs/ip_spec.md)** - Format for `*.ip.yml` files.
+📘 **[Memory Map Specification](docs/memory_map_spec.md)** - Format for `*.mm.yml` files.
 
 ## Schemas
 
@@ -53,11 +58,16 @@ This gives you:
 | `minimal.ip.yml` | Bare minimum IP core |
 | `basic.ip.yml` | Clock, reset, ports |
 | `axi_slave.ip.yml` | AXI-Lite slave with registers |
+| `avalon_peripheral.ip.yml` | Avalon-MM slave and Avalon-ST interfaces |
+| `minimal.mm.yml` | Bare minimum memory map |
 | `basic.mm.yml` | Simple memory map |
+| `axi_slave.mm.yml` | AXI-Lite slave registers |
 | `array.mm.yml` | Register arrays |
+| `multi_block.mm.yml` | Multiple address blocks |
 
 ## File Naming
 
 - `*.ip.yml` - IP Core definitions
 - `*.mm.yml` - Memory map definitions
 - `*.fileset.yml` - File set definitions
+

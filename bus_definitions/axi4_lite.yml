@@ -1,0 +1,79 @@
+AXI4_LITE:
+  busType:
+    vendor: ipcraft
+    library: busif
+    name: axi4_lite
+    version: '1.0'
+    description: >
+      AXI4-Lite is a subset of the AXI4 protocol, designed for simple, low-throughput communication between a master and a slave. It is typically used for control and status register access in peripherals. AXI4-Lite supports only single data transfers (no bursts) and has a simplified handshake mechanism compared to the full AXI4 protocol.
+  ports:
+  - name: ACLK
+    presence: required
+  - name: ARESETn
+    presence: required
+  - name: AWADDR
+    width: 32
+    direction: out
+    presence: required
+  - name: AWVALID
+    direction: out
+    presence: required
+  - name: AWREADY
+    direction: in
+    presence: required
+  - name: AWPROT
+    width: 3
+    direction: out
+    presence: optional
+  - name: WDATA
+    width: 32
+    direction: out
+    presence: required
+  - name: WSTRB
+    width: 4
+    direction: out
+    presence: required
+  - name: WVALID
+    direction: out
+    presence: required
+  - name: WREADY
+    direction: in
+    presence: required
+  - name: BRESP
+    width: 2
+    direction: in
+    presence: required
+  - name: BVALID
+    direction: in
+    presence: required
+  - name: BREADY
+    direction: out
+    presence: required
+  - name: ARADDR
+    width: 32
+    direction: out
+    presence: required
+  - name: ARVALID
+    direction: out
+    presence: required
+  - name: ARREADY
+    direction: in
+    presence: required
+  - name: ARPROT
+    width: 3
+    direction: out
+    presence: optional
+  - name: RDATA
+    width: 32
+    direction: in
+    presence: required
+  - name: RRESP
+    width: 2
+    direction: in
+    presence: required
+  - name: RVALID
+    direction: in
+    presence: required
+  - name: RREADY
+    direction: out
+    presence: required

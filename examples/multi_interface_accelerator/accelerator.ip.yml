@@ -1,0 +1,79 @@
+vlnv:
+  vendor: ipcraft.io
+
+  library: examples
+  name: multi_interface_accelerator
+  version: 1.0.0
+description: An advanced IP core with multiple interfaces, asynchronous clocks, and complex memory map.
+clocks:
+- name: i_clk_sys
+  logicalName: CLK
+  direction: in
+  frequency: 200MHz
+  description: High-speed processing clock
+- name: i_clk_reg
+  logicalName: CLK
+  direction: in
+  frequency: 50MHz
+  description: Slower clock for the AXI-Lite register interface
+resets:
+- name: i_rst_n_sys
+  logicalName: RESET_N
+  direction: in
+  polarity: activeLow
+  description: Processing logic reset
+- name: i_rst_p_reg
+  logicalName: RESET
+  direction: in
+  polarity: activeHigh
+  description: Register interface reset
+ports:
+- name: o_global_irq
+  logicalName: IRQ_OUT
+  direction: out
+  description: Global interrupt request output
+busInterfaces:
+- name: S_AXI_LITE
+  type: ipcraft.busif.axi4_lite.1.0
+  mode: slave
+  physicalPrefix: s_axi_
+  associatedClock: i_clk_reg
+  associatedReset: i_rst_p_reg
+  memoryMapRef: CSR_MAP
+  useOptionalPorts:
+  - AWPROT
+  - ARPROT
+  portWidthOverrides:
+    AWADDR: 16
+- name: M_AXIS_OUT
+  type: ipcraft.busif.axi_stream.1.0
+  mode: master
+  array:
+    count: 4
+    indexStart: 0
+    namingPattern: M_AXIS_CH{index}_OUT
+    physicalPrefixPattern: m_axis_ch{index}_
+  associatedClock: i_clk_sys
+  associatedReset: i_rst_n_sys
+  useOptionalPorts:
+  - TLAST
+  - TUSER
+  portWidthOverrides:
+    TDATA: 64
+- name: S_AXIS_IN
+  type: ipcraft.busif.axi_stream.1.0
+  mode: slave
+  physicalPrefix: s_axis_
+  associatedClock: i_clk_sys
+  associatedReset: i_rst_n_sys
+memoryMaps:
+  import: accelerator.mm.yml
+parameters:
+- name: NUM_CHANNELS
+  value: 4
+  dataType: integer
+fileSets:
+- name: RTL_Sources
+  files:
+  - path: rtl/accelerator_top.vhd
+    type: vhdl

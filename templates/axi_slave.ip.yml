@@ -1,11 +1,9 @@
-apiVersion: '1.0'
 vlnv:
   vendor: example.com
   library: examples
   name: axi_slave_core
   version: 1.0.0
 description: IP core with AXI-Lite slave interface and register map
-useBusLibrary: ../common/bus_definitions.yml
 clocks:
 - name: s_axi_aclk
   logicalName: AXI_CLK
@@ -20,7 +18,7 @@ resets:
   description: AXI-Lite reset, active low
 busInterfaces:
 - name: S_AXI_LITE
-  type: AXI4L
+  type: ipcraft.busif.axi4_lite.1.0
   mode: slave
   physicalPrefix: s_axi_
   associatedClock: s_axi_aclk

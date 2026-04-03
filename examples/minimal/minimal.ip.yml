@@ -1,0 +1,8 @@
+vlnv:
+  vendor: ipcraft.io
+
+  library: examples
+  name: minimal_ip
+  version: 1.0.0
+description: Minimal IP core with only required fields - no interfaces or other optional
+  elements

@@ -1,0 +1,72 @@
+vlnv:
+  vendor: ipcraft.io
+
+  library: examples
+  name: basic_peripheral
+  version: 1.0.0
+description: A basic IP core with a single AXI-Lite interface and simple memory map.
+parameters:
+- name: DATA_WIDTH
+  value: 32
+  dataType: integer
+  description: Width of the primary data port
+clocks:
+- name: i_clk
+  logicalName: CLK
+  direction: in
+  frequency: 100MHz
+  description: Main system clock
+resets:
+- name: i_rst_n
+  logicalName: RESET_N
+  direction: in
+  polarity: activeLow
+  description: Active-low system reset
+ports:
+- name: o_data
+  logicalName: DATA_OUT
+  direction: out
+  width: DATA_WIDTH
+  description: Parallel data output
+- name: o_irq
+  logicalName: IRQ_OUT
+  direction: out
+  description: Interrupt request output
+busInterfaces:
+- name: S_AXI_LITE
+  type: ipcraft.busif.axi4_lite.1.0
+  mode: slave
+  physicalPrefix: s_axi_
+  associatedClock: i_clk
+  associatedReset: i_rst_n
+  memoryMapRef: CSR_MAP
+  useOptionalPorts:
+  - AWPROT
+  - ARPROT
+  portWidthOverrides:
+    AWADDR: 12
+    ARADDR: 12
+    WDATA: 32
+    RDATA: 32
+    WSTRB: 4
+memoryMaps:
+  import: basic_peripheral.mm.yml
+fileSets:
+- name: RTL_Sources
+  description: RTL Sources
+  files:
+  - path: rtl/basic_peripheral_pkg.vhd
+    type: vhdl
+  - path: rtl/basic_peripheral_regs.vhd
+    type: vhdl
+  - path: rtl/basic_peripheral_core.vhd
+    type: vhdl
+  - path: rtl/basic_peripheral_axil.vhd
+    type: vhdl
+  - path: rtl/basic_peripheral.vhd
+    type: vhdl
+- name: Simulation_Resources
+  description: Simulation Files
+  files:
+  - path: tb/basic_peripheral_test.py
+    type: python

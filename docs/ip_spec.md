@@ -1,17 +1,15 @@
 <!-- editorconfig-checker-disable-file -->
 <!-- This file contains YAML examples with 2-space indentation per YAML standard -->
 
-# IP Core YAML Specification
+# IP Core Specification
 
-> Author's Guide to defining IP cores and memory maps in YAML format.
+This document defines the YAML format for IPCraft IP core definitions (`*.ip.yml`).
 
 ## File Conventions
 
 | Extension | Purpose | Detection |
 |-----------|---------|-----------|
 | `*.ip.yml` | IP Core definition | Contains `apiVersion` + `vlnv` |
-| `*.mm.yml` | Memory Map definition | Register/address block definitions |
-| `*.fileset.yml` | File Set definition | Importable file lists |
 
 ---
 
@@ -20,27 +18,24 @@
 ### Minimal Example
 
 ```yaml
-apiVersion: '1.0'
 vlnv:
-  vendor: company.com
-  library: peripherals
-  name: my_core
+  vendor: ipcraft.io
+  library: examples
+  name: minimal_ip
   version: 1.0.0
 ```
 
 ### Complete Example
 
 ```yaml
-apiVersion: '1.0'
 vlnv:
   vendor: my-company.com
   library: processing
   name: my_timer_core
   version: 1.2.0
 
-description: A 4-channel timer IP with AXI-Lite interface
 
-useBusLibrary: ../common/bus_definitions.yml
+description: A 4-channel timer IP with AXI-Lite interface
 
 clocks:
   - name: i_clk_sys           # Physical HDL port name
@@ -58,21 +53,25 @@ ports:
   - name: o_irq
     direction: out
     width: 1
+    description: Interrupt request output
 
 busInterfaces:
   - name: S_AXI_LITE
-    type: AXI4L
+    type: ipcraft.busif.axi4_lite.1.0
     mode: slave
     physicalPrefix: s_axi_
     associatedClock: i_clk_sys
     associatedReset: i_rst_n_sys
     memoryMapRef: CSR_MAP
+    useOptionalPorts:
+      - AWPROT
+      - ARPROT
     portWidthOverrides:
       AWADDR: 12
       ARADDR: 12
 
 memoryMaps:
-  import: my_timer_core.mm.yml
+  import: my_ip_core.mm.yml
 
 parameters:
   - name: NUM_CHANNELS
@@ -94,9 +93,9 @@ Every IP core requires a **Vendor-Library-Name-Version** identifier:
 
 ```yaml
 vlnv:
-  vendor: company.com      # Your organization
+  vendor: ipcraft          # Your organization name or domain
   library: peripherals     # IP category
-  name: timer_core         # Core name (underscore preferred)
+  name: ip_core         # Core name (snake_case preferred)
   version: 1.0.0           # Semantic version
 ```
 
@@ -139,8 +138,8 @@ ports:
 ```yaml
 busInterfaces:
   - name: S_AXI_LITE
-    type: AXI4L             # From bus library: AXI4L, AXIS, AVALON_MM, etc.
-    mode: slave             # slave | master
+    type: ipcraft.busif.axi4_lite.1.0   # vendor.library.name.version
+    mode: slave             # slave | master | source | sink
     physicalPrefix: s_axi_  # Generates: s_axi_awaddr, s_axi_wdata, etc.
     associatedClock: i_clk  # References clock by physical port name
     associatedReset: i_rst_n
@@ -151,6 +150,7 @@ busInterfaces:
     portWidthOverrides:     # Override default signal widths
       AWADDR: 12
       ARADDR: 12
+    description: Control interface
 ```
 
 ### Bus Interface Arrays
@@ -159,7 +159,7 @@ For multiple similar interfaces (e.g., 4 AXI-Stream channels):
 
 ```yaml
 - name: M_AXIS_EVENTS
-  type: AXIS
+  type: ipcraft.busif.axi_stream.1.0
   mode: master
   array:
     count: 4
@@ -170,9 +170,13 @@ For multiple similar interfaces (e.g., 4 AXI-Stream channels):
 
 ---
 
-## Memory Maps
+## Connectivity: Memory Maps
+
+IP cores reference memory maps using the `memoryMaps` key.
 
 ### Import (Recommended)
+
+Memory maps can be imported from external `*.mm.yml` files. See the [Memory Map Specification](memory_map_spec.md) for details on the format.
 
 ```yaml
 memoryMaps:
@@ -194,83 +198,13 @@ memoryMaps:
 
 ---
 
-## Memory Map File Format (`*.mm.yml`)
-
-```yaml
-- name: CSR_MAP
-  description: Control and status registers
-  addressBlocks:
-    - name: REGS
-      baseAddress: 0
-      range: 4096
-      usage: register           # register | memory | reserved
-      defaultRegWidth: 32
-      registers:
-        - name: CTRL
-          offset: 0
-          size: 32
-          access: read-write
-          resetValue: 0x00000000
-          description: Control register
-          fields:
-            - name: ENABLE
-              bits: "[0:0]"
-              access: read-write
-              description: Enable bit
-
-            - name: MODE
-              bits: "[2:1]"
-              access: read-write
-
-        - name: STATUS
-          offset: 4
-          access: read-only
-          fields:
-            - name: BUSY
-              bits: "[0:0]"
-
-        - name: IRQ_FLAGS
-          offset: 8
-          access: write-1-to-clear
-```
-
-### Register Arrays
-
-```yaml
-registers:
-  - name: TIMER
-    count: 4
-    stride: 16               # Bytes between array elements
-    registers:
-      - name: CTRL
-        offset: 0
-      - name: STATUS
-        offset: 4
-      - name: COMPARE
-        offset: 8
-```
-
-This expands to: `TIMER_0_CTRL`, `TIMER_0_STATUS`, `TIMER_1_CTRL`, etc.
-
-### Access Types
-
-| Type | Description |
-|------|-------------|
-| `read-write` | Normal read/write register |
-| `read-only` | Read-only (status, version) |
-| `write-only` | Write-only (command) |
-| `write-1-to-clear` | Writing 1 clears bits (interrupt flags) |
-| `read-write-1-to-clear` | Read-write with write-1-to-clear behavior |
-
----
-
 ## Parameters
 
 ```yaml
 parameters:
   - name: DATA_WIDTH
     value: 32
-    dataType: integer        # integer | string | boolean
+    dataType: integer        # integer | natural | positive | real | string | boolean
     description: Data bus width
 ```
 
@@ -291,35 +225,33 @@ fileSets:
     files:
       - path: tb/test.py
         type: python
-
-  # Import external file set
-  - import: ../common/c_api.fileset.yml
 ```
+
+### Supported File Types
+
+`vhdl`, `verilog`, `systemverilog`, `xdc`, `sdc`, `ucf`, `cHeader`, `cSource`, `cppHeader`, `cppSource`, `python`, `makefile`, `pdf`, `markdown`, `text`, `tcl`, `yaml`, `json`, `xml`.
 
 ---
 
 ## Templates
-
-Start with these templates in `ipcore_spec/templates/`:
 
 | Template | Use Case |
 |----------|----------|
 | `minimal.ip.yml` | Bare minimum valid IP core |
 | `basic.ip.yml` | Clock, reset, and simple ports |
 | `axi_slave.ip.yml` | AXI-Lite slave with register map |
-| `basic.mm.yml` | Simple memory map |
-| `array.mm.yml` | Register arrays with count/stride |
-| `multi_block.mm.yml` | Multiple address blocks |
+| `avalon_peripheral.ip.yml` | Avalon-MM slave and Avalon-ST interfaces |
 
 ---
 
 ## Examples
 
-Real-world examples in `ipcore_spec/examples/`:
+Reference examples in `examples/`:
 
-- `timers/my_timer_core.ip.yml` - Timer with AXI-Lite + AXI-Stream
-- `led/led_controller.ip.yml` - Simple LED controller
-- `test_cases/` - Various test configurations
+- `minimal/` - Bare minimum IP core
+- `basic_peripheral/` - Single AXI4-Lite slave with registers
+- `multi_interface_accelerator/` - Multiple interfaces (AXI-L + AXI-S) and complex memory map
+- `system_controller/` - Many clocks, resets, and divers bus interfaces
 
 ---
 
@@ -327,11 +259,13 @@ Real-world examples in `ipcore_spec/examples/`:
 
 ```bash
 # Generate VHDL from IP core
-ipcore generate my_core.ip.yml --output ./generated
+ipcraft generate my_core.ip.yml --output ./generated
 
 # Parse VHDL to create IP core YAML
-ipcore parse entity.vhd
+ipcraft parse entity.vhd
 
 # List available bus types
-ipcore list-buses
+ipcraft list-buses
+```
+ipcraft list-buses
 ```

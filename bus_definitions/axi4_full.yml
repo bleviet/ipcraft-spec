@@ -1,0 +1,119 @@
+AXI4_FULL:
+  busType:
+    vendor: ipcraft
+    library: busif
+    name: axi4_full
+    version: '1.0'
+    description: >
+      AXI4-Full is the full-featured version of the AXI4 protocol, designed for high-performance, high-throughput communication between a master and a slave. It supports burst transfers, multiple outstanding transactions, and a wide range of data widths. AXI4-Full is commonly used for connecting high-speed peripherals and memory interfaces in SoC designs.
+  ports:
+  - name: ACLK
+    presence: required
+  - name: ARESETn
+    presence: required
+  - name: AWADDR
+    width: 32
+    direction: out
+    presence: required
+  - name: AWVALID
+    direction: out
+    presence: required
+  - name: AWREADY
+    direction: in
+    presence: required
+  - name: AWPROT
+    width: 3
+    direction: out
+    presence: optional
+  - name: AWLEN
+    width: 8
+    direction: out
+    presence: optional
+  - name: AWSIZE
+    width: 3
+    direction: out
+    presence: optional
+  - name: AWBURST
+    width: 2
+    direction: out
+    presence: optional
+  - name: AWLOCK
+    width: 1
+    direction: out
+    presence: optional
+  - name: AWCACHE
+    width: 4
+    direction: out
+    presence: optional
+  - name: WDATA
+    width: 32
+    direction: out
+    presence: required
+  - name: WSTRB
+    width: 4
+    direction: out
+    presence: required
+  - name: WVALID
+    direction: out
+    presence: required
+  - name: WREADY
+    direction: in
+    presence: required
+  - name: BRESP
+    width: 2
+    direction: in
+    presence: required
+  - name: BVALID
+    direction: in
+    presence: required
+  - name: BREADY
+    direction: out
+    presence: required
+  - name: ARADDR
+    width: 32
+    direction: out
+    presence: required
+  - name: ARVALID
+    direction: out
+    presence: required
+  - name: ARREADY
+    direction: in
+    presence: required
+  - name: ARPROT
+    width: 3
+    direction: out
+    presence: optional
+  - name: ARLEN
+    width: 8
+    direction: out
+    presence: optional
+  - name: ARSIZE
+    width: 3
+    direction: out
+    presence: optional
+  - name: ARBURST
+    width: 2
+    direction: out
+    presence: optional
+  - name: ARLOCK
+    width: 1
+    direction: out
+    presence: optional
+  - name: ARCACHE
+    width: 4
+    direction: out
+    presence: optional
+  - name: RDATA
+    width: 32
+    direction: in
+    presence: required
+  - name: RRESP
+    width: 2
+    direction: in
+    presence: required
+  - name: RVALID
+    direction: in
+    presence: required
+  - name: RREADY
+    direction: out
+    presence: required

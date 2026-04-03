@@ -1,0 +1,46 @@
+AXI_STREAM:
+  busType:
+    vendor: ipcraft
+    library: busif
+    name: axi_stream
+    version: '1.0'
+    description: >
+      AXI-Stream (AXIS) is a subset of the AXI protocol designed for high-speed streaming data transfers. It is typically used for data-intensive applications such as video processing, networking, and signal processing. AXIS supports unidirectional data flow with optional sideband signals for packet management and error reporting.
+  ports:
+  - name: ACLK
+    presence: required
+  - name: ARESETn
+    presence: required
+  - name: TDATA
+    width: 32
+    direction: out
+    presence: required
+  - name: TVALID
+    direction: out
+    presence: required
+  - name: TREADY
+    direction: in
+    presence: required
+  - name: TSTRB
+    width: 4
+    direction: out
+    presence: optional
+  - name: TKEEP
+    width: 4
+    direction: out
+    presence: optional
+  - name: TLAST
+    direction: out
+    presence: optional
+  - name: TID
+    width: 8
+    direction: out
+    presence: optional
+  - name: TDEST
+    width: 4
+    direction: out
+    presence: optional
+  - name: TUSER
+    width: 1
+    direction: out
+    presence: optional

@@ -1,0 +1,52 @@
+vlnv:
+  vendor: ipcraft.io
+
+  library: templates
+  name: avalon_peripheral
+  version: 1.0.0
+description: IP core template with Avalon-MM Slave and Avalon-ST Source/Sink interfaces
+clocks:
+- name: clk
+  logicalName: CLK
+  direction: in
+  frequency: 50MHz
+  description: Primary clock for all Avalon interfaces
+resets:
+- name: reset
+  logicalName: RESET
+  direction: in
+  polarity: activeHigh
+  description: Primary reset for all Avalon interfaces
+busInterfaces:
+- name: avalon_mm_slave
+  type: ipcraft.busif.avalon_mm.1.0
+  mode: slave
+  physicalPrefix: as_
+  associatedClock: clk
+  associatedReset: reset
+  memoryMapRef: CSR_MAP
+  useOptionalPorts:
+  - waitrequest
+  - readdatavalid
+- name: avalon_st_sink
+  type: ipcraft.busif.avalon_st.1.0
+  mode: sink
+  physicalPrefix: ast_sink_
+  associatedClock: clk
+  associatedReset: reset
+  useOptionalPorts:
+  - ready
+  - startofpacket
+  - endofpacket
+- name: avalon_st_source
+  type: ipcraft.busif.avalon_st.1.0
+  mode: source
+  physicalPrefix: ast_src_
+  associatedClock: clk
+  associatedReset: reset
+  useOptionalPorts:
+  - ready
+  - startofpacket
+  - endofpacket
+memoryMaps:
+  import: basic.mm.yml

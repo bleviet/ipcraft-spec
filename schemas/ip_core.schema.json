@@ -238,7 +238,7 @@
           "type": "string"
         },
         "type": {
-          "description": "Bus type from library (e.g., 'AXI4L', 'AXIS')",
+          "description": "Bus type identifier in vendor.library.name.version format (e.g., 'ipcraft.busif.axi4_lite.1.0')",
           "title": "Type",
           "type": "string"
         },
@@ -847,11 +847,6 @@
   "additionalProperties": false,
   "description": "Complete IP core definition - the single source of truth.\n\nThis is the canonical data model that all parsers produce and\nall generators consume. It includes:\n- Metadata (VLNV, description)\n- Interface definitions (clocks, resets, ports, buses)\n- Memory maps (registers, bit fields)\n- Files (HDL sources, constraints, documentation)\n- Parameters/generics",
   "properties": {
-    "apiVersion": {
-      "description": "Schema version (e.g., 'my-ip-schema/v2.3')",
-      "title": "Apiversion",
-      "type": "string"
-    },
     "vlnv": {
       "$ref": "#/$defs/VLNV",
       "description": "Unique identifier"
@@ -895,12 +890,28 @@
       "type": "array"
     },
     "memoryMaps": {
-      "description": "Memory maps",
-      "items": {
-        "$ref": "#/$defs/MemoryMap"
-      },
-      "title": "Memorymaps",
-      "type": "array"
+      "anyOf": [
+        {
+          "items": {
+            "$ref": "#/$defs/MemoryMap"
+          },
+          "type": "array"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "import": {
+              "description": "Path to external memory map YAML file",
+              "type": "string"
+            }
+          },
+          "required": [
+            "import"
+          ],
+          "type": "object"
+        }
+      ],
+      "description": "Memory map definitions (inline array or external import)"
     },
     "fileSets": {
       "description": "File sets",
@@ -917,23 +928,9 @@
       },
       "title": "Parameters",
       "type": "array"
-    },
-    "useBusLibrary": {
-      "anyOf": [
-        {
-          "type": "string"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null,
-      "description": "Path to bus definitions library",
-      "title": "Usebuslibrary"
     }
   },
   "required": [
-    "apiVersion",
     "vlnv"
   ],
   "title": "IpCore",
