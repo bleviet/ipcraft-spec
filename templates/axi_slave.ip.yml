@@ -1,28 +1,28 @@
 vlnv:
-  vendor: example.com
-  library: examples
+  vendor: ipcraft
+  library: templates
   name: axi_slave_core
   version: 1.0.0
 description: IP core with AXI-Lite slave interface and register map
 clocks:
-- name: s_axi_aclk
-  logicalName: AXI_CLK
+- name: clk
+  logicalName: CLK
   direction: in
   frequency: 100MHz
   description: AXI-Lite clock
 resets:
-- name: s_axi_aresetn
-  logicalName: AXI_RST
+- name: reset_n
+  logicalName: RESET_N
   direction: in
   polarity: activeLow
   description: AXI-Lite reset, active low
 busInterfaces:
-- name: S_AXI_LITE
+- name: s_axi_lite
   type: ipcraft.busif.axi4_lite.1.0
   mode: slave
-  physicalPrefix: s_axi_
-  associatedClock: s_axi_aclk
-  associatedReset: s_axi_aresetn
+  physicalPrefix: s_axil_
+  associatedClock: clk
+  associatedReset: reset_n
   memoryMapRef: CSR_MAP
   useOptionalPorts:
   - AWPROT

@@ -9,7 +9,7 @@ This document defines the YAML format for IPCraft IP core definitions (`*.ip.yml
 
 | Extension | Purpose | Detection |
 |-----------|---------|-----------|
-| `*.ip.yml` | IP Core definition | Contains `apiVersion` + `vlnv` |
+| `*.ip.yml` | IP Core definition | Contains `vlnv` |
 
 ---
 
@@ -19,7 +19,7 @@ This document defines the YAML format for IPCraft IP core definitions (`*.ip.yml
 
 ```yaml
 vlnv:
-  vendor: ipcraft.io
+  vendor: ipcraft
   library: examples
   name: minimal_ip
   version: 1.0.0

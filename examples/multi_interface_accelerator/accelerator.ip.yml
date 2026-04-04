@@ -1,5 +1,5 @@
 vlnv:
-  vendor: ipcraft.io
+  vendor: ipcraft
 
   library: examples
   name: multi_interface_accelerator

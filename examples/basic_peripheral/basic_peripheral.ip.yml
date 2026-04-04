@@ -1,5 +1,5 @@
 vlnv:
-  vendor: ipcraft.io
+  vendor: ipcraft
 
   library: examples
   name: basic_peripheral
@@ -11,13 +11,13 @@ parameters:
   dataType: integer
   description: Width of the primary data port
 clocks:
-- name: i_clk
+- name: clk
   logicalName: CLK
   direction: in
   frequency: 100MHz
   description: Main system clock
 resets:
-- name: i_rst_n
+- name: reset_n
   logicalName: RESET_N
   direction: in
   polarity: activeLow
@@ -36,9 +36,9 @@ busInterfaces:
 - name: S_AXI_LITE
   type: ipcraft.busif.axi4_lite.1.0
   mode: slave
-  physicalPrefix: s_axi_
-  associatedClock: i_clk
-  associatedReset: i_rst_n
+  physicalPrefix: s_axil_
+  associatedClock: clk
+  associatedReset: reset_n
   memoryMapRef: CSR_MAP
   useOptionalPorts:
   - AWPROT

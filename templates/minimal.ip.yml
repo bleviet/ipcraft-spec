@@ -1,5 +1,6 @@
 vlnv:
-  vendor: example.com
-  library: examples
+  vendor: ipcraft
+  library: templates
   name: minimal_core
   version: 1.0.0
+description: Minimal IP core with no ports, clocks, or interfaces
