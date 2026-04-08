@@ -9,4 +9,6 @@ __pycache__/
 coverage/
 .pytest_cache/
 sim_build/
-results.xml
+results.xmltesting/
+
+testing/

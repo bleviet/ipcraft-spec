@@ -300,9 +300,12 @@
         },
         "portWidthOverrides": {
           "additionalProperties": {
-            "type": "integer"
+            "anyOf": [
+              { "type": "integer" },
+              { "type": "string", "description": "Parameter name reference" }
+            ]
           },
-          "description": "Port width overrides {port_name: width}",
+          "description": "Port width overrides {port_name: width_or_parameter_name}",
           "title": "Portwidthoverrides",
           "type": "object"
         },
