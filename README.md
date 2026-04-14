@@ -1,21 +1,22 @@
 # ipcraft-spec
 
-YAML specifications for FPGA IP cores and memory maps.
+YAML specifications for FPGA IP cores and memory maps.  
+Used as a local package by [IPCraft for VS Code](https://github.com/bleviet/ipcraft-vscode).
 
 ## Directory Structure
 
 ```
 ipcraft-spec/
-├── schemas/        # JSON schemas
+├── schemas/         # JSON schemas (source of truth for *.ip.yml / *.mm.yml)
 │   ├── ip_core.schema.json
 │   └── memory_map.schema.json
-├── templates/      # Starter templates
-├── examples/       # Reference implementations
-│   ├── minimal/    # Bare minimum IP core
-│   ├── basic_peripheral/ # AXI4L + Simple Memory Map
+├── templates/       # Starter templates
+├── examples/        # Reference implementations
+│   ├── minimal/                    # Bare minimum IP core
+│   ├── basic_peripheral/           # AXI4L + Simple Memory Map
 │   ├── multi_interface_accelerator/ # AXI4L + AXIS + Complex Memory Map
-│   └── system_controller/ # Many clocks/resets/interfaces
-└── bus_definitions/ # Shared definitions (bus types)
+│   └── system_controller/          # Many clocks/resets/interfaces
+└── bus_definitions/ # Shared bus type definitions (copied to dist/resources/ at build time)
 ```
 
 ## Quick Start
@@ -25,12 +26,27 @@ ipcraft-spec/
 
 ## Documentation
 
-📘 **[IP Core Specification](docs/ip_spec.md)** - Format for `*.ip.yml` files.
+📘 **[IP Core Specification](docs/ip_spec.md)** - Format for `*.ip.yml` files.  
 📘 **[Memory Map Specification](docs/memory_map_spec.md)** - Format for `*.mm.yml` files.
 
 ## Schemas
 
-The JSON schemas in `schemas/` are the single source of truth for the YAML format.
+The JSON schemas in `schemas/` are the **single source of truth** for both the YAML format and the TypeScript types used by the extension.
+
+### TypeScript Type Generation
+
+The extension generates `src/webview/types/memoryMap.d.ts` and `src/webview/types/ipCore.d.ts` directly from these schemas. Re-run after any schema change:
+
+```bash
+# CMake
+cmake --build build --target generate_types
+
+# npm
+npm run generate-types
+```
+
+!!! warning
+    Never edit the generated `src/webview/types/*.d.ts` files by hand — they are overwritten by `generate_types`.
 
 ### VS Code YAML Validation Setup
 
@@ -51,6 +67,9 @@ This gives you:
 - **Inline validation**
 - **Hover documentation**
 
+!!! tip
+    The IPCraft for VS Code extension provides visual editing on top of this — YAML validation is a useful complement when editing files directly.
+
 ## Templates
 
 | Template | Description |
@@ -67,7 +86,7 @@ This gives you:
 
 ## File Naming
 
-- `*.ip.yml` - IP Core definitions
-- `*.mm.yml` - Memory map definitions
-- `*.fileset.yml` - File set definitions
+- `*.ip.yml` — IP Core definitions
+- `*.mm.yml` — Memory map definitions
+- `*.fileset.yml` — File set definitions
 
