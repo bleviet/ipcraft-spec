@@ -28,9 +28,11 @@ ports:
   direction: out
   width: DATA_WIDTH
   description: Parallel data output
+interrupts:
 - name: o_irq
   logicalName: IRQ_OUT
   direction: out
+  sensitivity: LEVEL_HIGH
   description: Interrupt request output
 busInterfaces:
 - name: S_AXI_LITE

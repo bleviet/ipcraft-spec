@@ -27,10 +27,12 @@ resets:
   direction: in
   polarity: activeHigh
   description: Register interface reset
-ports:
+ports: []
+interrupts:
 - name: o_global_irq
   logicalName: IRQ_OUT
   direction: out
+  sensitivity: LEVEL_HIGH
   description: Global interrupt request output
 busInterfaces:
 - name: S_AXI_LITE

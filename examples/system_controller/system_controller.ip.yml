@@ -55,10 +55,12 @@ resets:
   logicalName: RESET
   direction: in
   polarity: activeHigh
-ports:
+ports: []
+interrupts:
 - name: IRQ_OUT
   logicalName: irq_out
   direction: out
+  sensitivity: LEVEL_HIGH
   description: Global interrupt request output
 busInterfaces:
 - name: control_reg
