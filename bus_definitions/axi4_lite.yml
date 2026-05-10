@@ -24,7 +24,7 @@ AXI4_LITE:
   - name: AWPROT
     width: 3
     direction: out
-    presence: optional
+    presence: required
   - name: WDATA
     width: 32
     direction: out
@@ -62,7 +62,7 @@ AXI4_LITE:
   - name: ARPROT
     width: 3
     direction: out
-    presence: optional
+    presence: required
   - name: RDATA
     width: 32
     direction: in

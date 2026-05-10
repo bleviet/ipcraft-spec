@@ -11,6 +11,10 @@ AXI4_FULL:
     presence: required
   - name: ARESETn
     presence: required
+  - name: AWID
+    width: 1
+    direction: out
+    presence: required
   - name: AWADDR
     width: 32
     direction: out
@@ -24,33 +28,36 @@ AXI4_FULL:
   - name: AWPROT
     width: 3
     direction: out
-    presence: optional
+    presence: required
   - name: AWLEN
     width: 8
     direction: out
-    presence: optional
+    presence: required
   - name: AWSIZE
     width: 3
     direction: out
-    presence: optional
+    presence: required
   - name: AWBURST
     width: 2
     direction: out
-    presence: optional
+    presence: required
   - name: AWLOCK
     width: 1
     direction: out
-    presence: optional
+    presence: required
   - name: AWCACHE
     width: 4
     direction: out
-    presence: optional
+    presence: required
   - name: WDATA
     width: 32
     direction: out
     presence: required
   - name: WSTRB
     width: 4
+    direction: out
+    presence: required
+  - name: WLAST
     direction: out
     presence: required
   - name: WVALID
@@ -63,10 +70,18 @@ AXI4_FULL:
     width: 2
     direction: in
     presence: required
+  - name: BID
+    width: 1
+    direction: in
+    presence: required
   - name: BVALID
     direction: in
     presence: required
   - name: BREADY
+    direction: out
+    presence: required
+  - name: ARID
+    width: 1
     direction: out
     presence: required
   - name: ARADDR
@@ -82,33 +97,40 @@ AXI4_FULL:
   - name: ARPROT
     width: 3
     direction: out
-    presence: optional
+    presence: required
   - name: ARLEN
     width: 8
     direction: out
-    presence: optional
+    presence: required
   - name: ARSIZE
     width: 3
     direction: out
-    presence: optional
+    presence: required
   - name: ARBURST
     width: 2
     direction: out
-    presence: optional
+    presence: required
   - name: ARLOCK
     width: 1
     direction: out
-    presence: optional
+    presence: required
   - name: ARCACHE
     width: 4
     direction: out
-    presence: optional
+    presence: required
+  - name: RID
+    width: 1
+    direction: in
+    presence: required
   - name: RDATA
     width: 32
     direction: in
     presence: required
   - name: RRESP
     width: 2
+    direction: in
+    presence: required
+  - name: RLAST
     direction: in
     presence: required
   - name: RVALID
