@@ -331,6 +331,22 @@
                     "description": "Interface description",
                     "title": "Description",
                     "type": "string"
+                },
+                "conduitPorts": {
+                    "anyOf": [
+                        {
+                            "items": {
+                                "$ref": "#/$defs/ConduitPort"
+                            },
+                            "type": "array"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "User-defined signals for conduit (custom) interfaces",
+                    "title": "ConduitPorts"
                 }
             },
             "required": [
@@ -348,10 +364,78 @@
                 "master",
                 "slave",
                 "source",
-                "sink"
+                "sink",
+                "conduit"
             ],
             "title": "BusInterfaceMode",
             "type": "string"
+        },
+        "ConduitPort": {
+            "additionalProperties": false,
+            "description": "A single signal within a conduit (custom) bus interface.",
+            "properties": {
+                "name": {
+                    "description": "Port name (HDL signal name)",
+                    "title": "Name",
+                    "type": "string"
+                },
+                "direction": {
+                    "allOf": [
+                        {
+                            "$ref": "#/$defs/PortDirection"
+                        }
+                    ],
+                    "description": "Port direction"
+                },
+                "width": {
+                    "anyOf": [
+                        {
+                            "type": "integer"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ],
+                    "default": 1,
+                    "description": "Port width in bits or parameter name",
+                    "title": "Width"
+                },
+                "description": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Optional port description",
+                    "title": "Description"
+                },
+                "presence": {
+                    "anyOf": [
+                        {
+                            "enum": [
+                                "required",
+                                "optional"
+                            ],
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": "required",
+                    "description": "Whether the port is required or optional in the generated interface",
+                    "title": "Presence"
+                }
+            },
+            "required": [
+                "name"
+            ],
+            "title": "ConduitPort",
+            "type": "object"
         },
         "Clock": {
             "additionalProperties": false,
