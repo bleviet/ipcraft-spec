@@ -11,22 +11,26 @@ clocks:
   direction: in
   frequency: 200MHz
   description: High-speed processing clock
+  associatedReset: i_rst_n_sys
 - name: i_clk_reg
   logicalName: CLK
   direction: in
   frequency: 50MHz
   description: Slower clock for the AXI-Lite register interface
+  associatedReset: i_rst_p_reg
 resets:
 - name: i_rst_n_sys
   logicalName: RESET_N
   direction: in
   polarity: activeLow
   description: Processing logic reset
+  associatedClock: i_clk_sys
 - name: i_rst_p_reg
   logicalName: RESET
   direction: in
   polarity: activeHigh
   description: Register interface reset
+  associatedClock: i_clk_reg
 ports: []
 interrupts:
 - name: o_global_irq

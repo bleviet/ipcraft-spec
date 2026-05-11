@@ -10,12 +10,14 @@ clocks:
   direction: in
   frequency: 50MHz
   description: Primary clock for all Avalon interfaces
+  associatedReset: reset
 resets:
 - name: reset
   logicalName: RESET
   direction: in
   polarity: activeHigh
   description: Primary reset for all Avalon interfaces
+  associatedClock: clk
 busInterfaces:
 - name: avalon_mm_slave
   type: ipcraft.busif.avalon_mm.1.0

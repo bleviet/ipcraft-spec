@@ -10,12 +10,14 @@ clocks:
   direction: in
   frequency: 100MHz
   description: AXI-Lite clock
+  associatedReset: reset_n
 resets:
 - name: reset_n
   logicalName: RESET_N
   direction: in
   polarity: activeLow
   description: AXI-Lite reset, active low
+  associatedClock: clk
 busInterfaces:
 - name: s_axi_lite
   type: ipcraft.busif.axi4_lite.1.0

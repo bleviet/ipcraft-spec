@@ -10,12 +10,14 @@ clocks:
   direction: in
   frequency: 100MHz
   description: Main system clock
+  associatedReset: reset_n
 resets:
 - name: reset_n
   logicalName: RESET_N
   direction: in
   polarity: activeLow
   description: Main system reset, active low
+  associatedClock: clk
 ports:
 - name: o_enable
   logicalName: ENABLE

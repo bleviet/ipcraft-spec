@@ -494,6 +494,19 @@
                     "default": null,
                     "description": "Clock frequency (e.g., '100MHz')",
                     "title": "Frequency"
+                },
+                "associatedReset": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Name of the reset signal associated with this clock",
+                    "title": "Associatedreset"
                 }
             },
             "required": [
@@ -900,6 +913,19 @@
                     "$ref": "#/$defs/Polarity",
                     "default": "activeHigh",
                     "description": "Reset polarity (activeHigh or activeLow)"
+                },
+                "associatedClock": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Name of the clock signal associated with this reset",
+                    "title": "Associatedclock"
                 }
             },
             "required": [

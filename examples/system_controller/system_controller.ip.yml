@@ -10,51 +10,68 @@ clocks:
   logicalName: CLK
   direction: in
   frequency: 100MHz
+  associatedReset: RST_SYS
 - name: CLK_AXI
   logicalName: CLK
   direction: in
   frequency: 200MHz
+  associatedReset: RST_AXI
 - name: CLK_DDR
   logicalName: CLK
   direction: in
   frequency: 400MHz
+  associatedReset: RST_DDR
 - name: CLK_ETH
   logicalName: CLK
   direction: in
   frequency: 125MHz
+  associatedReset: RST_ETH
 - name: CLK_PCIE
   logicalName: CLK
   direction: in
   frequency: 250MHz
+  associatedReset: RST_PCIE
 - name: CLK_USB
   logicalName: CLK
   direction: in
   frequency: 60MHz
+  associatedReset: RST_SYS
 - name: CLK_AUX
   logicalName: CLK
   direction: in
   frequency: 50MHz
+  associatedReset: RST_AUX
 resets:
 - name: RST_SYS
   logicalName: RESET_N
   direction: in
   polarity: activeLow
+  associatedClock: CLK_SYS
 - name: RST_AXI
   logicalName: RESET_N
   direction: in
   polarity: activeLow
+  associatedClock: CLK_AXI
 - name: RST_DDR
   logicalName: RESET
   direction: in
   polarity: activeHigh
+  associatedClock: CLK_DDR
 - name: RST_ETH
   logicalName: RESET_N
   direction: in
   polarity: activeLow
+  associatedClock: CLK_ETH
 - name: RST_PCIE
   logicalName: RESET
   direction: in
   polarity: activeHigh
+  associatedClock: CLK_PCIE
+- name: RST_AUX
+  logicalName: RESET
+  direction: in
+  polarity: activeHigh
+  associatedClock: CLK_AUX
 ports: []
 interrupts:
 - name: IRQ_OUT
