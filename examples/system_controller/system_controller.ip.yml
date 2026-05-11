@@ -4,144 +4,168 @@ vlnv:
   library: examples
   name: system_controller
   version: 1.0.0
-description: A complex IP core for system-level control with many clocks, resets, and bus interfaces.
+description: A complex IP core for system-level control with many clocks,
+  resets, and bus interfaces.
 clocks:
-- name: CLK_SYS
-  logicalName: CLK
-  direction: in
-  frequency: 100MHz
-  associatedReset: RST_SYS
-- name: CLK_AXI
-  logicalName: CLK
-  direction: in
-  frequency: 200MHz
-  associatedReset: RST_AXI
-- name: CLK_DDR
-  logicalName: CLK
-  direction: in
-  frequency: 400MHz
-  associatedReset: RST_DDR
-- name: CLK_ETH
-  logicalName: CLK
-  direction: in
-  frequency: 125MHz
-  associatedReset: RST_ETH
-- name: CLK_PCIE
-  logicalName: CLK
-  direction: in
-  frequency: 250MHz
-  associatedReset: RST_PCIE
-- name: CLK_USB
-  logicalName: CLK
-  direction: in
-  frequency: 60MHz
-  associatedReset: RST_SYS
-- name: CLK_AUX
-  logicalName: CLK
-  direction: in
-  frequency: 50MHz
-  associatedReset: RST_AUX
+  - name: CLK_SYS
+    logicalName: CLK
+    direction: in
+    frequency: 100MHz
+    associatedReset: RST_SYS
+  - name: CLK_AXI
+    logicalName: CLK
+    direction: in
+    frequency: 200MHz
+    associatedReset: RST_AXI
+  - name: CLK_DDR
+    logicalName: CLK
+    direction: in
+    frequency: 400MHz
+    associatedReset: RST_DDR
+  - name: CLK_ETH
+    logicalName: CLK
+    direction: in
+    frequency: 125MHz
+    associatedReset: RST_ETH
+  - name: CLK_PCIE
+    logicalName: CLK
+    direction: in
+    frequency: 250MHz
+    associatedReset: RST_PCIE
+  - name: CLK_USB
+    logicalName: CLK
+    direction: in
+    frequency: 60MHz
+    associatedReset: RST_SYS
+  - name: CLK_AUX
+    logicalName: CLK
+    direction: in
+    frequency: 50MHz
+    associatedReset: RST_AUX
 resets:
-- name: RST_SYS
-  logicalName: RESET_N
-  direction: in
-  polarity: activeLow
-  associatedClock: CLK_SYS
-- name: RST_AXI
-  logicalName: RESET_N
-  direction: in
-  polarity: activeLow
-  associatedClock: CLK_AXI
-- name: RST_DDR
-  logicalName: RESET
-  direction: in
-  polarity: activeHigh
-  associatedClock: CLK_DDR
-- name: RST_ETH
-  logicalName: RESET_N
-  direction: in
-  polarity: activeLow
-  associatedClock: CLK_ETH
-- name: RST_PCIE
-  logicalName: RESET
-  direction: in
-  polarity: activeHigh
-  associatedClock: CLK_PCIE
-- name: RST_AUX
-  logicalName: RESET
-  direction: in
-  polarity: activeHigh
-  associatedClock: CLK_AUX
+  - name: RST_SYS
+    logicalName: RESET_N
+    direction: in
+    polarity: activeLow
+    associatedClock: CLK_SYS
+  - name: RST_AXI
+    logicalName: RESET_N
+    direction: in
+    polarity: activeLow
+    associatedClock: CLK_AXI
+  - name: RST_DDR
+    logicalName: RESET
+    direction: in
+    polarity: activeHigh
+    associatedClock: CLK_DDR
+  - name: RST_ETH
+    logicalName: RESET_N
+    direction: in
+    polarity: activeLow
+    associatedClock: CLK_ETH
+  - name: RST_PCIE
+    logicalName: RESET
+    direction: in
+    polarity: activeHigh
+    associatedClock: CLK_PCIE
+  - name: RST_AUX
+    logicalName: RESET
+    direction: in
+    polarity: activeHigh
+    associatedClock: CLK_AUX
 ports: []
 interrupts:
-- name: IRQ_OUT
-  logicalName: irq_out
-  direction: out
-  sensitivity: LEVEL_HIGH
-  description: Global interrupt request output
+  - name: IRQ_OUT
+    logicalName: irq_out
+    direction: out
+    sensitivity: LEVEL_HIGH
+    description: Global interrupt request output
 busInterfaces:
-- name: control_reg
-  type: ipcraft.busif.axi4_lite.1.0
-  mode: slave
-  physicalPrefix: s_axi_ctrl_
-  associatedClock: CLK_SYS
-  associatedReset: RST_SYS
-- name: dma_control
-  type: ipcraft.busif.axi4_lite.1.0
-  mode: slave
-  physicalPrefix: s_axi_dma_
-  associatedClock: CLK_AXI
-  associatedReset: RST_AXI
-- name: memory_port
-  type: ipcraft.busif.axi4_lite.1.0
-  mode: master
-  physicalPrefix: m_axi_mem_
-  associatedClock: CLK_DDR
-  associatedReset: RST_DDR
-- name: data_stream_in
-  type: ipcraft.busif.axi_stream.1.0
-  mode: slave
-  physicalPrefix: s_axis_data_
-  associatedClock: CLK_ETH
-  associatedReset: RST_ETH
-- name: data_stream_out
-  type: ipcraft.busif.axi_stream.1.0
-  mode: master
-  physicalPrefix: m_axis_data_
-  associatedClock: CLK_ETH
-  associatedReset: RST_ETH
-- name: pcie_interface
-  type: ipcraft.busif.axi4_lite.1.0
-  mode: master
-  physicalPrefix: m_axi_pcie_
-  associatedClock: CLK_PCIE
-  associatedReset: RST_PCIE
-- name: usb_data_in
-  type: ipcraft.busif.axi_stream.1.0
-  mode: slave
-  physicalPrefix: s_axis_usb_
-  associatedClock: CLK_USB
-  associatedReset: RST_SYS
-- name: usb_data_out
-  type: ipcraft.busif.axi_stream.1.0
-  mode: master
-  physicalPrefix: m_axis_usb_
-  associatedClock: CLK_USB
-  associatedReset: RST_SYS
+  - name: control_reg
+    type: ipcraft.busif.axi4_lite.1.0
+    mode: slave
+    physicalPrefix: s_axi_ctrl_
+    associatedClock: CLK_SYS
+    associatedReset: RST_SYS
+  - name: dma_control
+    type: ipcraft.busif.axi4_lite.1.0
+    mode: slave
+    physicalPrefix: s_axi_dma_
+    associatedClock: CLK_AXI
+    associatedReset: RST_AXI
+  - name: memory_port
+    type: ipcraft.busif.axi4_lite.1.0
+    mode: master
+    physicalPrefix: m_axi_mem_
+    associatedClock: CLK_DDR
+    associatedReset: RST_DDR
+  - name: data_stream_in
+    type: ipcraft.busif.axi_stream.1.0
+    mode: slave
+    physicalPrefix: s_axis_data_
+    associatedClock: CLK_ETH
+    associatedReset: RST_ETH
+  - name: data_stream_out
+    type: ipcraft.busif.axi_stream.1.0
+    mode: master
+    physicalPrefix: m_axis_data_
+    associatedClock: CLK_ETH
+    associatedReset: RST_ETH
+  - name: pcie_interface
+    type: ipcraft.busif.axi4_lite.1.0
+    mode: master
+    physicalPrefix: m_axi_pcie_
+    associatedClock: CLK_PCIE
+    associatedReset: RST_PCIE
+  - name: usb_data_in
+    type: ipcraft.busif.axi_stream.1.0
+    mode: slave
+    physicalPrefix: s_axis_usb_
+    associatedClock: CLK_USB
+    associatedReset: RST_SYS
+  - name: usb_data_out
+    type: ipcraft.busif.axi_stream.1.0
+    mode: master
+    physicalPrefix: m_axis_usb_
+    associatedClock: CLK_USB
+    associatedReset: RST_SYS
 parameters:
-- name: DATA_WIDTH
-  dataType: integer
-  value: 32
-  description: Width of data bus
-- name: ADDR_WIDTH
-  dataType: integer
-  value: 32
-  description: Width of address bus
-- name: FIFO_DEPTH
-  dataType: integer
-  value: 1024
-  description: Depth of internal FIFO
-- name: ENABLE_DMA
-  dataType: boolean
-  value: true
-  description: Enable DMA functionality
+  - name: DATA_WIDTH
+    dataType: integer
+    value: 32
+    description: Width of data bus
+  - name: ADDR_WIDTH
+    dataType: integer
+    value: 32
+    description: Width of address bus
+  - name: FIFO_DEPTH
+    dataType: integer
+    value: 1024
+    description: Depth of internal FIFO
+  - name: ENABLE_DMA
+    dataType: boolean
+    value: true
+    description: Enable DMA functionality
+fileSets:
+  - name: RTL_Sources
+    description: RTL Sources
+    files:
+      - path: rtl/system_controller_pkg.vhd
+        type: vhdl
+      - path: rtl/system_controller.vhd
+        type: vhdl
+      - path: rtl/system_controller_regs.vhd
+        type: vhdl
+      - path: rtl/system_controller_core.vhd
+        type: vhdl
+      - path: rtl/system_controller_axil.vhd
+        type: vhdl
+  - name: Integration
+    description: Integration Files
+    files:
+      - path: altera/system_controller_hw.tcl
+        type: tcl
+      - path: amd/component.xml
+        type: unknown
+      - path: amd/xgui/system_controller_v1_0_0.tcl
+        type: tcl
