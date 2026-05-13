@@ -169,3 +169,5 @@ fileSets:
         type: unknown
       - path: amd/xgui/system_controller_v1_0_0.tcl
         type: tcl
+subcores:
+  - xilinx.com:ip:axis_vio:1.0
