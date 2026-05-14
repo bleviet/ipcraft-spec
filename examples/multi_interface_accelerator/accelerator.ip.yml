@@ -46,9 +46,6 @@ busInterfaces:
   associatedClock: i_clk_reg
   associatedReset: i_rst_p_reg
   memoryMapRef: CSR_MAP
-  useOptionalPorts:
-  - AWPROT
-  - ARPROT
   portWidthOverrides:
     AWADDR: 16
 - name: M_AXIS_OUT

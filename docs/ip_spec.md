@@ -63,9 +63,6 @@ busInterfaces:
     associatedClock: i_clk_sys
     associatedReset: i_rst_n_sys
     memoryMapRef: CSR_MAP
-    useOptionalPorts:
-      - AWPROT
-      - ARPROT
     portWidthOverrides:
       AWADDR: 12
       ARADDR: 12
@@ -144,9 +141,6 @@ busInterfaces:
     associatedClock: i_clk  # References clock by physical port name
     associatedReset: i_rst_n
     memoryMapRef: CSR_MAP   # Links to memory map name
-    useOptionalPorts:       # Include optional bus signals
-      - AWPROT
-      - ARPROT
     portWidthOverrides:     # Override default signal widths
       AWADDR: 12
       ARADDR: 12

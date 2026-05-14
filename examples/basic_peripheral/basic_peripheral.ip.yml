@@ -44,9 +44,6 @@ busInterfaces:
   associatedClock: clk
   associatedReset: reset_n
   memoryMapRef: CSR_MAP
-  useOptionalPorts:
-  - AWPROT
-  - ARPROT
   portWidthOverrides:
     AWADDR: 12
     ARADDR: 12
