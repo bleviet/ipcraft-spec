@@ -84,6 +84,7 @@ Address blocks are contiguous regions within a memory map.
 | `size` | Width in bits (default: 32) |
 | `access` | Access type (see below) |
 | `resetValue` | Value after hardware reset |
+| `description` | Human-readable description |
 | `fields` | List of bit fields (optional) |
 | `registers` | List of child registers (for grouping) |
 
@@ -131,7 +132,8 @@ registers:
 | `bits` | Bit range string, e.g., `"[7:0]"` or `"[0:0]"` |
 | `access` | Access type |
 | `resetValue` | Field-specific reset value |
-| `enumeratedValues` | Map of values to names |
+| `description` | Human-readable description |
+| `enumeratedValues` | Map of integer values to symbolic names |
 
 ---
 

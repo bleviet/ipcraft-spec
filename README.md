@@ -10,24 +10,35 @@ ipcraft-spec/
 ├── schemas/         # JSON schemas (source of truth for *.ip.yml / *.mm.yml)
 │   ├── ip_core.schema.json
 │   └── memory_map.schema.json
+├── bus_definitions/ # Shared bus type definitions
+│   ├── axi4_lite.yml
+│   ├── axi4_full.yml
+│   ├── axi_stream.yml
+│   ├── avalon_mm.yml
+│   └── avalon_st.yml
 ├── templates/       # Starter templates
 ├── examples/        # Reference implementations
-│   ├── minimal/                    # Bare minimum IP core
-│   ├── basic_peripheral/           # AXI4L + Simple Memory Map
-│   ├── multi_interface_accelerator/ # AXI4L + AXIS + Complex Memory Map
-│   └── system_controller/          # Many clocks/resets/interfaces
-└── bus_definitions/ # Shared bus type definitions (copied to dist/resources/ at build time)
+│   ├── minimal/                     # Bare minimum IP core
+│   ├── basic_peripheral/            # AXI4-Lite slave + simple memory map
+│   ├── multi_interface_accelerator/ # AXI4-Lite + AXI-Stream + complex memory map
+│   └── system_controller/           # Many clocks, resets, and bus interfaces
+└── docs/
+    ├── ip_spec.md          # Format reference for *.ip.yml files
+    └── memory_map_spec.md  # Format reference for *.mm.yml files
 ```
+
+Generated output (`rtl/`, `tb/`, `altera/`, `xilinx/`) is produced by the VS Code extension and is not tracked here.
 
 ## Quick Start
 
 1. **New IP Core:** Copy `templates/axi_slave.ip.yml`
-2. **Setup VS Code Validation:** See below.
+2. **New Memory Map:** Copy `templates/axi_slave.mm.yml`
+3. **Setup VS Code Validation:** See below.
 
 ## Documentation
 
-📘 **[IP Core Specification](docs/ip_spec.md)** - Format for `*.ip.yml` files.  
-📘 **[Memory Map Specification](docs/memory_map_spec.md)** - Format for `*.mm.yml` files.
+📘 **[IP Core Specification](docs/ip_spec.md)** — Format reference for `*.ip.yml` files.  
+📘 **[Memory Map Specification](docs/memory_map_spec.md)** — Format reference for `*.mm.yml` files.
 
 ## Schemas
 
@@ -38,15 +49,10 @@ The JSON schemas in `schemas/` are the **single source of truth** for both the Y
 The extension generates `src/webview/types/memoryMap.d.ts` and `src/webview/types/ipCore.d.ts` directly from these schemas. Re-run after any schema change:
 
 ```bash
-# CMake
-cmake --build build --target generate_types
-
-# npm
 npm run generate-types
 ```
 
-!!! warning
-    Never edit the generated `src/webview/types/*.d.ts` files by hand — they are overwritten by `generate_types`.
+> **Warning:** Never edit the generated `src/webview/types/*.d.ts` files by hand — they are overwritten by `generate-types`.
 
 ### VS Code YAML Validation Setup
 
@@ -67,8 +73,7 @@ This gives you:
 - **Inline validation**
 - **Hover documentation**
 
-!!! tip
-    The IPCraft for VS Code extension provides visual editing on top of this — YAML validation is a useful complement when editing files directly.
+> **Tip:** The IPCraft for VS Code extension provides visual editing on top of this — YAML validation is a useful complement when editing files directly.
 
 ## Templates
 
@@ -86,7 +91,7 @@ This gives you:
 
 ## File Naming
 
-- `*.ip.yml` — IP Core definitions
-- `*.mm.yml` — Memory map definitions
-- `*.fileset.yml` — File set definitions
-
+| Extension | Purpose |
+|-----------|---------|
+| `*.ip.yml` | IP Core definition |
+| `*.mm.yml` | Memory map definition |

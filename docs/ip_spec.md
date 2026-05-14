@@ -34,25 +34,38 @@ vlnv:
   name: my_timer_core
   version: 1.2.0
 
-
 description: A 4-channel timer IP with AXI-Lite interface
 
+parameters:
+  - name: NUM_CHANNELS
+    value: 4
+    dataType: integer
+
 clocks:
-  - name: i_clk_sys           # Physical HDL port name
-    logicalName: CLK          # Logical name for associations
+  - name: i_clk_sys
+    logicalName: CLK
     direction: in
     frequency: 100MHz
+    associatedReset: i_rst_n_sys
 
 resets:
   - name: i_rst_n_sys
     logicalName: RESET_N
     direction: in
-    polarity: activeLow       # or activeHigh
+    polarity: activeLow
+    associatedClock: i_clk_sys
 
 ports:
-  - name: o_irq
+  - name: o_data_valid
     direction: out
     width: 1
+    description: Data valid flag
+
+interrupts:
+  - name: o_irq
+    logicalName: IRQ_OUT
+    direction: out
+    sensitivity: LEVEL_HIGH
     description: Interrupt request output
 
 busInterfaces:
@@ -69,11 +82,6 @@ busInterfaces:
 
 memoryMaps:
   import: my_ip_core.mm.yml
-
-parameters:
-  - name: NUM_CHANNELS
-    value: 4
-    dataType: integer
 
 fileSets:
   - name: RTL_Sources
@@ -92,7 +100,7 @@ Every IP core requires a **Vendor-Library-Name-Version** identifier:
 vlnv:
   vendor: ipcraft          # Your organization name or domain
   library: peripherals     # IP category
-  name: ip_core         # Core name (snake_case preferred)
+  name: ip_core            # Core name (snake_case preferred)
   version: 1.0.0           # Semantic version
 ```
 
@@ -106,19 +114,23 @@ clocks:
     logicalName: CLK        # Used by associatedClock references
     direction: in
     frequency: 100MHz
+    associatedReset: i_rst_n  # Logical name of associated reset
 
 resets:
   - name: i_rst_n
     logicalName: RESET_N
     direction: in
-    polarity: activeLow     # activeLow | activeHigh
+    polarity: activeLow       # activeLow | activeHigh
+    associatedClock: i_clk_sys
 ```
+
+`associatedClock` and `associatedReset` reference each other by **logical name** (`logicalName`), not the physical port name.
 
 ---
 
 ## Ports
 
-Generic (non-bus) ports:
+Generic (non-bus) ports that do not belong to a standard bus interface:
 
 ```yaml
 ports:
@@ -130,31 +142,79 @@ ports:
 
 ---
 
+## Interrupts
+
+Interrupt outputs follow the same port structure but carry additional metadata used by platform tools to wire up interrupt controllers.
+
+```yaml
+interrupts:
+  - name: o_irq
+    logicalName: IRQ_OUT        # Logical name for platform wiring
+    direction: out
+    sensitivity: LEVEL_HIGH     # LEVEL_HIGH | LEVEL_LOW | EDGE_RISING | EDGE_FALLING | EDGE_BOTH
+    description: Interrupt request output
+```
+
+---
+
 ## Bus Interfaces
 
 ```yaml
 busInterfaces:
   - name: S_AXI_LITE
     type: ipcraft.busif.axi4_lite.1.0   # vendor.library.name.version
-    mode: slave             # slave | master | source | sink
+    mode: slave             # slave | master | source | sink | conduit
     physicalPrefix: s_axi_  # Generates: s_axi_awaddr, s_axi_wdata, etc.
     associatedClock: i_clk  # References clock by physical port name
     associatedReset: i_rst_n
-    memoryMapRef: CSR_MAP   # Links to memory map name
-    portWidthOverrides:     # Override default signal widths
+    memoryMapRef: CSR_MAP   # Links to a memory map by name
+    portWidthOverrides:     # Override default signal widths from the bus definition
       AWADDR: 12
       ARADDR: 12
     description: Control interface
 ```
 
+### Bus Interface Modes
+
+| Mode | Description |
+|------|-------------|
+| `slave` | Responds to transactions initiated by a master (e.g. AXI-Lite slave) |
+| `master` | Initiates transactions (e.g. AXI-Lite master, DMA engine) |
+| `source` | Produces streaming data (e.g. AXI-Stream transmitter) |
+| `sink` | Consumes streaming data (e.g. AXI-Stream receiver) |
+| `conduit` | Pass-through or non-standard signals grouped as an interface |
+
+### `portWidthOverrides`
+
+Override the default signal widths defined in the bus definition. Common use: narrowing the address bus of an AXI-Lite slave to match the actual register space.
+
+```yaml
+portWidthOverrides:
+  AWADDR: 12    # address bus is 12 bits wide, not the default 32
+  ARADDR: 12
+```
+
+### `useOptionalPorts`
+
+Bus definitions mark some signals as optional. By default these are excluded from the generated port list. List them here to include them. Example for AXI-Stream sideband signals:
+
+```yaml
+useOptionalPorts:
+  - TLAST
+  - TUSER
+  - TID
+```
+
+Refer to the relevant file in `bus_definitions/` to see which signals are optional for a given bus type.
+
 ### Bus Interface Arrays
 
-For multiple similar interfaces (e.g., 4 AXI-Stream channels):
+For multiple similar interfaces (e.g. 4 AXI-Stream output channels):
 
 ```yaml
 - name: M_AXIS_EVENTS
   type: ipcraft.busif.axi_stream.1.0
-  mode: master
+  mode: source
   array:
     count: 4
     indexStart: 0
@@ -162,15 +222,25 @@ For multiple similar interfaces (e.g., 4 AXI-Stream channels):
     physicalPrefixPattern: m_axis_ch{index}_evt_
 ```
 
+### Available Bus Types
+
+| Type string | Protocol |
+|-------------|----------|
+| `ipcraft.busif.axi4_lite.1.0` | AXI4-Lite |
+| `ipcraft.busif.axi4_full.1.0` | AXI4 (full, with bursts) |
+| `ipcraft.busif.axi_stream.1.0` | AXI4-Stream |
+| `ipcraft.busif.avalon_mm.1.0` | Avalon Memory-Mapped |
+| `ipcraft.busif.avalon_st.1.0` | Avalon Streaming |
+
+Full port lists for each bus type are in `bus_definitions/`.
+
 ---
 
-## Connectivity: Memory Maps
+## Memory Maps
 
 IP cores reference memory maps using the `memoryMaps` key.
 
 ### Import (Recommended)
-
-Memory maps can be imported from external `*.mm.yml` files. See the [Memory Map Specification](memory_map_spec.md) for details on the format.
 
 ```yaml
 memoryMaps:
@@ -190,9 +260,13 @@ memoryMaps:
         registers: [...]
 ```
 
+See the [Memory Map Specification](memory_map_spec.md) for register and field details.
+
 ---
 
 ## Parameters
+
+Parameters map to HDL generics/parameters and can be referenced in `portWidthOverrides`.
 
 ```yaml
 parameters:
@@ -222,6 +296,13 @@ fileSets:
     files:
       - path: tb/test.py
         type: python
+
+  - name: Integration
+    files:
+      - path: altera/core_hw.tcl
+        type: tcl
+      - path: xilinx/component.xml
+        type: xml
 ```
 
 ### File Properties
@@ -237,8 +318,7 @@ fileSets:
 
 ### The `managed` flag
 
-The `managed` flag controls whether `ipcraft generate` will overwrite a file
-that already exists on disk.
+The `managed` flag controls whether `ipcraft generate` will overwrite a file that already exists on disk.
 
 | `managed` | File exists on disk | Behaviour |
 |-----------|---------------------|-----------|
@@ -247,27 +327,27 @@ that already exists on disk.
 | `false` | no | File is **created** (first run only) |
 | `false` | yes | File is **skipped** — your edits are preserved |
 
-`ipcraft generate` automatically sets `managed: false` on `{name}_core.vhd`
-(the bus-agnostic core logic stub) so user implementations are never
-overwritten when registers or bus widths change.
-
-You can protect any other file the same way — for example, if you have
-hand-edited the generated AXI-Lite wrapper:
-
-```yaml
-fileSets:
-  - name: RTL_Sources
-    files:
-      - path: rtl/my_core_axil.vhd
-        type: vhdl
-        managed: false   # customised — preserve across regeneration
-```
+`ipcraft generate` automatically sets `managed: false` on `{name}_core.vhd` (the bus-agnostic core logic stub) so user implementations are never overwritten when registers or bus widths change.
 
 ### Supported File Types
 
 `vhdl`, `verilog`, `systemverilog`, `xdc`, `sdc`, `ucf`, `cHeader`, `cSource`,
 `cppHeader`, `cppSource`, `python`, `makefile`, `pdf`, `markdown`, `text`,
-`tcl`, `yaml`, `json`, `xml`.
+`tcl`, `yaml`, `json`, `xml`, `unknown`.
+
+---
+
+## Sub-cores
+
+IP cores can declare dependencies on other IP cores using `subcores`. This is used by platform tools to resolve and include required sub-components.
+
+```yaml
+subcores:
+  - vendor: ipcraft
+    library: primitives
+    name: fifo_sync
+    version: 1.0.0
+```
 
 ---
 
@@ -286,22 +366,7 @@ fileSets:
 
 Reference examples in `examples/`:
 
-- `minimal/` - Bare minimum IP core
-- `basic_peripheral/` - Single AXI4-Lite slave with registers
-- `multi_interface_accelerator/` - Multiple interfaces (AXI-L + AXI-S) and complex memory map
-- `system_controller/` - Many clocks, resets, and divers bus interfaces
-
----
-
-## CLI Usage
-
-```bash
-# Generate VHDL from IP core
-ipcraft generate my_core.ip.yml --output ./generated
-
-# Parse VHDL to create IP core YAML
-ipcraft parse entity.vhd
-
-# List available bus types
-ipcraft list-buses
-```
+- `minimal/` — Bare minimum IP core (VLNV only)
+- `basic_peripheral/` — AXI4-Lite slave with interrupt and register map
+- `multi_interface_accelerator/` — Multiple interfaces (AXI-L + AXI-S), async clocks, complex memory map
+- `system_controller/` — Many clocks, resets, and diverse bus interfaces
