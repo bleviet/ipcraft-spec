@@ -12,3 +12,9 @@ sim_build/
 results.xmltesting/
 
 testing/
+
+# Generated IP output — not tracked in the spec repo
+examples/*/rtl/
+examples/*/tb/
+examples/*/altera/
+examples/*/xilinx/
