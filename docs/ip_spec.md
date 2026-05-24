@@ -163,7 +163,7 @@ interrupts:
 busInterfaces:
   - name: S_AXI_LITE
     type: ipcraft.busif.axi4_lite.1.0   # vendor.library.name.version
-    mode: slave             # slave | master | source | sink | conduit
+    mode: slave             # slave | master | conduit
     physicalPrefix: s_axi_  # Generates: s_axi_awaddr, s_axi_wdata, etc.
     associatedClock: i_clk  # References clock by physical port name
     associatedReset: i_rst_n
@@ -178,10 +178,8 @@ busInterfaces:
 
 | Mode | Description |
 |------|-------------|
-| `slave` | Responds to transactions initiated by a master (e.g. AXI-Lite slave) |
-| `master` | Initiates transactions (e.g. AXI-Lite master, DMA engine) |
-| `source` | Produces streaming data (e.g. AXI-Stream transmitter) |
-| `sink` | Consumes streaming data (e.g. AXI-Stream receiver) |
+| `slave` | Responds to transactions (e.g. AXI-Lite slave, AXI-Stream receiver) |
+| `master` | Initiates transactions (e.g. AXI-Lite master, AXI-Stream transmitter) |
 | `conduit` | Pass-through or non-standard signals grouped as an interface |
 
 ### `portWidthOverrides`
@@ -214,7 +212,7 @@ For multiple similar interfaces (e.g. 4 AXI-Stream output channels):
 ```yaml
 - name: M_AXIS_EVENTS
   type: ipcraft.busif.axi_stream.1.0
-  mode: source
+  mode: master
   array:
     count: 4
     indexStart: 0
