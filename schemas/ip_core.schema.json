@@ -229,7 +229,7 @@
       "type": "string"
     },
     "BusInterface": {
-      "additionalProperties": false,
+      "additionalProperties": true,
       "description": "Bus interface definition for an IP core.\n\nRepresents a standardized bus connection (AXI, Avalon, etc.) with\noptional width overrides, clock/reset associations, and array support.",
       "properties": {
         "name": {
@@ -371,7 +371,7 @@
       "type": "string"
     },
     "ConduitPort": {
-      "additionalProperties": false,
+      "additionalProperties": true,
       "description": "A single signal within a conduit (custom) bus interface.",
       "properties": {
         "name": {
@@ -516,7 +516,7 @@
       "type": "object"
     },
     "File": {
-      "additionalProperties": false,
+      "additionalProperties": true,
       "description": "File reference within a file set.\n\nRepresents a file that is part of the IP core (source, constraint, doc, etc.).",
       "properties": {
         "managed": {
@@ -648,7 +648,7 @@
       "type": "object"
     },
     "Parameter": {
-      "additionalProperties": false,
+      "additionalProperties": true,
       "description": "Generic parameter/generic definition for IP cores.\n\nUsed for VHDL generics, Verilog parameters, or component configuration.",
       "properties": {
         "name": {
@@ -670,11 +670,18 @@
           "description": "Parameter description",
           "title": "Description",
           "type": "string"
+        },
+        "defaultValue": {
+          "description": "Default value (alias for value; accepted for compatibility)."
+        },
+        "data_type": {
+          "$ref": "#/$defs/ParameterType",
+          "default": "integer",
+          "description": "Data type (snake_case alias for dataType)."
         }
       },
       "required": [
-        "name",
-        "value"
+        "name"
       ],
       "title": "Parameter",
       "type": "object"
@@ -702,7 +709,7 @@
       "type": "string"
     },
     "Port": {
-      "additionalProperties": false,
+      "additionalProperties": true,
       "description": "Generic port definition for IP cores.\n\nUsed for data and control ports that are not part of clock, reset, or bus interfaces.",
       "properties": {
         "name": {
@@ -1122,14 +1129,6 @@
       ],
       "description": "Memory map definitions (inline array or external import)"
     },
-    "fileSets": {
-      "description": "File sets",
-      "items": {
-        "$ref": "#/$defs/FileSet"
-      },
-      "title": "Filesets",
-      "type": "array"
-    },
     "parameters": {
       "description": "Generics/parameters",
       "items": {
@@ -1151,6 +1150,87 @@
           }
         ]
       },
+      "type": "array"
+    },
+    "simulation": {
+      "description": "Simulation configuration overrides for testbench generation.",
+      "type": "object",
+      "properties": {
+        "framework": {
+          "type": "string",
+          "enum": [
+            "cocotb",
+            "vunit"
+          ],
+          "description": "Testbench framework (overrides ipcraft.testbench.framework workspace setting)."
+        },
+        "engine": {
+          "type": "string",
+          "enum": [
+            "ghdl",
+            "icarus",
+            "verilator",
+            "questa"
+          ],
+          "description": "Simulation engine (overrides ipcraft.testbench.engine workspace setting)."
+        },
+        "compileArgs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Extra compile-time arguments forwarded to the engine."
+        },
+        "simArgs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Extra simulation-time arguments forwarded to the engine."
+        },
+        "env": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Environment variables forwarded to the simulation process (e.g. LM_LICENSE_FILE)."
+        },
+        "vendorOptions": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Engine-specific free-form options passed through to the framework."
+        }
+      },
+      "additionalProperties": false
+    },
+    "targets": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Synthesis vendor targets (e.g. ['vivado', 'quartus']). Replaces the legacy vendor: field."
+    },
+    "apiVersion": {
+      "type": "string",
+      "description": "Schema version for this IP core file (e.g. '1.0')."
+    },
+    "bus_interfaces": {
+      "description": "Bus interfaces (snake_case alias for busInterfaces).",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/BusInterface"
+      }
+    },
+    "useBusLibrary": {
+      "type": "string",
+      "description": "Path to a custom bus library directory relative to this file."
+    },
+    "fileSets": {
+      "description": "File sets",
+      "items": {
+        "$ref": "#/$defs/FileSet"
+      },
+      "title": "Filesets",
       "type": "array"
     }
   },
