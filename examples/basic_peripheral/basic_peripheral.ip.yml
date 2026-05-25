@@ -6,69 +6,127 @@ vlnv:
   version: 1.0.0
 description: A basic IP core with a single AXI-Lite interface and simple memory map.
 parameters:
-- name: DATA_WIDTH
-  value: 32
-  dataType: integer
-  description: Width of the primary data port
+  - name: DATA_WIDTH
+    value: 32
+    dataType: integer
+    description: Width of the primary data port
+  - name: XCVR_DW
+    dataType: natural
+    defaultValue: 16
+  - name: XCVR_KW
+    dataType: natural
+    defaultValue: 2
 clocks:
-- name: clk
-  logicalName: CLK
-  direction: in
-  frequency: 100MHz
-  description: Main system clock
-  associatedReset: reset_n
+  - name: clk
+    logicalName: CLK
+    direction: in
+    frequency: 100MHz
+    description: Main system clock
+    associatedReset: reset_n
 resets:
-- name: reset_n
-  logicalName: RESET_N
-  direction: in
-  polarity: activeLow
-  description: Active-low system reset
-  associatedClock: clk
+  - name: reset_n
+    logicalName: RESET_N
+    direction: in
+    polarity: activeLow
+    description: Active-low system reset
+    associatedClock: clk
 ports:
-- name: o_data
-  logicalName: DATA_OUT
-  direction: out
-  width: DATA_WIDTH
-  description: Parallel data output
+  - name: o_data
+    logicalName: DATA_OUT
+    direction: out
+    width: DATA_WIDTH
+    description: Parallel data output
 interrupts:
-- name: o_irq
-  logicalName: IRQ_OUT
-  direction: out
-  sensitivity: LEVEL_HIGH
-  description: Interrupt request output
+  - name: o_irq
+    logicalName: IRQ_OUT
+    direction: out
+    sensitivity: LEVEL_HIGH
+    description: Interrupt request output
 busInterfaces:
-- name: S_AXI_LITE
-  type: ipcraft.busif.axi4_lite.1.0
-  mode: slave
-  physicalPrefix: s_axil_
-  associatedClock: clk
-  associatedReset: reset_n
-  memoryMapRef: CSR_MAP
-  portWidthOverrides:
-    AWADDR: 12
-    ARADDR: 12
-    WDATA: 32
-    RDATA: 32
-    WSTRB: 4
+  - name: S_AXI_LITE
+    type: ipcraft.busif.axi4_lite.1.0
+    mode: slave
+    physicalPrefix: s_axil_
+    associatedClock: clk
+    associatedReset: reset_n
+    memoryMapRef: CSR_MAP
+    portWidthOverrides:
+      AWADDR: 12
+      ARADDR: 12
+      WDATA: 32
+      RDATA: 32
+      WSTRB: 4
+  - name: xcvr_if_in
+    type: user.busif.xcvr.1.0
+    mode: slave
+    physicalPrefix: xcvr_if_in_
+    associatedClock: clk
+    associatedReset: reset_n
+    portWidthOverrides:
+      tx_data: XCVR_DW
+      tx_k: XCVR_KW
+      rx_data: XCVR_DW
+      rx_k: XCVR_KW
+  - name: xcvr_if_out
+    type: user.busif.xcvr.1.0
+    mode: master
+    physicalPrefix: xcvr_if_out_
+    associatedClock: clk
+    associatedReset: reset_n
+    portWidthOverrides:
+      tx_data: XCVR_DW
+      tx_k: XCVR_KW
+      rx_data: XCVR_DW
+      rx_k: XCVR_KW
 memoryMaps:
   import: basic_peripheral.mm.yml
 fileSets:
-- name: RTL_Sources
-  description: RTL Sources
-  files:
-  - path: rtl/basic_peripheral_pkg.vhd
-    type: vhdl
-  - path: rtl/basic_peripheral_regs.vhd
-    type: vhdl
-  - path: rtl/basic_peripheral_core.vhd
-    type: vhdl
-    managed: false
-  - path: rtl/basic_peripheral_axil.vhd
-    type: vhdl
-  - path: rtl/basic_peripheral.vhd
-    type: vhdl
-- name: Simulation_Resources
-  description: Simulation Files
-  files:
-  - path: tb/basic_peripheral_test.py
-    type: python
+  - name: RTL_Sources
+    description: RTL Sources
+    files:
+      - path: rtl/basic_peripheral_pkg.vhd
+        type: vhdl
+      - path: rtl/basic_peripheral_regs.vhd
+        type: vhdl
+      - path: rtl/basic_peripheral_core.vhd
+        type: vhdl
+        managed: false
+      - path: rtl/basic_peripheral_axil.vhd
+        type: vhdl
+      - path: rtl/basic_peripheral.vhd
+        type: vhdl
+  - name: Simulation_Resources
+    description: Simulation Files
+    files:
+      - path: tb/basic_peripheral_test.py
+        type: python
+      - path: tb/mm_loader.py
+        type: python
+      - path: tb/conftest.py
+        type: python
+      - path: tb/test_basic_peripheral_sim.py
+        type: python
+      - path: tb/Makefile
+        type: unknown
+  - name: Integration
+    description: Integration Files
+    files:
+      - path: xilinx/component.xml
+        type: unknown
+      - path: altera/basic_peripheral_hw.tcl
+        type: tcl
+      - path: xilinx/basic_peripheral_project.tcl
+        type: tcl
+      - path: xilinx/basic_peripheral_run_ooc.tcl
+        type: tcl
+      - path: xilinx/basic_peripheral_run_xpr.tcl
+        type: tcl
+      - path: altera/basic_peripheral_project.tcl
+        type: tcl
+      - path: xilinx/xgui/basic_peripheral_v1_0_0.tcl
+        type: tcl
+      - path: xilinx/busdef/xcvr.xml
+        type: unknown
+      - path: xilinx/busdef/xcvr_rtl.xml
+        type: unknown
+useBusLibrary: ./custom_bus_definitions

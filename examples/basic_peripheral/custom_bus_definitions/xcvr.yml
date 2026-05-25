@@ -1,0 +1,23 @@
+Xcvr:
+  busType:
+    vendor: user
+    library: busif
+    name: xcvr
+    version: '1.0'
+  ports:
+    - name: tx_data
+      presence: required
+      direction: out
+      width: 16
+    - name: tx_k
+      presence: required
+      direction: out
+      width: 2
+    - name: rx_data
+      presence: required
+      direction: out
+      width: 16
+    - name: rx_k
+      presence: required
+      direction: out
+      width: 2
