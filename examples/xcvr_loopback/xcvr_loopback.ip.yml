@@ -1,0 +1,56 @@
+vlnv:
+  vendor: ipcraft
+  library: examples
+  name: xcvr_loopback
+  version: 1.0.0
+description: >
+  Demonstrates a custom bus interface definition (xcvr) with parameterized widths.
+  The bus definition uses constant literal widths; this IP overrides them
+  per-interface using portWidthOverrides referencing design parameters.
+parameters:
+  - name: XCVR_DW
+    dataType: natural
+    defaultValue: 16
+    description: Transceiver data bus width in bits
+  - name: XCVR_KW
+    dataType: natural
+    defaultValue: 2
+    description: Transceiver control (K) bus width in bits
+clocks:
+  - name: clk
+    logicalName: CLK
+    direction: in
+    frequency: 125MHz
+    description: Transceiver reference clock
+    associatedReset: reset_n
+resets:
+  - name: reset_n
+    logicalName: RESET_N
+    direction: in
+    polarity: activeLow
+    description: Active-low asynchronous reset
+    associatedClock: clk
+busInterfaces:
+  - name: xcvr_in
+    type: user.busif.xcvr.1.0
+    mode: slave
+    physicalPrefix: xcvr_in_
+    associatedClock: clk
+    associatedReset: reset_n
+    portWidthOverrides:
+      tx_data: XCVR_DW
+      tx_k: XCVR_KW
+      rx_data: XCVR_DW
+      rx_k: XCVR_KW
+  - name: xcvr_out
+    type: user.busif.xcvr.1.0
+    mode: master
+    physicalPrefix: xcvr_out_
+    associatedClock: clk
+    associatedReset: reset_n
+    portWidthOverrides:
+      tx_data: XCVR_DW
+      tx_k: XCVR_KW
+      rx_data: XCVR_DW
+      rx_k: XCVR_KW
+useBusLibrary: ./custom_bus_definitions
