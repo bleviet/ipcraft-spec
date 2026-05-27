@@ -352,8 +352,7 @@
       "required": [
         "name",
         "type",
-        "mode",
-        "physicalPrefix"
+        "mode"
       ],
       "title": "BusInterface",
       "type": "object"
