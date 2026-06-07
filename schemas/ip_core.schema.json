@@ -314,6 +314,14 @@
           "title": "Portwidthoverrides",
           "type": "object"
         },
+        "absentPorts": {
+          "description": "Logical port names (uppercase) that are required by the bus spec but absent from the user's HDL source. Populated automatically by the VHDL parser; prevents the generator from emitting ports not present in the entity.",
+          "items": {
+            "type": "string"
+          },
+          "title": "AbsentPorts",
+          "type": "array"
+        },
         "array": {
           "anyOf": [
             {
