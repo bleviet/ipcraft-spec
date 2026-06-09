@@ -1,0 +1,108 @@
+vlnv:
+  vendor: ipcraft
+  library: examples
+  name: comprehensive_avalon
+  version: 1.0.0
+apiVersion: '1.0'
+scaffold_pack: builtin-bahonavi
+description: >
+  Comprehensive Avalon-family example. Exercises an Avalon-MM CSR slave
+  (with optional byteenable/waitrequest/readdatavalid ports), Avalon-ST
+  source and sink interfaces (source/sink modes, optional packet ports,
+  port name overrides) and change-of-state W1C automation behind the
+  Avalon-MM register wrapper.
+targets:
+  - quartus
+  - vivado
+
+parameters:
+  - name: ST_DATA_W
+    value: 64
+    dataType: integer
+    description: Streaming data width in bits
+
+clocks:
+  - name: clk
+    logicalName: CLK
+    direction: in
+    frequency: 50MHz
+    description: Single system clock
+    associatedReset: rst
+
+resets:
+  - name: rst
+    logicalName: RESET
+    direction: in
+    polarity: activeHigh
+    description: Active-high synchronous reset
+    associatedClock: clk
+
+interrupts:
+  - name: o_irq_n
+    logicalName: IRQ_OUT
+    direction: out
+    sensitivity: LEVEL_LOW
+    description: Active-low interrupt request
+  - name: o_evt_fall
+    logicalName: EVT_OUT
+    direction: out
+    sensitivity: EDGE_FALLING
+    description: Falling-edge event strobe
+
+ports:
+  - name: i_sync
+    direction: in
+    width: 1
+    description: External sync input
+
+busInterfaces:
+  - name: S_AVMM
+    type: ipcraft.busif.avalon_mm.1.0
+    mode: slave
+    physicalPrefix: avs_
+    associatedClock: clk
+    associatedReset: rst
+    memoryMapRef: AVMM_CSR
+    description: Avalon-MM CSR slave with optional flow-control ports
+    useOptionalPorts:
+      - byteenable
+      - waitrequest
+      - readdatavalid
+    portWidthOverrides:
+      address: 12
+  - name: SRC_ST
+    type: ipcraft.busif.avalon_st.1.0
+    mode: source
+    physicalPrefix: aso_
+    associatedClock: clk
+    associatedReset: rst
+    description: Avalon-ST source with packet and backpressure ports
+    useOptionalPorts:
+      - ready
+      - startofpacket
+      - endofpacket
+      - empty
+      - channel
+      - error
+    portWidthOverrides:
+      data: ST_DATA_W
+      empty: 3
+      channel: 2
+  - name: SNK_ST
+    type: ipcraft.busif.avalon_st.1.0
+    mode: sink
+    physicalPrefix: asi_
+    associatedClock: clk
+    associatedReset: rst
+    description: Avalon-ST sink with renamed physical ports
+    useOptionalPorts:
+      - ready
+    portNameOverrides:
+      data: rx_bits
+      valid: rx_strobe
+      ready: rx_ready
+    portWidthOverrides:
+      data: 16
+
+memoryMaps:
+  import: comprehensive_avalon.mm.yml

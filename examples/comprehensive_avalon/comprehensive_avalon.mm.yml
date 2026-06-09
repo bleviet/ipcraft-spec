@@ -1,0 +1,94 @@
+# Avalon-MM register map: all access types, change-of-state W1C behind the
+# AVMM wrapper, a read-only flat register array and a memory block.
+- name: AVMM_CSR
+  description: Avalon-MM control/status registers and mailbox RAM
+  addressBlocks:
+    - name: CSR
+      baseAddress: 0
+      usage: register
+      access: read-write
+      defaultRegWidth: 32
+      registers:
+        - name: VERSION
+          offset: 0
+          access: read-only
+          description: IP version
+          fields:
+            - name: MINOR
+              bits: '[7:0]'
+              access: read-only
+              resetValue: 2
+            - name: MAJOR
+              bits: '[15:8]'
+              access: read-only
+              resetValue: 1
+        - name: CONTROL
+          offset: 4
+          access: read-write
+          description: Run control
+          fields:
+            - name: RUN
+              bits: '[0:0]'
+              access: read-write
+              resetValue: 0
+              description: Start/stop the stream engine
+            - name: STOP_ON_ERR
+              bits: '[1:1]'
+              access: read-write
+              resetValue: 1
+              description: Halt on first stream error
+            - name: LOG_LEVEL
+              bits: '[7:4]'
+              access: read-write
+              description: Diagnostic verbosity
+              enumeratedValues:
+                0: 'OFF'
+                1: ERROR
+                2: WARN
+                3: INFO
+                4: TRACE
+            - name: CLEAR_STATS
+              bits: '[31:31]'
+              access: write-only
+              description: Pulse to clear the sample counters
+        - name: EVENTS
+          offset: 8
+          access: read-write-1-to-clear
+          description: >
+            Sticky events. OVERRUN/UNDERRUN set by hardware pulses;
+            SRC_TOGGLED auto-sets when SRC_ACTIVE changes (monitorChangeOf
+            through the Avalon-MM wrapper).
+          fields:
+            - name: OVERRUN
+              bits: '[0:0]'
+              access: write-1-to-clear
+              description: Sink FIFO overrun (sticky, W1C)
+            - name: UNDERRUN
+              bits: '[1:1]'
+              access: write-1-to-clear
+              description: Source FIFO underrun (sticky, W1C)
+            - name: SRC_ACTIVE
+              bits: '[8:8]'
+              access: read-only
+              description: Live source-channel activity flag
+            - name: SRC_TOGGLED
+              bits: '[9:9]'
+              access: write-1-to-clear
+              monitorChangeOf: SRC_ACTIVE
+              description: Sticky change-of-state flag for SRC_ACTIVE
+        - name: SAMPLE_CNT
+          count: 2
+          stride: 4
+          access: read-only
+          description: Per-direction sample counters (flat array)
+          fields:
+            - name: VALUE
+              bits: '[31:0]'
+              access: read-only
+              description: Free-running sample count
+    - name: MAILBOX
+      baseAddress: 1024
+      usage: memory
+      range: 1K
+      access: read-write
+      description: Software mailbox RAM

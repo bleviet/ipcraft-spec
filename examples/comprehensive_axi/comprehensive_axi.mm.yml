@@ -1,0 +1,213 @@
+# Memory map exercising every register-map schema property:
+#   - all five access types (read-only, write-only, read-write,
+#     write-1-to-clear, read-write-1-to-clear)
+#   - explicit offsets and auto-assigned offsets
+#   - bits-string and offset/width field syntax
+#   - field and register reset values, enumerated values
+#   - monitorChangeOf (change-of-state W1C automation)
+#   - flat register arrays (count/stride) and register groups
+#   - register, memory and reserved address blocks
+- name: CSR
+  description: Control/status registers, scratch RAM and reserved space
+  addressBlocks:
+    - name: CORE_REGS
+      baseAddress: 0
+      range: 256
+      usage: register
+      access: read-write
+      defaultRegWidth: 32
+      description: Core control and status registers
+      registers:
+        - name: ID
+          offset: 0
+          size: 32
+          access: read-only
+          resetValue: 0xC0FFEE01
+          description: Device identification (read-only with field reset values)
+          fields:
+            - name: REVISION
+              bits: '[7:0]'
+              access: read-only
+              resetValue: 0x01
+              description: Silicon revision
+            - name: DEVICE_ID
+              bits: '[31:8]'
+              access: read-only
+              resetValue: 0xC0FFEE
+              description: Device identifier
+        - name: CTRL
+          offset: 4
+          access: read-write
+          description: Main control register (mixed field syntax and access)
+          fields:
+            - name: ENABLE
+              offset: 0
+              width: 1
+              access: read-write
+              resetValue: 0
+              description: Global enable (offset/width syntax)
+            - name: MODE
+              bits: '[2:1]'
+              access: read-write
+              resetValue: 0
+              description: Operating mode (enumerated values)
+              enumeratedValues:
+                0: IDLE
+                1: STREAM
+                2: LOOPBACK
+                3: DEBUG
+            - name: PRESCALE
+              offset: 4
+              width: 8
+              access: read-write
+              resetValue: 10
+              description: Clock prescaler
+            - name: SOFT_RST
+              bits: '[31:31]'
+              access: write-only
+              description: Self-clearing software reset strobe
+        - name: STATUS
+          access: read-only
+          description: Status register (auto-assigned offset)
+          fields:
+            - name: BUSY
+              bits: '[0:0]'
+              access: read-only
+              description: Datapath busy flag
+            - name: FIFO_LEVEL
+              bits: '[15:4]'
+              access: read-only
+              description: Current FIFO fill level
+            - name: FSM_STATE
+              bits: '[18:16]'
+              access: read-only
+              description: Datapath FSM state (enumerated)
+              enumeratedValues:
+                0: RESET
+                1: IDLE
+                2: FETCH
+                3: PROCESS
+                4: DRAIN
+        - name: CMD
+          access: write-only
+          description: Command register (write-only)
+          fields:
+            - name: OPCODE
+              bits: '[7:0]'
+              access: write-only
+              description: Command opcode
+            - name: ARG
+              bits: '[31:8]'
+              access: write-only
+              description: Command argument
+        - name: SCRATCH
+          access: read-write
+          resetValue: 0xDEADBEEF
+          description: Scratch register with register-level reset value
+          fields:
+            - name: VALUE
+              bits: '[31:0]'
+              access: read-write
+              description: Software scratch value
+        - name: IRQ_EVENT
+          access: read-write-1-to-clear
+          description: >
+            Sticky event register. DONE/ERR set by hardware pulses;
+            LINK_TOGGLED auto-sets when LINK_STATE changes (monitorChangeOf).
+          fields:
+            - name: DONE
+              bits: '[0:0]'
+              access: write-1-to-clear
+              description: Operation done (sticky, W1C)
+            - name: ERR
+              bits: '[1:1]'
+              access: write-1-to-clear
+              description: Operation error (sticky, W1C)
+            - name: LINK_STATE
+              bits: '[4:4]'
+              access: read-only
+              description: Live link state from the PHY
+            - name: LINK_TOGGLED
+              bits: '[5:5]'
+              access: write-1-to-clear
+              monitorChangeOf: LINK_STATE
+              description: Sticky change-of-state flag for LINK_STATE
+        - name: CH_GAIN
+          count: 4
+          stride: 4
+          access: read-write
+          description: Per-channel gain (flat register array, count/stride)
+          fields:
+            - name: GAIN
+              bits: '[11:0]'
+              access: read-write
+              resetValue: 256
+              description: Fixed-point channel gain
+            - name: MUTE
+              bits: '[16:16]'
+              access: read-write
+              description: Channel mute
+    - name: DMA_REGS
+      baseAddress: 512
+      usage: register
+      defaultRegWidth: 32
+      description: DMA channel register groups (nested register arrays)
+      registers:
+        - name: DMA
+          count: 2
+          stride: 32
+          description: Per-channel DMA descriptor group
+          registers:
+            - name: SRC
+              offset: 0
+              access: read-write
+              description: Source address
+              fields:
+                - name: ADDR
+                  bits: '[31:0]'
+                  access: read-write
+            - name: DST
+              offset: 4
+              access: read-write
+              description: Destination address
+              fields:
+                - name: ADDR
+                  bits: '[31:0]'
+                  access: read-write
+            - name: LEN
+              offset: 8
+              access: read-write
+              description: Transfer length in bytes
+              fields:
+                - name: BYTES
+                  bits: '[23:0]'
+                  access: read-write
+            - name: CTRL
+              offset: 12
+              access: read-write
+              description: Channel control and sticky completion flag
+              fields:
+                - name: START
+                  bits: '[0:0]'
+                  access: write-only
+                  description: Start strobe
+                - name: IE
+                  bits: '[1:1]'
+                  access: read-write
+                  description: Interrupt enable
+                - name: DONE
+                  bits: '[8:8]'
+                  access: write-1-to-clear
+                  description: Transfer complete (sticky, W1C)
+    - name: BUF_RAM
+      baseAddress: 4096
+      usage: memory
+      range: 4K
+      access: read-write
+      defaultRegWidth: 32
+      description: 4K data buffer (memory block, string range)
+    - name: RSVD
+      baseAddress: 8192
+      usage: reserved
+      range: 1024
+      description: Reserved address space (integer range)

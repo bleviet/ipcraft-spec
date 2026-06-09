@@ -1,0 +1,171 @@
+vlnv:
+  vendor: ipcraft
+  library: examples
+  name: comprehensive_axi
+  version: 1.0.0
+apiVersion: '1.0'
+scaffold_pack: builtin-bahonavi
+description: >
+  Comprehensive AXI-family example. Exercises every register-map property
+  (all access types, enumerated values, monitorChangeOf, register arrays,
+  register groups, memory and reserved blocks) together with an AXI4-Lite
+  CSR slave, an AXI4-Full master, an arrayed AXI-Stream master, an
+  AXI-Stream slave and a custom conduit interface.
+targets:
+  - vivado
+  - quartus
+
+parameters:
+  - name: DATA_W
+    value: 32
+    dataType: integer
+    description: Width of the parallel GPIO output port
+  - name: FIFO_DEPTH
+    value: 512
+    dataType: natural
+    description: Internal buffer depth in words
+  - name: NUM_CH
+    value: 2
+    dataType: positive
+    description: Number of streaming output channels
+  - name: ENABLE_DBG
+    dataType: boolean
+    description: Compile-time enable for the debug conduit logic
+  - name: DEVICE_TAG
+    value: '"COMP"'
+    dataType: string
+    description: Build tag embedded in the ID register logic
+
+clocks:
+  - name: i_clk_axi
+    logicalName: CLK
+    direction: in
+    frequency: 100MHz
+    description: Clock for the AXI4-Lite register interface
+    associatedReset: i_rstn_axi
+  - name: i_clk_proc
+    logicalName: CLK
+    direction: in
+    frequency: 250MHz
+    description: High-speed processing clock for the streaming datapath
+    associatedReset: i_rst_proc
+
+resets:
+  - name: i_rstn_axi
+    logicalName: RESET_N
+    direction: in
+    polarity: activeLow
+    description: Active-low reset for the register interface
+    associatedClock: i_clk_axi
+  - name: i_rst_proc
+    logicalName: RESET
+    direction: in
+    polarity: activeHigh
+    description: Active-high reset for the processing domain
+    associatedClock: i_clk_proc
+
+interrupts:
+  - name: o_irq
+    logicalName: IRQ_OUT
+    direction: out
+    sensitivity: LEVEL_HIGH
+    description: Level-sensitive interrupt request
+  - name: o_err_pulse
+    logicalName: ERR_OUT
+    direction: out
+    sensitivity: EDGE_RISING
+    description: Single-cycle error pulse
+
+ports:
+  - name: i_gpio
+    direction: in
+    width: 8
+    description: General-purpose parallel input
+  - name: o_gpio
+    direction: out
+    width: DATA_W
+    description: Parallel output, width set by the DATA_W parameter
+  - name: o_led
+    direction: out
+    width: 1
+    description: Heartbeat LED
+
+busInterfaces:
+  - name: S_AXI
+    type: ipcraft.busif.axi4_lite.1.0
+    mode: slave
+    physicalPrefix: s_axi_
+    associatedClock: i_clk_axi
+    associatedReset: i_rstn_axi
+    memoryMapRef: CSR
+    description: CSR access port
+    portWidthOverrides:
+      AWADDR: 16
+      ARADDR: 16
+  - name: M_AXI
+    type: ipcraft.busif.axi4_full.1.0
+    mode: master
+    physicalPrefix: m_axi_
+    associatedClock: i_clk_proc
+    associatedReset: i_rst_proc
+    description: DMA master toward external memory
+    portWidthOverrides:
+      AWADDR: 40
+      ARADDR: 40
+      WDATA: 64
+      RDATA: 64
+      WSTRB: 8
+  - name: M_AXIS
+    type: ipcraft.busif.axi_stream.1.0
+    mode: master
+    array:
+      count: 2
+      indexStart: 1
+      namingPattern: M_AXIS_CH{index}
+      physicalPrefixPattern: m_axis_ch{index}_
+    associatedClock: i_clk_proc
+    associatedReset: i_rst_proc
+    description: Arrayed streaming outputs (channels 1..2)
+    useOptionalPorts:
+      - TLAST
+      - TKEEP
+      - TUSER
+    portWidthOverrides:
+      TDATA: 64
+      TKEEP: 8
+      TUSER: 4
+  - name: S_AXIS
+    type: ipcraft.busif.axi_stream.1.0
+    mode: slave
+    physicalPrefix: s_axis_
+    associatedClock: i_clk_proc
+    associatedReset: i_rst_proc
+    description: Streaming input
+    useOptionalPorts:
+      - TLAST
+  - name: DBG
+    type: ipcraft.busif.conduit.1.0
+    mode: conduit
+    physicalPrefix: dbg_
+    associatedClock: i_clk_proc
+    associatedReset: i_rst_proc
+    description: Custom debug conduit with user-defined signals
+    conduitPorts:
+      - name: trace_data
+        direction: out
+        width: DATA_W
+        description: Trace word, parameterized width
+      - name: trace_valid
+        direction: out
+        width: 1
+      - name: trigger
+        direction: in
+        width: 4
+        presence: required
+      - name: ext_halt
+        direction: in
+        width: 1
+        presence: optional
+
+memoryMaps:
+  import: comprehensive_axi.mm.yml
