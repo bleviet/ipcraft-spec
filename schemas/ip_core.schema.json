@@ -1072,6 +1072,10 @@
       "title": "Description",
       "type": "string"
     },
+    "scaffold_pack": {
+      "description": "Scaffold pack used to generate this IP core (e.g. \"builtin-bahonavi\"). Persisted so the canvas picker restores the correct methodology when the file is reopened.",
+      "type": "string"
+    },
     "clocks": {
       "description": "Clock definitions",
       "items": {

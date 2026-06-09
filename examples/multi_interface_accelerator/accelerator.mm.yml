@@ -72,6 +72,30 @@
         - name: VALUE
           bits: '[31:0]'
           access: read-write
+  - name: SENSOR_BLOCK
+    baseAddress: 256
+    usage: register
+    defaultRegWidth: 32
+    description: Sensor status block demonstrating change-of-state W1C automation
+    registers:
+    - name: SENSOR_STATUS
+      offset: 0
+      access: read-write-1-to-clear
+      description: Sensor status with automatic change detection
+      fields:
+      - name: FIFO_OVERFLOW
+        bits: '[0:0]'
+        access: write-1-to-clear
+        description: Sticky bit — set by external FIFO overflow pulse.
+      - name: TEMP_VALUE
+        bits: '[15:4]'
+        access: read-only
+        description: Live 12-bit ADC temperature reading.
+      - name: TEMP_UPDATED
+        bits: '[16:16]'
+        access: write-1-to-clear
+        monitorChangeOf: TEMP_VALUE
+        description: Sticky bit — auto-sets when TEMP_VALUE changes. No pulse port needed.
   - name: LOCAL_RAM
     baseAddress: 4096
     usage: memory

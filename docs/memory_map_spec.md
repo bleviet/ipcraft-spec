@@ -134,6 +134,7 @@ registers:
 | `resetValue` | Field-specific reset value |
 | `description` | Human-readable description |
 | `enumeratedValues` | Map of integer values to symbolic names |
+| `monitorChangeOf` | Field name in same register to watch for change-of-state (see below) |
 
 ---
 
@@ -146,6 +147,55 @@ registers:
 | `write-only` | Write-only (command) |
 | `write-1-to-clear` | Writing 1 clears bits (interrupt flags) |
 | `read-write-1-to-clear` | Read-write with write-1-to-clear behavior |
+
+### Change-of-State W1C (`monitorChangeOf`)
+
+A `write-1-to-clear` field can carry `monitorChangeOf: FIELD_NAME` to reference another field
+in the same register. When present:
+
+- **No external pulse port** is generated for the monitoring field in `t_regs_hw2sw`.
+- The generator creates an internal shadow register for the monitored field's value.
+- A combinatorial comparator detects when the live value differs from the shadow.
+- The change-of-state pulse drives the W1C sticky bit automatically.
+- The monitored field's live value is exposed via a `_val` port in `t_regs_hw2sw`.
+
+**Constraints:** `monitorChangeOf` is only valid on `write-1-to-clear` or `read-write-1-to-clear`
+fields. The referenced field must exist in the same register.
+
+**Example:**
+
+```yaml
+- name: SENSOR_STATUS
+  offset: 0x40
+  access: read-write-1-to-clear
+  description: Sensor status with automatic change detection
+  fields:
+    - name: FIFO_OVERFLOW
+      bits: "[0:0]"
+      access: write-1-to-clear
+      description: Sticky bit — set by external FIFO overflow pulse.
+
+    - name: TEMP_VALUE
+      bits: "[15:4]"
+      access: read-only
+      description: Live 12-bit ADC temperature reading.
+
+    - name: TEMP_UPDATED
+      bits: "[16:16]"
+      access: write-1-to-clear
+      monitorChangeOf: TEMP_VALUE
+      description: Sticky bit — auto-sets when TEMP_VALUE changes. No pulse port needed.
+```
+
+Generated interface (VHDL):
+
+```vhdl
+-- t_regs_hw2sw contains:
+--   sensor_status_pulse : t_reg_sensor_status_pulse  -- fifo_overflow_pulse only
+--   sensor_status_val   : t_reg_sensor_status_val    -- temp_value (live, for CoS monitoring)
+-- Internal to register file:
+--   shadow register + comparator → drives temp_updated sticky bit automatically
+```
 
 ---
 

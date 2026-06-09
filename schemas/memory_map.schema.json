@@ -178,6 +178,19 @@
             "default": null,
             "description": "Enumeration mapping {value: name}",
             "title": "Enumeratedvalues"
+          },
+          "monitorChangeOf": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Field name in the same register to watch for change-of-state. Valid only on write-1-to-clear fields. Generator creates an internal shadow register and comparator — no external pulse port is emitted for this field.",
+            "title": "Monitorchangeof"
           }
         },
         "required": [
