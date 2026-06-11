@@ -639,6 +639,15 @@
           "title": "Description",
           "type": "string"
         },
+        "import": {
+          "anyOf": [
+            { "type": "string" },
+            { "type": "null" }
+          ],
+          "default": null,
+          "description": "Path to an external .mm.yml file whose content is loaded for this map entry. When present, addressBlocks from this entry override the imported file.",
+          "title": "Import"
+        },
         "addressBlocks": {
           "description": "Address blocks",
           "items": {
