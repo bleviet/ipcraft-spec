@@ -690,46 +690,32 @@
         "defaultValue": {
           "description": "Default value (alias for value; accepted for compatibility)."
         },
-        "data_type": {
-          "$ref": "#/$defs/ParameterType",
-          "default": "integer",
-          "description": "Data type (snake_case alias for dataType)."
-        },
         "min": {
-          "type": "integer",
+          "anyOf": [{ "type": "integer" }, { "type": "null" }],
           "description": "Minimum value constraint (for integer)"
         },
         "max": {
-          "type": "integer",
+          "anyOf": [{ "type": "integer" }, { "type": "null" }],
           "description": "Maximum value constraint (for integer)"
         },
         "allowedValues": {
-          "type": "array",
-          "items": {
-            "anyOf": [
-              { "type": "integer" },
-              { "type": "string" }
-            ]
-          },
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  { "type": "integer" },
+                  { "type": "string" }
+                ]
+              }
+            },
+            { "type": "null" }
+          ],
           "description": "Allowed discrete choices constraint (mutually exclusive with min/max)"
-        },
-        "allowed_values": {
-          "type": "array",
-          "items": {
-            "anyOf": [
-              { "type": "integer" },
-              { "type": "string" }
-            ]
-          },
-          "description": "Allowed discrete choices constraint (snake_case alias)"
         },
         "uiGroup": {
           "type": "string",
           "description": "UI grouping category"
-        },
-        "ui_group": {
-          "type": "string",
-          "description": "UI grouping category (snake_case alias)"
         }
       },
       "required": [
