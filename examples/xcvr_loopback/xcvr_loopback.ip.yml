@@ -9,11 +9,11 @@ description: >
   per-interface using portWidthOverrides referencing design parameters.
 parameters:
   - name: XCVR_DW
-    dataType: natural
+    dataType: integer
     defaultValue: 16
     description: Transceiver data bus width in bits
   - name: XCVR_KW
-    dataType: natural
+    dataType: integer
     defaultValue: 2
     description: Transceiver control (K) bus width in bits
 clocks:

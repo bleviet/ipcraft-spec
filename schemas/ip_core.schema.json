@@ -694,6 +694,42 @@
           "$ref": "#/$defs/ParameterType",
           "default": "integer",
           "description": "Data type (snake_case alias for dataType)."
+        },
+        "min": {
+          "type": "integer",
+          "description": "Minimum value constraint (for integer)"
+        },
+        "max": {
+          "type": "integer",
+          "description": "Maximum value constraint (for integer)"
+        },
+        "allowedValues": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              { "type": "integer" },
+              { "type": "string" }
+            ]
+          },
+          "description": "Allowed discrete choices constraint (mutually exclusive with min/max)"
+        },
+        "allowed_values": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              { "type": "integer" },
+              { "type": "string" }
+            ]
+          },
+          "description": "Allowed discrete choices constraint (snake_case alias)"
+        },
+        "uiGroup": {
+          "type": "string",
+          "description": "UI grouping category"
+        },
+        "ui_group": {
+          "type": "string",
+          "description": "UI grouping category (snake_case alias)"
         }
       },
       "required": [
@@ -706,9 +742,6 @@
       "description": "Enumeration for standard IP-XACT/HDL parameter types.",
       "enum": [
         "integer",
-        "natural",
-        "positive",
-        "real",
         "boolean",
         "string"
       ],

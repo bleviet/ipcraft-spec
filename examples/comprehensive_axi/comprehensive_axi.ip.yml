@@ -22,11 +22,11 @@ parameters:
     description: Width of the parallel GPIO output port
   - name: FIFO_DEPTH
     value: 512
-    dataType: natural
+    dataType: integer
     description: Internal buffer depth in words
   - name: NUM_CH
     value: 2
-    dataType: positive
+    dataType: integer
     description: Number of streaming output channels
   - name: ENABLE_DBG
     dataType: boolean
