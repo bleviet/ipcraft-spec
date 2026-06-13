@@ -6,10 +6,39 @@ vlnv:
   version: 1.0.0
 description: A basic IP core with a single AXI-Lite interface and simple memory map.
 parameters:
-- name: DATA_WIDTH
+- name: PARAM_CHOICES
   value: 32
   dataType: integer
   description: Width of the primary data port
+  allowedValues: [ 8, 16, 32 ]
+  uiPage: Configuration
+  uiGroup: Integer Parameters
+- name: PARAM_RANGE
+  dataType: integer
+  defaultValue: 0
+  min: 0
+  max: 255
+  uiPage: Configuration
+  uiGroup: Integer Parameters
+- name: PARAM_INTEGER
+  dataType: integer
+  defaultValue: 0
+  uiPage: Configuration
+- name: ENABLE
+  dataType: boolean
+  defaultValue: false
+  uiPage: Advanced
+- name: STR_CHOICES
+  dataType: string
+  defaultValue: "XILINX"
+  allowedValues: [ ALTERA, XILINX ]
+  uiPage: Advanced
+  uiGroup: String Parameters
+- name: STR
+  dataType: string
+  defaultValue: "BASIC"
+  uiPage: Advanced
+  uiGroup: String Parameters
 clocks:
 - name: clk
   logicalName: CLK
@@ -28,7 +57,7 @@ ports:
 - name: o_data
   logicalName: DATA_OUT
   direction: out
-  width: DATA_WIDTH
+  width: PARAM_CHOICES
   description: Parallel data output
 interrupts:
 - name: o_irq

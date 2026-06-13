@@ -713,10 +713,20 @@
           ],
           "description": "Allowed discrete choices constraint (mutually exclusive with min/max)"
         },
+        "uiPage": {
+          "type": "string",
+          "description": "Wizard tab / page name in Vivado IP Packager and Platform Designer"
+        },
         "uiGroup": {
           "type": "string",
-          "description": "UI grouping category"
+          "description": "Sub-group within uiPage. Requires uiPage to be set."
         }
+      },
+      "if": {
+        "required": ["uiGroup"]
+      },
+      "then": {
+        "required": ["name", "uiPage"]
       },
       "required": [
         "name"
