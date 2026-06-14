@@ -4,7 +4,7 @@ vlnv:
   name: comprehensive_axi
   version: 1.0.0
 apiVersion: '1.0'
-scaffold_pack: builtin-bahonavi
+scaffold_pack: builtin-ipcraft
 description: >
   Comprehensive AXI-family example. Exercises every register-map property
   (all access types, enumerated values, monitorChangeOf, register arrays,

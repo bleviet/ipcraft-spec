@@ -641,8 +641,12 @@
         },
         "import": {
           "anyOf": [
-            { "type": "string" },
-            { "type": "null" }
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
           ],
           "default": null,
           "description": "Path to an external .mm.yml file whose content is loaded for this map entry. When present, addressBlocks from this entry override the imported file.",
@@ -691,11 +695,25 @@
           "description": "Default value (alias for value; accepted for compatibility)."
         },
         "min": {
-          "anyOf": [{ "type": "integer" }, { "type": "null" }],
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
           "description": "Minimum value constraint (for integer)"
         },
         "max": {
-          "anyOf": [{ "type": "integer" }, { "type": "null" }],
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
           "description": "Maximum value constraint (for integer)"
         },
         "allowedValues": {
@@ -704,12 +722,18 @@
               "type": "array",
               "items": {
                 "anyOf": [
-                  { "type": "integer" },
-                  { "type": "string" }
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "string"
+                  }
                 ]
               }
             },
-            { "type": "null" }
+            {
+              "type": "null"
+            }
           ],
           "description": "Allowed discrete choices constraint (mutually exclusive with min/max)"
         },
@@ -723,10 +747,15 @@
         }
       },
       "if": {
-        "required": ["uiGroup"]
+        "required": [
+          "uiGroup"
+        ]
       },
       "then": {
-        "required": ["name", "uiPage"]
+        "required": [
+          "name",
+          "uiPage"
+        ]
       },
       "required": [
         "name"
@@ -1111,7 +1140,7 @@
       "type": "string"
     },
     "scaffold_pack": {
-      "description": "Scaffold pack used to generate this IP core (e.g. \"builtin-bahonavi\"). Persisted so the canvas picker restores the correct methodology when the file is reopened.",
+      "description": "Scaffold pack used to generate this IP core (e.g. \"builtin-ipcraft\"). Persisted so the canvas picker restores the correct methodology when the file is reopened.",
       "type": "string"
     },
     "clocks": {

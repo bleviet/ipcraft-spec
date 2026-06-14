@@ -4,7 +4,7 @@ vlnv:
   name: comprehensive_avalon
   version: 1.0.0
 apiVersion: '1.0'
-scaffold_pack: builtin-bahonavi
+scaffold_pack: builtin-ipcraft
 description: >
   Comprehensive Avalon-family example. Exercises an Avalon-MM CSR slave
   (with optional byteenable/waitrequest/readdatavalid ports), Avalon-ST
