@@ -7,7 +7,9 @@
         "write-only",
         "read-write",
         "write-1-to-clear",
-        "read-write-1-to-clear"
+        "read-write-1-to-clear",
+        "write-self-clearing",
+        "read-write-self-clearing"
       ],
       "title": "AccessType",
       "type": "string"
