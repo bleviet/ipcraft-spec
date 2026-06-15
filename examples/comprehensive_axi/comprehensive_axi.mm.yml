@@ -64,7 +64,7 @@
               description: Clock prescaler
             - name: SOFT_RST
               bits: '[31:31]'
-              access: write-only
+              access: read-write-self-clearing
               description: Self-clearing software reset strobe
         - name: STATUS
           access: read-only

@@ -49,7 +49,7 @@
                 4: TRACE
             - name: CLEAR_STATS
               bits: '[31:31]'
-              access: write-only
+              access: write-self-clearing
               description: Pulse to clear the sample counters
         - name: EVENTS
           offset: 8
