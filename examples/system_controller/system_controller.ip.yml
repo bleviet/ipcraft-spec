@@ -82,49 +82,49 @@ interrupts:
     description: Global interrupt request output
 busInterfaces:
   - name: control_reg
-    type: ipcraft.busif.axi4_lite.1.0
+    type: ipcraft:busif:axi4_lite:1.0
     mode: slave
     physicalPrefix: s_axi_ctrl_
     associatedClock: CLK_SYS
     associatedReset: RST_SYS
   - name: dma_control
-    type: ipcraft.busif.axi4_lite.1.0
+    type: ipcraft:busif:axi4_lite:1.0
     mode: slave
     physicalPrefix: s_axi_dma_
     associatedClock: CLK_AXI
     associatedReset: RST_AXI
   - name: memory_port
-    type: ipcraft.busif.axi4_lite.1.0
+    type: ipcraft:busif:axi4_lite:1.0
     mode: master
     physicalPrefix: m_axi_mem_
     associatedClock: CLK_DDR
     associatedReset: RST_DDR
   - name: data_stream_in
-    type: ipcraft.busif.axi_stream.1.0
+    type: ipcraft:busif:axi_stream:1.0
     mode: slave
     physicalPrefix: s_axis_data_
     associatedClock: CLK_ETH
     associatedReset: RST_ETH
   - name: data_stream_out
-    type: ipcraft.busif.axi_stream.1.0
+    type: ipcraft:busif:axi_stream:1.0
     mode: master
     physicalPrefix: m_axis_data_
     associatedClock: CLK_ETH
     associatedReset: RST_ETH
   - name: pcie_interface
-    type: ipcraft.busif.axi4_lite.1.0
+    type: ipcraft:busif:axi4_lite:1.0
     mode: master
     physicalPrefix: m_axi_pcie_
     associatedClock: CLK_PCIE
     associatedReset: RST_PCIE
   - name: usb_data_in
-    type: ipcraft.busif.axi_stream.1.0
+    type: ipcraft:busif:axi_stream:1.0
     mode: slave
     physicalPrefix: s_axis_usb_
     associatedClock: CLK_USB
     associatedReset: RST_SYS
   - name: usb_data_out
-    type: ipcraft.busif.axi_stream.1.0
+    type: ipcraft:busif:axi_stream:1.0
     mode: master
     physicalPrefix: m_axis_usb_
     associatedClock: CLK_USB

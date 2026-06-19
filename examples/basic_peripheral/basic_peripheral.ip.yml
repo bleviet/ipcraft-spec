@@ -67,7 +67,7 @@ interrupts:
   description: Interrupt request output
 busInterfaces:
 - name: S_AXI_LITE
-  type: ipcraft.busif.axi4_lite.1.0
+  type: ipcraft:busif:axi4_lite:1.0
   mode: slave
   physicalPrefix: s_axil_
   associatedClock: clk

@@ -32,7 +32,7 @@ resets:
     associatedClock: clk
 busInterfaces:
   - name: xcvr_in
-    type: user.busif.xcvr.1.0
+    type: user:busif:xcvr:1.0
     mode: slave
     physicalPrefix: xcvr_in_
     associatedClock: clk
@@ -43,7 +43,7 @@ busInterfaces:
       rx_data: XCVR_DW
       rx_k: XCVR_KW
   - name: xcvr_out
-    type: user.busif.xcvr.1.0
+    type: user:busif:xcvr:1.0
     mode: master
     physicalPrefix: xcvr_out_
     associatedClock: clk

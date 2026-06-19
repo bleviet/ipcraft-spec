@@ -70,7 +70,7 @@ interrupts:
 
 busInterfaces:
   - name: S_AXI_LITE
-    type: ipcraft.busif.axi4_lite.1.0
+    type: ipcraft:busif:axi4_lite:1.0
     mode: slave
     physicalPrefix: s_axi_
     associatedClock: i_clk_sys
@@ -162,7 +162,7 @@ interrupts:
 ```yaml
 busInterfaces:
   - name: S_AXI_LITE
-    type: ipcraft.busif.axi4_lite.1.0   # vendor.library.name.version
+    type: ipcraft:busif:axi4_lite:1.0   # vendor:library:name:version
     mode: slave             # slave | master | conduit
     physicalPrefix: s_axi_  # Generates: s_axi_awaddr, s_axi_wdata, etc.
     associatedClock: i_clk  # References clock by physical port name
@@ -211,7 +211,7 @@ For multiple similar interfaces (e.g. 4 AXI-Stream output channels):
 
 ```yaml
 - name: M_AXIS_EVENTS
-  type: ipcraft.busif.axi_stream.1.0
+  type: ipcraft:busif:axi_stream:1.0
   mode: master
   array:
     count: 4
@@ -224,11 +224,11 @@ For multiple similar interfaces (e.g. 4 AXI-Stream output channels):
 
 | Type string | Protocol |
 |-------------|----------|
-| `ipcraft.busif.axi4_lite.1.0` | AXI4-Lite |
-| `ipcraft.busif.axi4_full.1.0` | AXI4 (full, with bursts) |
-| `ipcraft.busif.axi_stream.1.0` | AXI4-Stream |
-| `ipcraft.busif.avalon_mm.1.0` | Avalon Memory-Mapped |
-| `ipcraft.busif.avalon_st.1.0` | Avalon Streaming |
+| `ipcraft:busif:axi4_lite:1.0` | AXI4-Lite |
+| `ipcraft:busif:axi4_full:1.0` | AXI4 (full, with bursts) |
+| `ipcraft:busif:axi_stream:1.0` | AXI4-Stream |
+| `ipcraft:busif:avalon_mm:1.0` | Avalon Memory-Mapped |
+| `ipcraft:busif:avalon_st:1.0` | Avalon Streaming |
 
 Full port lists for each bus type are in `bus_definitions/`.
 

@@ -92,7 +92,7 @@ ports:
 
 busInterfaces:
   - name: S_AXI
-    type: ipcraft.busif.axi4_lite.1.0
+    type: ipcraft:busif:axi4_lite:1.0
     mode: slave
     physicalPrefix: s_axi_
     associatedClock: i_clk_axi
@@ -103,7 +103,7 @@ busInterfaces:
       AWADDR: 16
       ARADDR: 16
   - name: M_AXI
-    type: ipcraft.busif.axi4_full.1.0
+    type: ipcraft:busif:axi4_full:1.0
     mode: master
     physicalPrefix: m_axi_
     associatedClock: i_clk_proc
@@ -116,7 +116,7 @@ busInterfaces:
       RDATA: 64
       WSTRB: 8
   - name: M_AXIS
-    type: ipcraft.busif.axi_stream.1.0
+    type: ipcraft:busif:axi_stream:1.0
     mode: master
     array:
       count: 2
@@ -135,7 +135,7 @@ busInterfaces:
       TKEEP: 8
       TUSER: 4
   - name: S_AXIS
-    type: ipcraft.busif.axi_stream.1.0
+    type: ipcraft:busif:axi_stream:1.0
     mode: slave
     physicalPrefix: s_axis_
     associatedClock: i_clk_proc
@@ -144,7 +144,7 @@ busInterfaces:
     useOptionalPorts:
       - TLAST
   - name: DBG
-    type: ipcraft.busif.conduit.1.0
+    type: ipcraft:busif:conduit:1.0
     mode: conduit
     physicalPrefix: dbg_
     associatedClock: i_clk_proc

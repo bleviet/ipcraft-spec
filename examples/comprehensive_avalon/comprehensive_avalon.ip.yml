@@ -57,7 +57,7 @@ ports:
 
 busInterfaces:
   - name: S_AVMM
-    type: ipcraft.busif.avalon_mm.1.0
+    type: ipcraft:busif:avalon_mm:1.0
     mode: slave
     physicalPrefix: avs_
     associatedClock: clk
@@ -71,7 +71,7 @@ busInterfaces:
     portWidthOverrides:
       address: 12
   - name: SRC_ST
-    type: ipcraft.busif.avalon_st.1.0
+    type: ipcraft:busif:avalon_st:1.0
     mode: source
     physicalPrefix: aso_
     associatedClock: clk
@@ -89,7 +89,7 @@ busInterfaces:
       empty: 3
       channel: 2
   - name: SNK_ST
-    type: ipcraft.busif.avalon_st.1.0
+    type: ipcraft:busif:avalon_st:1.0
     mode: sink
     physicalPrefix: asi_
     associatedClock: clk

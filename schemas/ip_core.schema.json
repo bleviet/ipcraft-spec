@@ -240,7 +240,7 @@
           "type": "string"
         },
         "type": {
-          "description": "Bus type identifier in vendor.library.name.version format (e.g., 'ipcraft.busif.axi4_lite.1.0')",
+          "description": "Bus type identifier: a full VLNV in vendor:library:name:version format (e.g., 'ipcraft:busif:axi4_lite:1.0'), or a recognized short alias (e.g., 'AXI4L').",
           "title": "Type",
           "type": "string"
         },
