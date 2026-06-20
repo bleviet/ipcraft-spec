@@ -120,14 +120,13 @@
             }
           ],
           "default": null,
-          "description": "Physical prefix pattern with {index} placeholder",
+          "description": "Physical prefix pattern with {index} placeholder. Optional: when the bus interface sets physicalNamePattern (which already carries {index}), the prefix pattern is unused.",
           "title": "Physicalprefixpattern"
         }
       },
       "required": [
         "count",
-        "namingPattern",
-        "physicalPrefixPattern"
+        "namingPattern"
       ],
       "title": "ArrayConfig",
       "type": "object"
@@ -268,6 +267,19 @@
           "default": null,
           "description": "Prefix for physical port names (e.g., 's_axi_')",
           "title": "Physicalprefix"
+        },
+        "physicalNamePattern": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Template for physical port names, generalizing physicalPrefix. Uses placeholders '{signal}' (the logical signal name, lowercased, or its portNameOverrides value) and '{index}' (the array instance index). Any other characters are literal, so direction tags and decorations need no special handling (e.g. 'asi_{signal}_{index}_i'). When set, it takes precedence over physicalPrefix. 'physicalPrefix: \"s_axi_\"' is equivalent to 'physicalNamePattern: \"s_axi_{signal}\"'.",
+          "title": "Physicalnamepattern"
         },
         "associatedClock": {
           "anyOf": [
