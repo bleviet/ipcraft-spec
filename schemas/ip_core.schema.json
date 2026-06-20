@@ -111,9 +111,17 @@
           "type": "string"
         },
         "physicalPrefixPattern": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
           "description": "Physical prefix pattern with {index} placeholder",
-          "title": "Physicalprefixpattern",
-          "type": "string"
+          "title": "Physicalprefixpattern"
         }
       },
       "required": [
@@ -249,9 +257,17 @@
           "description": "Interface mode: 'master' or 'slave'"
         },
         "physicalPrefix": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
           "description": "Prefix for physical port names (e.g., 's_axi_')",
-          "title": "Physicalprefix",
-          "type": "string"
+          "title": "Physicalprefix"
         },
         "associatedClock": {
           "anyOf": [
@@ -688,10 +704,17 @@
           "description": "Data type"
         },
         "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
           "default": "",
           "description": "Parameter description",
-          "title": "Description",
-          "type": "string"
+          "title": "Description"
         },
         "defaultValue": {
           "description": "Default value (alias for value; accepted for compatibility)."
@@ -740,11 +763,25 @@
           "description": "Allowed discrete choices constraint (mutually exclusive with min/max)"
         },
         "uiPage": {
-          "type": "string",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
           "description": "Wizard tab / page name in Vivado IP Packager and Platform Designer"
         },
         "uiGroup": {
-          "type": "string",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
           "description": "Sub-group within uiPage. Requires uiPage to be set."
         }
       },
@@ -957,10 +994,17 @@
           "type": "string"
         },
         "logicalName": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
           "default": "",
           "description": "Standard logical name for association",
-          "title": "Logicalname",
-          "type": "string"
+          "title": "Logicalname"
         },
         "direction": {
           "$ref": "#/$defs/PortDirection",
@@ -1136,10 +1180,17 @@
       "description": "Unique identifier"
     },
     "description": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
       "default": "",
       "description": "IP core description",
-      "title": "Description",
-      "type": "string"
+      "title": "Description"
     },
     "scaffold_pack": {
       "description": "Scaffold pack used to generate this IP core (e.g. \"builtin-ipcraft\"). Persisted so the canvas picker restores the correct methodology when the file is reopened.",
