@@ -422,7 +422,7 @@
             }
           ],
           "default": 1,
-          "description": "Port width in bits or parameter name",
+          "description": "Port width in bits, a parameter name, or an arithmetic expression with predefined functions (clog2, log2, ceil, floor, abs, min, max), e.g. clog2(FIFO_DEPTH)",
           "title": "Width"
         },
         "description": {
@@ -492,7 +492,7 @@
             }
           ],
           "default": 1,
-          "description": "Port width in bits or parameter name",
+          "description": "Port width in bits, a parameter name, or an arithmetic expression with predefined functions (clog2, log2, ceil, floor, abs, min, max), e.g. clog2(FIFO_DEPTH)",
           "title": "Width"
         },
         "type": {
@@ -850,7 +850,7 @@
             }
           ],
           "default": 1,
-          "description": "Port width in bits or parameter name",
+          "description": "Port width in bits, a parameter name, or an arithmetic expression with predefined functions (clog2, log2, ceil, floor, abs, min, max), e.g. clog2(FIFO_DEPTH)",
           "title": "Width"
         },
         "type": {
@@ -1021,7 +1021,7 @@
             }
           ],
           "default": 1,
-          "description": "Port width in bits or parameter name",
+          "description": "Port width in bits, a parameter name, or an arithmetic expression with predefined functions (clog2, log2, ceil, floor, abs, min, max), e.g. clog2(FIFO_DEPTH)",
           "title": "Width"
         },
         "type": {
@@ -1091,7 +1091,7 @@
             }
           ],
           "default": 1,
-          "description": "Port width in bits or parameter name",
+          "description": "Port width in bits, a parameter name, or an arithmetic expression with predefined functions (clog2, log2, ceil, floor, abs, min, max), e.g. clog2(FIFO_DEPTH)",
           "title": "Width"
         },
         "sensitivity": {

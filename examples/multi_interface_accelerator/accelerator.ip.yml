@@ -31,7 +31,13 @@ resets:
   polarity: activeHigh
   description: Register interface reset
   associatedClock: i_clk_reg
-ports: []
+ports:
+- name: i_active_channel
+  direction: in
+  # Channel-select line sized from the channel count via clog2:
+  # clog2(NUM_CHANNELS) = clog2(4) = 2 bits. Tracks NUM_CHANNELS automatically.
+  width: clog2(NUM_CHANNELS)
+  description: Selects which of the NUM_CHANNELS streaming outputs is active
 interrupts:
 - name: o_global_irq
   logicalName: IRQ_OUT

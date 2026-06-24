@@ -89,6 +89,13 @@ ports:
     direction: out
     width: 1
     description: Heartbeat LED
+  - name: o_fifo_level
+    direction: out
+    # Width derived from FIFO_DEPTH via the clog2 function: clog2(512) = 9 bits.
+    # Changing FIFO_DEPTH automatically resizes this port, with no separate
+    # address-width parameter to keep in sync.
+    width: clog2(FIFO_DEPTH)
+    description: Current fill level of the internal FIFO, sized from FIFO_DEPTH
 
 busInterfaces:
   - name: S_AXI
