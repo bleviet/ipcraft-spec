@@ -27,6 +27,11 @@ busInterfaces:
   associatedReset: reset
   memoryMapRef: CSR_MAP
   useOptionalPorts:
+  - address
+  - read
+  - readdata
+  - write
+  - writedata
   - waitrequest
   - readdatavalid
 - name: avalon_st_sink

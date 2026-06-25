@@ -65,6 +65,11 @@ busInterfaces:
     memoryMapRef: AVMM_CSR
     description: Avalon-MM CSR slave with optional flow-control ports
     useOptionalPorts:
+      - address
+      - read
+      - readdata
+      - write
+      - writedata
       - byteenable
       - waitrequest
       - readdatavalid
