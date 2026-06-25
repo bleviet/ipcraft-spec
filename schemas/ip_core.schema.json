@@ -803,9 +803,10 @@
       "type": "object"
     },
     "ParameterType": {
-      "description": "Enumeration for standard IP-XACT/HDL parameter types.",
+      "description": "Enumeration for standard IP-XACT/HDL parameter types. `natural` is the canonical non-negative numeric type; HDL `positive`/`unsigned` are normalized to it.",
       "enum": [
         "integer",
+        "natural",
         "boolean",
         "string"
       ],
