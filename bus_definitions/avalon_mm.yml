@@ -8,38 +8,58 @@ AVALON_MEMORY_MAPPED:
       Avalon Memory-Mapped (Avalon-MM) is a bus protocol used in Altera (Intel) FPGA designs for connecting masters and slaves in a memory-mapped fashion. It supports read and write operations with optional burst transfers and provides signals for flow control and error reporting.
   ports:
   - name: clk
-    presence: required
+    presence: optional
   - name: reset
-    presence: required
+    presence: optional
   - name: address
     width: 32
     direction: out
-    presence: required
+    presence: optional
   - name: read
     direction: out
-    presence: required
+    presence: optional
   - name: write
     direction: out
-    presence: required
+    presence: optional
   - name: byteenable
     width: 4
     direction: out
     presence: optional
-  - name: chipselect
+  - name: byteenable_n
+    width: 4
+    direction: out
+    presence: optional
+  - name: debugaccess
+    direction: out
+    presence: optional
+  - name: lock
     direction: out
     presence: optional
   - name: writedata
     width: 32
     direction: out
-    presence: required
+    presence: optional
   - name: readdata
     width: 32
     direction: in
-    presence: required
+    presence: optional
   - name: readdatavalid
     direction: in
     presence: optional
+  - name: readdatavalid_n
+    direction: in
+    presence: optional
+  - name: writeresponsevalid
+    direction: in
+    presence: optional
   - name: waitrequest
+    direction: in
+    presence: optional
+  - name: waitrequest_n
+    direction: in
+    presence: optional
+  - name: response
+    width: 2
     direction: in
     presence: optional
   - name: burstcount
@@ -49,7 +69,9 @@ AVALON_MEMORY_MAPPED:
   - name: beginbursttransfer
     direction: out
     presence: optional
-  - name: response
-    width: 2
-    direction: in
+  - name: read_n
+    direction: out
+    presence: optional
+  - name: write_n
+    direction: out
     presence: optional
