@@ -135,10 +135,14 @@ busInterfaces:
     description: Arrayed streaming outputs (channels 1..2)
     useOptionalPorts:
       - TLAST
+      - TSTRB
       - TKEEP
+      - TID
+      - TDEST
       - TUSER
     portWidthOverrides:
       TDATA: 64
+      TSTRB: 8
       TKEEP: 8
       TUSER: 4
   - name: S_AXIS
@@ -150,6 +154,11 @@ busInterfaces:
     description: Streaming input
     useOptionalPorts:
       - TLAST
+      - TSTRB
+      - TKEEP
+      - TID
+      - TDEST
+      - TUSER
   - name: DBG
     type: ipcraft:busif:conduit:1.0
     mode: conduit
