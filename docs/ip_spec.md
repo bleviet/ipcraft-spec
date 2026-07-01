@@ -289,6 +289,10 @@ fileSets:
       - path: rtl/core_core.vhd    # user implementation — never overwritten
         type: vhdl
         managed: false
+      - path: rtl/core_2008_helper.vhd  # uses VHDL-2008 constructs
+        type: vhdl
+        managed: false
+        version: "2008"
 
   - name: Simulation
     files:
@@ -313,6 +317,16 @@ fileSets:
 | `description` | string | `""` | Human-readable description |
 | `isIncludeFile` | boolean | `false` | Mark as a VHDL/Verilog include file |
 | `logicalName` | string | `""` | Library name (e.g. VHDL work library) |
+| `version` | string | `""` | HDL standard version for `vhdl`/`verilog` files (e.g. `"2008"`, `"93"`). Unset means the tool default — see below |
+
+### The `version` field and per-toolchain synthesis
+
+`version` records the HDL language standard a file was written against, so vendor packaging can register it correctly instead of silently falling back to an older standard.
+
+- **VHDL**: `"87"`, `"93"`, `"2002"`, `"2008"`, `"2019"`. Left unset, generated Vivado packaging (`component.xml`) marks the file as VHDL-2008 — the standard IPCraft's own generated RTL and OOC synthesis projects already assume. Set `version: "93"` explicitly to opt a file out and register it as VHDL-93.
+- **Verilog**: `"95"`, `"2001"`.
+- **Vivado**: each file is packaged individually (`spirit:userFileType` carries the version, e.g. `vhdlSource-2008`), so mixed-standard file sets are supported per file.
+- **Platform Designer (Quartus)**: `add_fileset_file` has no per-file language-version kind — the VHDL standard is a single project-wide QSF assignment (`VHDL_INPUT_VERSION`), which IPCraft already sets to `VHDL_2008`. The `version` field has no effect on Quartus/Platform Designer output.
 
 ### The `managed` flag
 
