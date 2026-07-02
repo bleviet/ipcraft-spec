@@ -1,0 +1,174 @@
+- name: CSR_MAP
+  description: Data-acquisition control/status registers
+  addressBlocks:
+    - name: REGS
+      baseAddress: 0x0000
+      usage: register
+      defaultRegWidth: 32
+      registers:
+        - name: CONTROL
+          offset: 0x00
+          description: Global control
+          fields:
+            - name: ENABLE
+              bits: '[0:0]'
+              access: read-write
+              resetValue: 0
+              description: Enable acquisition
+            - name: MODE
+              bits: '[2:1]'
+              access: read-write
+              resetValue: 1
+              description: Acquisition mode
+              enumeratedValues: { 0: OFF, 1: SINGLE, 2: CONTINUOUS }
+            - name: IRQ_EN
+              bits: '[3:3]'
+              access: read-write
+              description: Enable interrupt generation
+            - name: PRESCALER
+              bits: '[15:8]'
+              access: read-write
+              resetValue: 0x04
+              description: Sample clock prescaler
+
+        - name: STATUS
+          offset: 0x04
+          description: Peripheral status (hardware-driven)
+          access: read-only
+          fields:
+            - name: READY
+              bits: '[0:0]'
+              access: read-only
+              description: Peripheral is ready
+            - name: RUNNING
+              bits: '[1:1]'
+              access: read-only
+              description: Acquisition in progress
+            - name: FIFO_LEVEL
+              bits: '[15:8]'
+              access: read-only
+              description: Current FIFO occupancy
+
+        - name: INT_STATUS
+          offset: 0x08
+          description: Interrupt status (write 1 to clear)
+          fields:
+            - name: SAMPLE_DONE
+              bits: '[0:0]'
+              access: read-write-1-to-clear
+              description: A sample completed
+            - name: OVERFLOW
+              bits: '[1:1]'
+              access: read-write-1-to-clear
+              description: FIFO overflow occurred
+            - name: ERROR
+              bits: '[2:2]'
+              access: read-write-1-to-clear
+              description: Acquisition error occurred
+
+        - name: COMMAND
+          offset: 0x0C
+          description: One-shot commands (self-clearing)
+          fields:
+            - name: START
+              bits: '[0:0]'
+              access: write-self-clearing
+              description: Start acquisition
+            - name: STOP
+              bits: '[1:1]'
+              access: write-self-clearing
+              description: Stop acquisition
+            - name: FIFO_RESET
+              bits: '[2:2]'
+              access: write-self-clearing
+              description: Reset the sample FIFO
+
+        - name: CHANNEL
+          offset: 0x10
+          description: Per-channel configuration and status
+          count: 4
+          stride: 16
+          registers:
+            - name: CONFIG
+              offset: 0
+              description: Channel configuration
+              fields:
+                - name: GAIN
+                  bits: '[3:0]'
+                  access: read-write
+                  description: Input gain setting
+                - name: OFFSET
+                  bits: '[15:8]'
+                  access: read-write
+                  description: DC offset trim
+            - name: THRESHOLD
+              offset: 4
+              description: Trigger threshold
+              fields:
+                - name: VALUE
+                  bits: '[15:0]'
+                  access: read-write
+                  description: Trigger threshold value
+            - name: COUNT
+              offset: 8
+              description: Sample counter
+              fields:
+                - name: SAMPLES
+                  bits: '[31:0]'
+                  access: read-only
+                  description: Samples captured on this channel
+            - name: FLAGS
+              offset: 12
+              description: Per-channel interrupt flag (write 1 to clear)
+              fields:
+                - name: TRIGGERED
+                  bits: '[0:0]'
+                  access: read-write-1-to-clear
+                  description: Channel trigger fired
+
+        - name: LINK_STATUS
+          offset: 0x50
+          description: Link status with change-of-state monitoring
+          fields:
+            - name: SPEED
+              bits: '[3:0]'
+              access: read-only
+              description: Detected sample-clock speed grade (hardware-driven)
+            - name: SPEED_CHANGED
+              bits: '[8:8]'
+              access: read-write-1-to-clear
+              description: Set whenever SPEED changes value; write 1 to clear
+              monitorChangeOf: SPEED
+
+        - name: DIAG
+          offset: 0x54
+          description: Write-only diagnostic scratch register
+          fields:
+            - name: SCRATCH
+              bits: '[7:0]'
+              access: write-only
+              description: Diagnostic value latched for hardware, not readable by software
+
+        - name: IRQ_LEGACY
+          offset: 0x58
+          description: Legacy write-only interrupt clear (write 1 to clear, not readable)
+          fields:
+            - name: LEGACY_IRQ_CLR
+              bits: '[0:0]'
+              access: write-1-to-clear
+              description: Hardware-set legacy interrupt flag; write 1 to clear
+
+        - name: BUSY_STATUS
+          offset: 0x5C
+          description: Readable self-clearing busy flag
+          fields:
+            - name: BUSY
+              bits: '[0:0]'
+              access: read-write-self-clearing
+              description: Set by software, cleared by hardware, and readable while set
+
+    - name: SAMPLE_BUFFER
+      baseAddress: 0x1000
+      range: 4K
+      usage: memory
+      description: 1024 x 32-bit sample buffer, backed by a separate BRAM

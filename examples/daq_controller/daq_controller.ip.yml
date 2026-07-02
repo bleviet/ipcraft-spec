@@ -1,0 +1,43 @@
+vlnv:
+  vendor: ipcraft
+  library: examples
+  name: daq_controller
+  version: 1.0.0
+apiVersion: '1.0'
+scaffold_pack: builtin-ipcraft
+description: >
+  Data-acquisition controller register bank. Tutorial fixture demonstrating
+  the memory-mapped register methodology: read-write config with an
+  enumerated field, read-only status, readable write-1-to-clear interrupt
+  flags, self-clearing one-shot commands, a per-channel register array, and
+  a memory-usage address block. See docs/tutorials/memory-mapped-registers.md.
+targets:
+  - vivado
+  - quartus
+clocks:
+  - name: clk
+    logicalName: CLK
+    direction: in
+    associatedReset: reset_n
+resets:
+  - name: reset_n
+    logicalName: RESET_N
+    direction: in
+    polarity: activeLow
+    associatedClock: clk
+busInterfaces:
+  - name: S_AXI_LITE
+    type: ipcraft:busif:axi4_lite:1.0
+    mode: slave
+    physicalPrefix: s_axil_
+    associatedClock: clk
+    associatedReset: reset_n
+    memoryMapRef: CSR_MAP
+    portWidthOverrides:
+      AWADDR: 12
+      ARADDR: 12
+      WDATA: 32
+      RDATA: 32
+      WSTRB: 4
+memoryMaps:
+  import: daq_controller.mm.yml
