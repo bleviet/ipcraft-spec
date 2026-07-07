@@ -700,6 +700,18 @@
           "title": "Name",
           "type": "string"
         },
+        "displayName": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Human-friendly label shown in place of the parameter name in vendor tools (e.g. Vivado IP Packager). Defaults to the parameter name when unset.",
+          "title": "Display Name"
+        },
         "value": {
           "description": "Default value",
           "title": "Value"
