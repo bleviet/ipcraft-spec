@@ -4,6 +4,7 @@ vlnv:
   library: examples
   name: multi_interface_accelerator
   version: 1.0.0
+scaffold_pack: builtin-ipcraft
 description: An advanced IP core with multiple interfaces, asynchronous clocks, and complex memory map.
 clocks:
 - name: i_clk_sys

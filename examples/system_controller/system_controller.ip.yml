@@ -4,6 +4,7 @@ vlnv:
   library: examples
   name: system_controller
   version: 1.0.0
+scaffold_pack: builtin-ipcraft
 description: A complex IP core for system-level control with many clocks,
   resets, and bus interfaces.
 clocks:

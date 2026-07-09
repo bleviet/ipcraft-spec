@@ -4,6 +4,7 @@ vlnv:
   library: examples
   name: basic_peripheral
   version: 1.0.0
+scaffold_pack: builtin-ipcraft
 description: A basic IP core with a single AXI-Lite interface and simple memory map.
 parameters:
 - name: PARAM_CHOICES
