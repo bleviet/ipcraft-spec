@@ -82,9 +82,3 @@ parameters:
 - name: NUM_CHANNELS
   value: 4
   dataType: integer
-fileSets:
-- name: RTL_Sources
-  files:
-  - path: rtl/accelerator_top.vhd
-    type: vhdl
-    managed: false
