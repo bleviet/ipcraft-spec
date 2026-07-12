@@ -7,9 +7,10 @@ Used as a local package by [IPCraft for VS Code](https://github.com/bleviet/ipcr
 
 ```
 ipcraft-spec/
-├── schemas/         # JSON schemas (source of truth for *.ip.yml / *.mm.yml)
+├── schemas/         # JSON schemas (source of truth for *.ip.yml / *.mm.yml / *.board.yml)
 │   ├── ip_core.schema.json
-│   └── memory_map.schema.json
+│   ├── memory_map.schema.json
+│   └── board.schema.json   # Physical FPGA board definitions (device, clocks, resets, ios)
 ├── bus_definitions/ # Shared bus type definitions
 │   ├── axi4_lite.yml
 │   ├── axi4_full.yml
@@ -44,6 +45,8 @@ Generated output (`rtl/`, `tb/`, `altera/`, `xilinx/`) is produced by the VS Cod
 
 The JSON schemas in `schemas/` are the **single source of truth** for both the YAML format and the TypeScript types used by the extension.
 
+> **Note:** `board.schema.json` is not yet wired into TypeScript type generation (below) — that's tracked separately in the extension repo.
+
 ### TypeScript Type Generation
 
 The extension generates `src/webview/types/memoryMap.d.ts` and `src/webview/types/ipCore.d.ts` directly from these schemas. Re-run after any schema change:
@@ -63,7 +66,8 @@ by Red Hat, then add the following to your `.vscode/settings.json`:
 {
   "yaml.schemas": {
     "./schemas/ip_core.schema.json": "*.ip.yml",
-    "./schemas/memory_map.schema.json": "*.mm.yml"
+    "./schemas/memory_map.schema.json": "*.mm.yml",
+    "./schemas/board.schema.json": "*.board.yml"
   }
 }
 ```
@@ -95,3 +99,4 @@ This gives you:
 |-----------|---------|
 | `*.ip.yml` | IP Core definition |
 | `*.mm.yml` | Memory map definition |
+| `*.board.yml` | Physical board definition |

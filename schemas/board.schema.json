@@ -1,0 +1,118 @@
+{
+  "title": "BoardDefinition",
+  "description": "Physical FPGA board definition: device, clocks, resets, and I/O (LEDs/switches/buttons) with their board pins and I/O standards.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name", "device", "family", "vendor"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Board catalog label, e.g. \"DE10-Nano\"."
+    },
+    "device": {
+      "type": "string",
+      "description": "Target FPGA part number, e.g. \"5CSEBA6U23I7\"."
+    },
+    "family": {
+      "type": "string",
+      "description": "Device family, e.g. \"Cyclone V SoC\"."
+    },
+    "vendor": {
+      "type": "string",
+      "description": "Board vendor, e.g. \"Terasic\"."
+    },
+    "clocks": {
+      "type": "array",
+      "description": "Board clock nets available for mapping.",
+      "items": { "$ref": "#/$defs/BoardClock" }
+    },
+    "resets": {
+      "type": "array",
+      "description": "Board reset nets available for mapping.",
+      "items": { "$ref": "#/$defs/BoardReset" }
+    },
+    "ios": {
+      "type": "array",
+      "description": "Board general-purpose I/O nets available for mapping. Scope is deliberately limited to unidirectional nets (LEDs, switches, buttons) — bidirectional GPIO headers are not modeled here and are out of scope for this schema.",
+      "items": { "$ref": "#/$defs/BoardIo" }
+    }
+  },
+  "$defs": {
+    "BoardClock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "pin", "frequencyHz"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Board net name, e.g. \"FPGA_CLK1_50\"."
+        },
+        "pin": {
+          "type": "string",
+          "description": "Physical device pin, e.g. \"PIN_V11\"."
+        },
+        "frequencyHz": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Clock frequency in Hz."
+        },
+        "ioStandard": {
+          "type": "string",
+          "description": "I/O standard, e.g. \"3.3-V LVTTL\"."
+        }
+      }
+    },
+    "BoardReset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "pin", "polarity"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Board net name, e.g. \"KEY0\"."
+        },
+        "pin": {
+          "type": "string",
+          "description": "Physical device pin, e.g. \"PIN_AH17\"."
+        },
+        "polarity": {
+          "type": "string",
+          "enum": ["activeHigh", "activeLow"]
+        },
+        "ioStandard": {
+          "type": "string",
+          "description": "I/O standard, e.g. \"3.3-V LVTTL\"."
+        }
+      }
+    },
+    "BoardIo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "pin", "direction"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Board net name, e.g. \"LED0\"."
+        },
+        "pin": {
+          "type": "string",
+          "description": "Physical device pin, e.g. \"PIN_W15\"."
+        },
+        "direction": {
+          "type": "string",
+          "enum": ["in", "out"],
+          "description": "Unidirectional only — see the parent `ios` description for scope."
+        },
+        "polarity": {
+          "type": "string",
+          "enum": ["activeHigh", "activeLow"],
+          "description": "Active sense of the net, when meaningful (LEDs/buttons)."
+        },
+        "ioStandard": {
+          "type": "string",
+          "description": "I/O standard, e.g. \"3.3-V LVTTL\"."
+        }
+      }
+    }
+  }
+}
