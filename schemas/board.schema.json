@@ -1,5 +1,4 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "BoardDefinition",
   "description": "Physical FPGA board definition: device, clocks, resets, and I/O (LEDs/switches/buttons) with their board pins and I/O standards.",
   "type": "object",
@@ -34,7 +33,7 @@
     },
     "ios": {
       "type": "array",
-      "description": "Board general-purpose I/O nets (LEDs, switches, buttons) available for mapping.",
+      "description": "Board general-purpose I/O nets available for mapping. Scope is deliberately limited to unidirectional nets (LEDs, switches, buttons) — bidirectional GPIO headers are not modeled here and are out of scope for this schema.",
       "items": { "$ref": "#/$defs/BoardIo" }
     }
   },
@@ -101,7 +100,8 @@
         },
         "direction": {
           "type": "string",
-          "enum": ["in", "out"]
+          "enum": ["in", "out"],
+          "description": "Unidirectional only — see the parent `ios` description for scope."
         },
         "polarity": {
           "type": "string",
