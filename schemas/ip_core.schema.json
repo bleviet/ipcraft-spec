@@ -1306,6 +1306,10 @@
       "description": "Simulation configuration overrides for testbench generation.",
       "type": "object",
       "properties": {
+        "topLevel": {
+          "type": "string",
+          "description": "Override the testbench's top-level entity/module (e.g. a board wrapper) instead of the IP core's own top. Defaults to the IP core name."
+        },
         "framework": {
           "type": "string",
           "enum": [
