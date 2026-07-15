@@ -1211,6 +1211,19 @@
       "description": "IP core description",
       "title": "Description"
     },
+    "author": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": "",
+      "description": "IP core author",
+      "title": "Author"
+    },
     "scaffold_pack": {
       "description": "Scaffold pack used to generate this IP core (e.g. \"builtin-ipcraft\"). Persisted so the canvas picker restores the correct methodology when the file is reopened.",
       "type": "string"

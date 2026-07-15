@@ -35,6 +35,7 @@ vlnv:
   version: 1.2.0
 
 description: A 4-channel timer IP with AXI-Lite interface
+author: Jane Doe <jane@example.com>
 
 parameters:
   - name: NUM_CHANNELS
@@ -103,6 +104,10 @@ vlnv:
   name: ip_core            # Core name (snake_case preferred)
   version: 1.0.0           # Semantic version
 ```
+
+An optional top-level `author` field (e.g. a person or team name) may be set alongside
+`description`. When present, it is shown in the IP editor and, if a scaffold pack's
+templates reference it, included in generated file headers.
 
 ---
 
