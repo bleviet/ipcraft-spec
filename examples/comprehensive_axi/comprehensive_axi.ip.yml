@@ -116,9 +116,30 @@ busInterfaces:
     associatedClock: i_clk_proc
     associatedReset: i_rst_proc
     description: DMA master toward external memory
+    useOptionalPorts:
+      - AWID
+      - AWLEN
+      - AWSIZE
+      - AWBURST
+      - AWLOCK
+      - AWCACHE
+      - WLAST
+      - BID
+      - ARID
+      - ARLEN
+      - ARSIZE
+      - ARBURST
+      - ARLOCK
+      - ARCACHE
+      - RID
+      - RLAST
     portWidthOverrides:
+      AWID: 1
       AWADDR: 40
+      BID: 1
+      ARID: 1
       ARADDR: 40
+      RID: 1
       WDATA: 64
       RDATA: 64
       WSTRB: 8
