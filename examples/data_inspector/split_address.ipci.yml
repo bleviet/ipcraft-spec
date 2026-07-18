@@ -1,0 +1,72 @@
+# Build a 64-bit address from two 32-bit words captured independently.
+# Paste ADDR_HI and ADDR_LO, then inspect the composed ADDRESS output.
+version: 1
+name: split-address
+description: Compose high and low address words in explicit MSB-to-LSB order.
+
+sources:
+  - id: addr-high
+    name: ADDR_HI
+    width: 32
+  - id: addr-low
+    name: ADDR_LO
+    width: 32
+
+overlayGroups:
+  - id: address-parts
+    name: Address parts
+
+fields:
+  - id: address-region
+    sourceId: addr-high
+    name: REGION
+    msb: 31
+    lsb: 28
+    groupId: address-parts
+    description: Top-level address region carried by ADDR_HI.
+    display:
+      interpretation: hex
+  - id: address-page
+    sourceId: addr-high
+    name: PAGE
+    msb: 27
+    lsb: 12
+    groupId: address-parts
+    description: Page number carried by ADDR_HI.
+    display:
+      interpretation: hex
+  - id: address-flags
+    sourceId: addr-low
+    name: FLAGS
+    msb: 15
+    lsb: 12
+    groupId: address-parts
+    description: Low-word address flags.
+    display:
+      interpretation: binary
+  - id: address-offset
+    sourceId: addr-low
+    name: OFFSET
+    msb: 11
+    lsb: 0
+    groupId: address-parts
+    description: Byte offset within the selected page.
+    display:
+      interpretation: hex
+
+steps:
+  - id: address
+    type: concat
+    inputId: addr-high
+    operandId: addr-low
+
+outputs:
+  - id: result
+    name: ADDRESS
+    valueId: address
+
+view:
+  laneWidth: 32
+  zoom: field
+  selectedOutputId: result
+  selectedGroupId: address-parts

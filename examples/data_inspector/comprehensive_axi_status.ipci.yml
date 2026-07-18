@@ -1,0 +1,85 @@
+# Decode the STATUS register from examples/comprehensive_axi/comprehensive_axi.mm.yml.
+# Paste a 32-bit STATUS read into the Data Inspector; samples remain transient.
+version: 1
+name: comprehensive-axi-status
+description: Decode BUSY, FIFO_LEVEL, and FSM_STATE from the comprehensive AXI status register.
+
+sources:
+  - id: status
+    name: STATUS
+    width: 32
+
+overlayGroups:
+  - id: decoded
+    name: Decoded fields
+  - id: raw
+    name: Raw register
+
+fields:
+  - id: busy
+    sourceId: status
+    name: BUSY
+    msb: 0
+    lsb: 0
+    groupId: decoded
+    description: Datapath busy flag.
+    importProvenance:
+      sourceFile: examples/comprehensive_axi/comprehensive_axi.mm.yml
+      registerName: STATUS
+    display:
+      interpretation: unsigned
+  - id: fifo-level
+    sourceId: status
+    name: FIFO_LEVEL
+    msb: 15
+    lsb: 4
+    groupId: decoded
+    description: Current FIFO fill level.
+    importProvenance:
+      sourceFile: examples/comprehensive_axi/comprehensive_axi.mm.yml
+      registerName: STATUS
+    display:
+      interpretation: unsigned
+  - id: fsm-state
+    sourceId: status
+    name: FSM_STATE
+    msb: 18
+    lsb: 16
+    groupId: decoded
+    description: Datapath finite-state-machine state.
+    enumValues:
+      '0': RESET
+      '1': IDLE
+      '2': FETCH
+      '3': PROCESS
+      '4': DRAIN
+    importProvenance:
+      sourceFile: examples/comprehensive_axi/comprehensive_axi.mm.yml
+      registerName: STATUS
+    display:
+      interpretation: enum
+  - id: raw-status
+    sourceId: status
+    name: STATUS_RAW
+    msb: 31
+    lsb: 0
+    groupId: raw
+    description: Complete STATUS register as hexadecimal.
+    importProvenance:
+      sourceFile: examples/comprehensive_axi/comprehensive_axi.mm.yml
+      registerName: STATUS
+    display:
+      interpretation: hex
+
+steps: []
+
+outputs:
+  - id: result
+    name: STATUS
+    valueId: status
+
+view:
+  laneWidth: 32
+  zoom: field
+  selectedOutputId: result
+  selectedGroupId: decoded

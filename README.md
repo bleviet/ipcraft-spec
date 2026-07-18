@@ -20,6 +20,7 @@ ipcraft-spec/
 ├── examples/        # Reference implementations
 │   ├── minimal/                     # Bare minimum IP core
 │   ├── basic_peripheral/            # AXI4-Lite slave + simple memory map
+│   ├── data_inspector/               # Reusable Data Inspector recipes
 │   ├── multi_interface_accelerator/ # AXI4-Lite + AXI-Stream + complex memory map
 │   └── system_controller/           # Many clocks, resets, and bus interfaces
 └── docs/
@@ -95,3 +96,4 @@ This gives you:
 |-----------|---------|
 | `*.ip.yml` | IP Core definition |
 | `*.mm.yml` | Memory map definition |
+| `*.ipci.yml` | Data Inspector recipe |
