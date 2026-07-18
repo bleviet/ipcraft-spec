@@ -147,7 +147,29 @@
         "laneWidth": { "enum": [8, 16, 32, 64] },
         "zoom": { "enum": ["overview", "field", "bit"] },
         "selectedOutputId": { "$ref": "#/$defs/stableId" },
-        "selectedGroupId": { "$ref": "#/$defs/stableId" }
+        "selectedGroupId": { "$ref": "#/$defs/stableId" },
+        "canvas": { "$ref": "#/$defs/canvasView" }
+      }
+    },
+    "canvasView": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nodes"],
+      "properties": {
+        "nodes": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/canvasNodePosition" }
+        }
+      }
+    },
+    "canvasNodePosition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "x", "y"],
+      "properties": {
+        "id": { "$ref": "#/$defs/stableId" },
+        "x": { "type": "number" },
+        "y": { "type": "number" }
       }
     }
   }
