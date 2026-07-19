@@ -5,7 +5,7 @@
   "description": "Shareable Data Inspector definitions. Transient sample values and capture histories are intentionally excluded.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["version", "name", "sources", "fields", "overlayGroups", "steps", "outputs", "view"],
+  "required": ["version", "name", "sources", "fields", "overlayGroups", "steps", "view"],
   "properties": {
     "version": { "const": 1 },
     "name": { "type": "string", "minLength": 1 },
@@ -26,10 +26,6 @@
     "steps": {
       "type": "array",
       "items": { "$ref": "#/$defs/step" }
-    },
-    "outputs": {
-      "type": "array",
-      "items": { "$ref": "#/$defs/output" }
     },
     "view": { "$ref": "#/$defs/view" }
   },
@@ -129,16 +125,6 @@
         "width": { "type": "integer", "minimum": 1, "maximum": 4096 }
       }
     },
-    "output": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["id", "name", "valueId"],
-      "properties": {
-        "id": { "$ref": "#/$defs/stableId" },
-        "name": { "type": "string", "minLength": 1 },
-        "valueId": { "$ref": "#/$defs/stableId" }
-      }
-    },
     "view": {
       "type": "object",
       "additionalProperties": false,
@@ -146,7 +132,6 @@
       "properties": {
         "laneWidth": { "enum": [8, 16, 32, 64] },
         "zoom": { "enum": ["overview", "field", "bit"] },
-        "selectedOutputId": { "$ref": "#/$defs/stableId" },
         "selectedGroupId": { "$ref": "#/$defs/stableId" },
         "canvas": { "$ref": "#/$defs/canvasView" }
       }

@@ -60,13 +60,7 @@ steps:
     inputId: addr-high
     operandId: addr-low
 
-outputs:
-  - id: result
-    name: ADDRESS
-    valueId: address
-
 view:
   laneWidth: 32
   zoom: field
-  selectedOutputId: result
   selectedGroupId: address-parts

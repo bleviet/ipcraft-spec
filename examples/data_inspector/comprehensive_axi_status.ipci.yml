@@ -73,13 +73,7 @@ fields:
 
 steps: []
 
-outputs:
-  - id: result
-    name: STATUS
-    valueId: status
-
 view:
   laneWidth: 32
   zoom: field
-  selectedOutputId: result
   selectedGroupId: decoded
