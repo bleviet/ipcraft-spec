@@ -1,5 +1,5 @@
 # Build a 64-bit address from two 32-bit words captured independently.
-# Paste ADDR_HI and ADDR_LO, then inspect the composed ADDRESS output.
+# Paste ADDR_HI and ADDR_LO, then select the address transform step to inspect the composed value.
 version: 1
 name: split-address
 description: Compose high and low address words in explicit MSB-to-LSB order.

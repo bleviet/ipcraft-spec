@@ -10,5 +10,5 @@ Data Inspector after opening a recipe.
 | `split_address.ipci.yml` | Two independent 32-bit sources composed into one 64-bit address with an explicit high-word then low-word `concat` step. |
 
 For the split-address example, paste `32'h0001_2000` into `ADDR_HI` and
-`32'h0000_3F00` into `ADDR_LO`. The composed `ADDRESS` output is
-`64'h0001_2000_0000_3F00`.
+`32'h0000_3F00` into `ADDR_LO`, then select the `address` transform step on
+the canvas. Its composed value is `64'h0001_2000_0000_3F00`.
