@@ -1,99 +1,100 @@
-# ipcraft-spec
+# IPCraft Specification
 
-YAML specifications for FPGA IP cores and memory maps.  
-Used as a local package by [IPCraft for VS Code](https://github.com/bleviet/ipcraft-vscode).
+This repository contains the shared file formats used by
+[IPCraft for VS Code](https://github.com/bleviet/ipcraft-vscode). Use it when
+you want to create or validate an IP core, memory map, or Data Inspector recipe
+without relying on the visual editor.
 
-## Directory Structure
+## Choose a file type
 
-```
-ipcraft-spec/
-├── schemas/         # JSON schemas (source of truth for *.ip.yml / *.mm.yml)
-│   ├── ip_core.schema.json
-│   └── memory_map.schema.json
-├── bus_definitions/ # Shared bus type definitions
-│   ├── axi4_lite.yml
-│   ├── axi4_full.yml
-│   ├── axi_stream.yml
-│   ├── avalon_mm.yml
-│   └── avalon_st.yml
-├── templates/       # Starter templates
-├── examples/        # Reference implementations
-│   ├── minimal/                     # Bare minimum IP core
-│   ├── basic_peripheral/            # AXI4-Lite slave + simple memory map
-│   ├── data_inspector/               # Reusable Data Inspector recipes
-│   ├── multi_interface_accelerator/ # AXI4-Lite + AXI-Stream + complex memory map
-│   └── system_controller/           # Many clocks, resets, and bus interfaces
-└── docs/
-    ├── ip_spec.md          # Format reference for *.ip.yml files
-    └── memory_map_spec.md  # Format reference for *.mm.yml files
-```
+| File | Purpose | Schema |
+|---|---|---|
+| `*.ip.yml` | Describe an FPGA IP core and its interfaces | `schemas/ip_core.schema.json` |
+| `*.mm.yml` | Describe address blocks, registers, and fields | `schemas/memory_map.schema.json` |
+| `*.ipci.yml` | Save a reusable Data Inspector layout | `schemas/data_inspector.schema.json` |
 
-Generated output (`rtl/`, `tb/`, `altera/`, `xilinx/`) is produced by the VS Code extension and is not tracked here.
+The JSON schemas are the source of truth. The documents explain the common
+fields and show readable examples.
 
-## Quick Start
+## Start from a template
 
-1. **New IP Core:** Copy `templates/axi_slave.ip.yml`
-2. **New Memory Map:** Copy `templates/axi_slave.mm.yml`
-3. **Setup VS Code Validation:** See below.
+1. Copy a file from `templates/`.
+2. Rename it with the matching extension.
+3. Edit the YAML directly or open it with IPCraft for VS Code.
+4. Keep related `.ip.yml` and `.mm.yml` files in the same project directory.
 
-## Documentation
+| Template | Start here when you need |
+|---|---|
+| `minimal.ip.yml` | Only a valid IP core identity |
+| `basic.ip.yml` | A clock, reset, and plain ports |
+| `axi_slave.ip.yml` | An AXI4-Lite slave with registers |
+| `avalon_peripheral.ip.yml` | Avalon-MM and Avalon-ST interfaces |
+| `minimal.mm.yml` | An empty memory map |
+| `basic.mm.yml` | A small register block |
+| `axi_slave.mm.yml` | AXI4-Lite control and status registers |
+| `array.mm.yml` | Repeated registers |
+| `multi_block.mm.yml` | Several address blocks |
 
-📘 **[IP Core Specification](docs/ip_spec.md)** — Format reference for `*.ip.yml` files.  
-📘 **[Memory Map Specification](docs/memory_map_spec.md)** — Format reference for `*.mm.yml` files.
+## Read the format references
 
-## Schemas
+- [Define an IP core](docs/ip_spec.md)
+- [Define a memory map](docs/memory_map_spec.md)
+- [Define a Data Inspector recipe](docs/data_inspector_spec.md)
 
-The JSON schemas in `schemas/` are the **single source of truth** for both the YAML format and the TypeScript types used by the extension.
+## Enable YAML validation in VS Code
 
-### TypeScript Type Generation
-
-The extension generates `src/webview/types/memoryMap.d.ts` and `src/webview/types/ipCore.d.ts` directly from these schemas. Re-run after any schema change:
-
-```bash
-npm run generate-types
-```
-
-> **Warning:** Never edit the generated `src/webview/types/*.d.ts` files by hand — they are overwritten by `generate-types`.
-
-### VS Code YAML Validation Setup
-
-Install the [YAML extension](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml)
-by Red Hat, then add the following to your `.vscode/settings.json`:
+Install the
+[YAML extension by Red Hat](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml),
+then add this configuration to `.vscode/settings.json`:
 
 ```jsonc
 {
   "yaml.schemas": {
     "./schemas/ip_core.schema.json": "*.ip.yml",
-    "./schemas/memory_map.schema.json": "*.mm.yml"
+    "./schemas/memory_map.schema.json": "*.mm.yml",
+    "./schemas/data_inspector.schema.json": "*.ipci.yml"
   }
 }
 ```
 
-This gives you:
-- **Autocomplete** for field names
-- **Inline validation**
-- **Hover documentation**
+This adds completion, inline validation, and field descriptions when editing
+YAML. IPCraft for VS Code adds visual editors on top of the same schemas.
 
-> **Tip:** The IPCraft for VS Code extension provides visual editing on top of this — YAML validation is a useful complement when editing files directly.
+## Explore complete examples
 
-## Templates
+| Directory | What it demonstrates |
+|---|---|
+| `examples/minimal/` | The smallest valid IP core |
+| `examples/basic_peripheral/` | An AXI4-Lite peripheral and memory map |
+| `examples/comprehensive_axi/` | AXI interfaces and broad schema coverage |
+| `examples/comprehensive_avalon/` | Avalon interfaces and register generation |
+| `examples/data_inspector/` | Reusable decode and transform recipes |
+| `examples/daq_controller/` | A data-acquisition controller |
+| `examples/multi_interface_accelerator/` | Several interfaces and clock domains |
+| `examples/system_controller/` | A larger system-level IP core |
+| `examples/xcvr_loopback/` | A project-local custom bus definition |
 
-| Template | Description |
-|----------|-------------|
-| `minimal.ip.yml` | Bare minimum IP core |
-| `basic.ip.yml` | Clock, reset, ports |
-| `axi_slave.ip.yml` | AXI-Lite slave with registers |
-| `avalon_peripheral.ip.yml` | Avalon-MM slave and Avalon-ST interfaces |
-| `minimal.mm.yml` | Bare minimum memory map |
-| `basic.mm.yml` | Simple memory map |
-| `axi_slave.mm.yml` | AXI-Lite slave registers |
-| `array.mm.yml` | Register arrays |
-| `multi_block.mm.yml` | Multiple address blocks |
+Generated output such as `rtl/`, `tb/`, `altera/`, and `xilinx/` is not stored
+in this repository.
 
-## File Naming
+## Understand the repository layout
 
-| Extension | Purpose |
-|-----------|---------|
-| `*.ip.yml` | IP Core definition |
-| `*.mm.yml` | Memory map definition |
-| `*.ipci.yml` | Data Inspector recipe |
+| Directory | Contents |
+|---|---|
+| `schemas/` | JSON schemas for the three IPCraft file types |
+| `bus_definitions/` | Built-in AXI and Avalon interface definitions |
+| `templates/` | Small files to copy into a new project |
+| `examples/` | Complete files that exercise common and advanced features |
+| `docs/` | Human-readable format references |
+
+## Regenerate extension types after a schema change
+
+When this repository is used as the `ipcraft-spec` submodule of IPCraft for VS
+Code, run this command from the extension repository root:
+
+```bash
+npm run generate-types
+```
+
+It regenerates the domain types for IP cores, memory maps, and Data Inspector
+recipes. Do not edit generated type files by hand.

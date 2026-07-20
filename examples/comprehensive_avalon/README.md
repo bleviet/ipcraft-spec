@@ -1,35 +1,53 @@
-# comprehensive_avalon
+# Explore the Comprehensive Avalon Example
 
-Comprehensive Avalon-family example. Together with `comprehensive_axi` it
-covers every register-map schema property and every bus-interface feature
-supported by the generator.
+This example shows an Avalon-MM register slave, Avalon-ST interfaces, and a
+memory map with sticky event fields. Use it when building a Quartus-oriented IP
+core or comparing Avalon behavior with the comprehensive AXI example.
 
-## Interface coverage
+## Open the files
 
-| Feature | Where |
-| --- | --- |
-| Avalon-MM slave (primary CSR, drives the `avmm` bus wrapper) | `S_AVMM` |
-| Optional Avalon-MM ports (byteenable, waitrequest, readdatavalid) | `S_AVMM` |
-| Avalon-ST `source` mode with packet/sideband ports (sop/eop/empty/channel/error/ready) | `SRC_ST` |
-| Avalon-ST `sink` mode with `portNameOverrides` (renamed physical ports) | `SNK_ST` |
-| Parameter-driven stream width | `ST_DATA_W` on `SRC_ST.data` |
-| Interrupts (LEVEL_LOW, EDGE_FALLING) | `o_irq_n`, `o_evt_fall` |
-| Single clock, active-high reset | `clk`/`rst` |
+| File | Contents |
+|---|---|
+| `comprehensive_avalon.ip.yml` | IP identity, ports, Avalon interfaces, and build targets |
+| `comprehensive_avalon.mm.yml` | Registers, events, an array, and a memory block |
 
-## Register-map coverage (`comprehensive_avalon.mm.yml`)
+Open `comprehensive_avalon.ip.yml` with IPCraft for VS Code. Its `memoryMaps`
+section imports the memory map from the same directory.
 
-- All access types: `VERSION` (ro), `CONTROL` (rw with wo strobe field),
-  `EVENTS` (read-write-1-to-clear with w1c fields), `SAMPLE_CNT` (ro array).
-- `monitorChangeOf` change-of-state automation through the **Avalon-MM**
-  wrapper (`EVENTS.SRC_TOGGLED` watching `SRC_ACTIVE`).
-- `enumeratedValues` (`CONTROL.LOG_LEVEL`).
-- Flat register array (`SAMPLE_CNT`, count 2 / stride 4).
-- `usage: memory` block (`MAILBOX`, range 1K).
+## Review the interfaces
 
-## Validated with
+| Interface | What it demonstrates |
+|---|---|
+| `S_AVMM` | Avalon-MM register slave with optional flow-control signals |
+| `SRC_ST` | Avalon-ST source with packet and sideband signals |
+| `SNK_ST` | Avalon-ST sink with renamed physical ports |
 
-- `npm run test:integration` — fixture generation, plus GHDL
-  (analyze/elaborate/`--synth`) and Icarus Verilog (`-g2012`) compile checks
-  via `src/test/integration/hdl.test.ts`.
-- Vivado `ipx::check_integrity` / Quartus `hw.tcl` suites when those tools
-  are installed.
+The example also shows a parameter-based stream width, an active-high reset,
+level-low and falling-edge interrupts, and a plain synchronization input.
+
+## Review the memory map
+
+| Feature | Location |
+|---|---|
+| Read-only and read-write registers | `VERSION`, `CONTROL` |
+| Write self-clearing field | `CONTROL.CLEAR_STATS` |
+| Write-one-to-clear event fields | `EVENTS.OVERRUN`, `EVENTS.UNDERRUN` |
+| Automatic change detection | `EVENTS.SRC_TOGGLED` |
+| Enumerated values | `CONTROL.LOG_LEVEL` |
+| Flat register array | `SAMPLE_CNT` |
+| Memory block | `MAILBOX` |
+
+`EVENTS.SRC_TOGGLED` watches `SRC_ACTIVE`. The generated register logic sets the
+sticky flag whenever the live source state changes.
+
+## Validate the example
+
+From the IPCraft for VS Code repository root, run:
+
+```bash
+npm run test:integration:hdl
+```
+
+This regenerates the fixture and checks the generated VHDL and SystemVerilog
+with the available open-source compilers. Use `npm run test:integration:vivado`
+or `npm run test:integration:quartus` when those vendor tools are installed.

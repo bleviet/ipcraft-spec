@@ -1,46 +1,60 @@
-# comprehensive_axi
+# Explore the Comprehensive AXI Example
 
-Comprehensive AXI-family example. Together with `comprehensive_avalon` it
-covers every register-map schema property and every bus-interface feature
-supported by the generator.
+This example shows a large IP core with several AXI interfaces and a detailed
+memory map. Use it as a reference for advanced schema fields, not as the
+smallest starting point for a new core.
 
-## Interface coverage
+## Open the files
 
-| Feature | Where |
-| --- | --- |
-| AXI4-Lite slave (primary CSR, drives the bus wrapper) | `S_AXI` |
-| AXI4-Full master with width overrides | `M_AXI` |
-| Arrayed bus interface (`count`, `indexStart`, naming patterns) | `M_AXIS` (2× AXI-Stream master) |
-| Optional bus ports (`useOptionalPorts`) | `M_AXIS` (TLAST/TKEEP/TUSER), `S_AXIS` (TLAST) |
-| Conduit interface with user-defined `conduitPorts` (incl. parameterized width and `presence: optional`) | `DBG` |
-| Two clock domains, active-low + active-high resets | `i_clk_axi`/`i_clk_proc` |
-| Interrupts (LEVEL_HIGH, EDGE_RISING) | `o_irq`, `o_err_pulse` |
-| Parameters: integer, natural, positive, boolean, string; parameterized port width | `DATA_W` on `o_gpio` |
+| File | Contents |
+|---|---|
+| `comprehensive_axi.ip.yml` | IP identity, parameters, ports, interfaces, and build targets |
+| `comprehensive_axi.mm.yml` | Control registers, arrays, grouped registers, memory, and reserved space |
 
-## Register-map coverage (`comprehensive_axi.mm.yml`)
+Open `comprehensive_axi.ip.yml` with IPCraft for VS Code. Its `memoryMaps`
+section imports the memory map from the same directory.
 
-| Feature | Where |
-| --- | --- |
-| All five access types | `ID` (ro), `CMD` (wo), `CTRL` (rw), `IRQ_EVENT` (rw1c + w1c fields) |
-| `bits` string and `offset`/`width` field syntax | `CTRL.MODE` vs `CTRL.PRESCALE` |
-| Field and register `resetValue` | `ID`, `SCRATCH` |
-| `enumeratedValues` | `CTRL.MODE`, `STATUS.FSM_STATE` |
-| `monitorChangeOf` (change-of-state W1C) | `IRQ_EVENT.LINK_TOGGLED` watching `LINK_STATE` |
-| Flat register array (`count`/`stride`) | `CH_GAIN` (4×) |
-| Register group array (nested `registers`) | `DMA` (2× SRC/DST/LEN/CTRL) |
-| Explicit and auto-assigned register offsets | `CTRL` (offset 4) vs `STATUS` (auto) |
-| `usage: memory` with string `range` | `BUF_RAM` (4K) |
-| `usage: reserved` with integer `range` | `RSVD` |
+## Review the interfaces
 
-> Note: the generated register file packs registers densely (enumeration
-> order × 4 bytes); sparse `baseAddress`/`stride` gaps are preserved in the
-> memory-map YAML for documentation/header generation but not in the RTL
-> address decoder.
+| Interface | What it demonstrates |
+|---|---|
+| `S_AXI` | AXI4-Lite register slave with address-width overrides |
+| `M_AXI` | AXI4-Full master with optional burst and ID signals |
+| `M_AXIS` | Two AXI4-Stream masters created from one interface array |
+| `S_AXIS` | AXI4-Stream slave with optional sideband signals |
+| `DBG` | Custom conduit with required and optional user-defined ports |
 
-## Validated with
+The example also contains two clock domains, active-high and active-low resets,
+level and edge interrupts, and parameter-based port widths.
 
-- `npm run test:integration` — fixture generation, plus GHDL
-  (analyze/elaborate/`--synth`) and Icarus Verilog (`-g2012`) compile checks
-  via `src/test/integration/hdl.test.ts`.
-- Vivado `ipx::check_integrity` / Quartus `hw.tcl` suites when those tools
-  are installed.
+## Review the memory map
+
+| Feature | Location |
+|---|---|
+| Read-only, write-only, and read-write registers | `ID`, `CMD`, `CTRL`, `SCRATCH` |
+| Write-one-to-clear fields | `IRQ_EVENT` |
+| Read-write self-clearing field | `CTRL.SOFT_RST` |
+| Field range and offset/width syntax | `CTRL.MODE`, `CTRL.PRESCALE` |
+| Register and field reset values | `ID`, `SCRATCH`, `CTRL` |
+| Enumerated values | `CTRL.MODE`, `STATUS.FSM_STATE` |
+| Automatic change detection | `IRQ_EVENT.LINK_TOGGLED` |
+| Flat register array | `CH_GAIN` |
+| Array of register groups | `DMA` |
+| Memory and reserved blocks | `BUF_RAM`, `RSVD` |
+
+The generated register file currently packs implemented registers in their
+listed order. Explicit gaps remain useful for documentation and software
+headers, but are not represented as sparse locations in the RTL address
+decoder.
+
+## Validate the example
+
+From the IPCraft for VS Code repository root, run:
+
+```bash
+npm run test:integration:hdl
+```
+
+This regenerates the fixture and checks the generated VHDL and SystemVerilog
+with the available open-source compilers. Use `npm run test:integration:vivado`
+or `npm run test:integration:quartus` when those vendor tools are installed.

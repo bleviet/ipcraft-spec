@@ -1,21 +1,13 @@
 <!-- editorconfig-checker-disable-file -->
-<!-- This file contains YAML examples with 2-space indentation per YAML standard -->
+<!-- YAML examples use two-space indentation. -->
 
-# IP Core Specification
+# Define an IP Core
 
-This document defines the YAML format for IPCraft IP core definitions (`*.ip.yml`).
+An `*.ip.yml` file describes one FPGA IP core: its identity, ports, interfaces,
+parameters, source files, memory maps, and build settings. Only `vlnv` is
+required.
 
-## File Conventions
-
-| Extension | Purpose | Detection |
-|-----------|---------|-----------|
-| `*.ip.yml` | IP Core definition | Contains `vlnv` |
-
----
-
-## IP Core Structure
-
-### Minimal Example
+## Start with the smallest valid file
 
 ```yaml
 vlnv:
@@ -25,365 +17,335 @@ vlnv:
   version: 1.0.0
 ```
 
-### Complete Example
+Use a stable identity because generated projects and other IP cores may refer to
+it.
+
+## Understand the top-level sections
+
+| Section | Purpose |
+|---|---|
+| `vlnv` | Required identity: vendor, library, name, and version |
+| `description`, `author` | Human-readable ownership and purpose |
+| `parameters` | Values exposed as HDL generics or parameters |
+| `clocks`, `resets` | Clock and reset ports |
+| `ports`, `interrupts` | Plain HDL ports and interrupt outputs |
+| `busInterfaces` | AXI, Avalon, or custom interfaces |
+| `memoryMaps` | Inline register maps or an imported `.mm.yml` file |
+| `fileSets` | Source, constraint, software, and support files |
+| `subcores` | Other IP cores required by this core |
+| `simulation` | Testbench framework and simulator overrides |
+| `targets` | Intended synthesis tools, such as Vivado or Quartus |
+| `useBusLibrary` | Project-local directory containing bus definitions |
+| `apiVersion` | Version of the IPCraft file format |
+| `scaffold_pack` | Saved scaffold pack selection; normally managed by the editor |
+
+## Set the IP identity
+
+`vlnv` means vendor, library, name, and version.
 
 ```yaml
 vlnv:
   vendor: my-company.com
-  library: processing
-  name: my_timer_core
+  library: peripherals
+  name: timer_core
   version: 1.2.0
 
-description: A 4-channel timer IP with AXI-Lite interface
-author: Jane Doe <jane@example.com>
+description: Four-channel timer
+author: Hardware Team
+```
 
+All four `vlnv` fields are required. Use names that remain valid in generated
+HDL and vendor projects.
+
+## Add parameters
+
+Parameters become VHDL generics or Verilog parameters. A port or bus width can
+refer to a parameter by name.
+
+```yaml
 parameters:
-  - name: NUM_CHANNELS
-    value: 4
+  - name: DATA_WIDTH
+    displayName: Data width
+    value: 32
     dataType: integer
+    min: 8
+    max: 128
+    description: Width of the data path
+```
 
+| Field | Purpose |
+|---|---|
+| `name` | Required HDL name |
+| `value` | Default value |
+| `dataType` | `integer`, `natural`, `boolean`, or `string` |
+| `displayName` | Friendly label in vendor tools |
+| `min`, `max` | Inclusive integer limits |
+| `allowedValues` | List of allowed choices; use instead of `min` and `max` |
+| `uiPage`, `uiGroup` | Placement in generated configuration screens |
+| `description` | Short explanation for users |
+
+If `uiGroup` is set, `uiPage` must also be set.
+
+## Add clocks and resets
+
+Clock and reset associations use the physical `name` fields, not
+`logicalName`.
+
+```yaml
 clocks:
-  - name: i_clk_sys
+  - name: i_clk
     logicalName: CLK
     direction: in
     frequency: 100MHz
-    associatedReset: i_rst_n_sys
+    associatedReset: i_rst_n
 
 resets:
-  - name: i_rst_n_sys
+  - name: i_rst_n
     logicalName: RESET_N
     direction: in
     polarity: activeLow
-    associatedClock: i_clk_sys
+    associatedClock: i_clk
+```
 
+| Field | Clock | Reset |
+|---|---|---|
+| `name` | Required physical HDL port | Required physical HDL port |
+| `logicalName` | Logical name used by packaging tools | Logical name used by packaging tools |
+| `direction` | `in`, `out`, or `inout` | `in`, `out`, or `inout` |
+| `width` | Integer, parameter, or width expression | Integer, parameter, or width expression |
+| `frequency` | Text such as `100MHz` | Not used |
+| `polarity` | Not used | `activeHigh` or `activeLow` |
+| `associatedReset` | Name of a reset | Not used |
+| `associatedClock` | Not used | Name of a clock |
+
+## Add plain ports and interrupts
+
+Use `ports` for signals that are not supplied by a bus definition.
+
+```yaml
 ports:
-  - name: o_data_valid
+  - name: o_data
     direction: out
-    width: 1
-    description: Data valid flag
+    width: DATA_WIDTH
+    description: Parallel output
 
 interrupts:
   - name: o_irq
     logicalName: IRQ_OUT
     direction: out
     sensitivity: LEVEL_HIGH
-    description: Interrupt request output
+    description: Interrupt request
+```
 
+A width can be an integer, a parameter name, or an arithmetic expression such
+as `clog2(FIFO_DEPTH)`. Supported functions are `clog2`, `log2`, `ceil`,
+`floor`, `abs`, `min`, and `max`.
+
+Interrupt sensitivity can be `LEVEL_HIGH`, `LEVEL_LOW`, `EDGE_RISING`, or
+`EDGE_FALLING`.
+
+## Add a bus interface
+
+```yaml
 busInterfaces:
-  - name: S_AXI_LITE
+  - name: S_AXI
     type: ipcraft:busif:axi4_lite:1.0
     mode: slave
     physicalPrefix: s_axi_
-    associatedClock: i_clk_sys
-    associatedReset: i_rst_n_sys
-    memoryMapRef: CSR_MAP
+    associatedClock: i_clk
+    associatedReset: i_rst_n
+    memoryMapRef: CSR
     portWidthOverrides:
       AWADDR: 12
       ARADDR: 12
-
-memoryMaps:
-  import: my_ip_core.mm.yml
-
-fileSets:
-  - name: RTL_Sources
-    files:
-      - path: rtl/my_core.vhd
-        type: vhdl
 ```
 
----
+| Field | Purpose |
+|---|---|
+| `name` | Required interface name |
+| `type` | Bus definition identifier |
+| `mode` | `master`, `slave`, `source`, `sink`, or `conduit` |
+| `physicalPrefix` | Prefix added to generated HDL port names |
+| `associatedClock`, `associatedReset` | Physical clock and reset names |
+| `memoryMapRef` | Name of the memory map served by the interface |
+| `useOptionalPorts` | Optional logical ports to include |
+| `portWidthOverrides` | Logical port widths that differ from the bus definition |
+| `array` | Rules for creating several similar interfaces |
+| `conduitPorts` | User-defined signals for a custom conduit |
+| `description` | Short explanation of the interface |
 
-## VLNV (Required)
+### Choose a built-in bus type
 
-Every IP core requires a **Vendor-Library-Name-Version** identifier:
+| Type | Common modes |
+|---|---|
+| `ipcraft:busif:axi4_lite:1.0` | `master`, `slave` |
+| `ipcraft:busif:axi4_full:1.0` | `master`, `slave` |
+| `ipcraft:busif:axi_stream:1.0` | `master`, `slave` |
+| `ipcraft:busif:avalon_mm:1.0` | `master`, `slave` |
+| `ipcraft:busif:avalon_st:1.0` | `source`, `sink` |
 
-```yaml
-vlnv:
-  vendor: ipcraft          # Your organization name or domain
-  library: peripherals     # IP category
-  name: ip_core            # Core name (snake_case preferred)
-  version: 1.0.0           # Semantic version
-```
+See `bus_definitions/` for logical port names, default widths, directions, and
+optional ports.
 
-An optional top-level `author` field (e.g. a person or team name) may be set alongside
-`description`. When present, it is shown in the IP editor and, if a scaffold pack's
-templates reference it, included in generated file headers.
-
----
-
-## Clocks & Resets
-
-```yaml
-clocks:
-  - name: i_clk_sys         # Physical port name in HDL
-    logicalName: CLK        # Used by associatedClock references
-    direction: in
-    frequency: 100MHz
-    associatedReset: i_rst_n  # Logical name of associated reset
-
-resets:
-  - name: i_rst_n
-    logicalName: RESET_N
-    direction: in
-    polarity: activeLow       # activeLow | activeHigh
-    associatedClock: i_clk_sys
-```
-
-`associatedClock` and `associatedReset` reference each other by **logical name** (`logicalName`), not the physical port name.
-
----
-
-## Ports
-
-Generic (non-bus) ports that do not belong to a standard bus interface:
-
-```yaml
-ports:
-  - name: o_irq
-    direction: out          # in | out | inout
-    width: 1
-    description: Interrupt output
-```
-
----
-
-## Interrupts
-
-Interrupt outputs follow the same port structure but carry additional metadata used by platform tools to wire up interrupt controllers.
-
-```yaml
-interrupts:
-  - name: o_irq
-    logicalName: IRQ_OUT        # Logical name for platform wiring
-    direction: out
-    sensitivity: LEVEL_HIGH     # LEVEL_HIGH | LEVEL_LOW | EDGE_RISING | EDGE_FALLING | EDGE_BOTH
-    description: Interrupt request output
-```
-
----
-
-## Bus Interfaces
-
-```yaml
-busInterfaces:
-  - name: S_AXI_LITE
-    type: ipcraft:busif:axi4_lite:1.0   # vendor:library:name:version
-    mode: slave             # slave | master | conduit
-    physicalPrefix: s_axi_  # Generates: s_axi_awaddr, s_axi_wdata, etc.
-    associatedClock: i_clk  # References clock by physical port name
-    associatedReset: i_rst_n
-    memoryMapRef: CSR_MAP   # Links to a memory map by name
-    portWidthOverrides:     # Override default signal widths from the bus definition
-      AWADDR: 12
-      ARADDR: 12
-    description: Control interface
-```
-
-### Bus Interface Modes
-
-| Mode | Description |
-|------|-------------|
-| `slave` | Responds to transactions (e.g. AXI-Lite slave, AXI-Stream receiver) |
-| `master` | Initiates transactions (e.g. AXI-Lite master, AXI-Stream transmitter) |
-| `conduit` | Pass-through or non-standard signals grouped as an interface |
-
-### `portWidthOverrides`
-
-Override the default signal widths defined in the bus definition. Common use: narrowing the address bus of an AXI-Lite slave to match the actual register space.
-
-```yaml
-portWidthOverrides:
-  AWADDR: 12    # address bus is 12 bits wide, not the default 32
-  ARADDR: 12
-```
-
-### `useOptionalPorts`
-
-Bus definitions mark some signals as optional. By default these are excluded from the generated port list. List them here to include them. Example for AXI-Stream sideband signals:
+### Include optional ports
 
 ```yaml
 useOptionalPorts:
   - TLAST
+  - TKEEP
   - TUSER
-  - TID
 ```
 
-Refer to the relevant file in `bus_definitions/` to see which signals are optional for a given bus type.
+Use the logical names from the bus definition. `portWidthOverrides` uses those
+same names and accepts an integer or parameter name.
 
-### Bus Interface Arrays
-
-For multiple similar interfaces (e.g. 4 AXI-Stream output channels):
+### Create an interface array
 
 ```yaml
-- name: M_AXIS_EVENTS
-  type: ipcraft:busif:axi_stream:1.0
-  mode: master
-  array:
-    count: 4
-    indexStart: 0
-    namingPattern: M_AXIS_CH{index}_EVENTS
-    physicalPrefixPattern: m_axis_ch{index}_evt_
+busInterfaces:
+  - name: M_AXIS
+    type: ipcraft:busif:axi_stream:1.0
+    mode: master
+    array:
+      count: 4
+      indexStart: 0
+      namingPattern: M_AXIS_CH{index}
+      physicalPrefixPattern: m_axis_ch{index}_
 ```
 
-### Available Bus Types
+`count`, `namingPattern`, and `physicalPrefixPattern` are required inside
+`array`. `indexStart` defaults to zero.
 
-| Type string | Protocol |
-|-------------|----------|
-| `ipcraft:busif:axi4_lite:1.0` | AXI4-Lite |
-| `ipcraft:busif:axi4_full:1.0` | AXI4 (full, with bursts) |
-| `ipcraft:busif:axi_stream:1.0` | AXI4-Stream |
-| `ipcraft:busif:avalon_mm:1.0` | Avalon Memory-Mapped |
-| `ipcraft:busif:avalon_st:1.0` | Avalon Streaming |
+### Define a custom conduit
 
-Full port lists for each bus type are in `bus_definitions/`.
+```yaml
+busInterfaces:
+  - name: DEBUG
+    type: ipcraft:busif:conduit:1.0
+    mode: conduit
+    physicalPrefix: dbg_
+    conduitPorts:
+      - name: trace_data
+        direction: out
+        width: DATA_WIDTH
+      - name: trigger
+        direction: in
+        width: 1
+        presence: optional
+```
 
----
+Use `useBusLibrary` when the project keeps reusable custom bus definitions in a
+local directory. See `examples/xcvr_loopback/` for a complete example.
 
-## Memory Maps
+## Connect a memory map
 
-IP cores reference memory maps using the `memoryMaps` key.
-
-### Import (Recommended)
+Keep a register map in a separate file for most projects:
 
 ```yaml
 memoryMaps:
-  import: my_core.mm.yml
+  import: timer_core.mm.yml
 ```
 
-### Inline
+An inline list is also valid:
 
 ```yaml
 memoryMaps:
-  - name: CSR_MAP
+  - name: CSR
     addressBlocks:
       - name: REGS
         baseAddress: 0
-        range: 4096
-        usage: register
-        registers: [...]
+        range: 4K
+        registers: []
 ```
 
-See the [Memory Map Specification](memory_map_spec.md) for register and field details.
+`memoryMapRef` on a bus interface must match the imported or inline map name.
+See [Define a memory map](memory_map_spec.md) for register details.
 
----
-
-## Parameters
-
-Parameters map to HDL generics/parameters and can be referenced in `portWidthOverrides`.
-
-```yaml
-parameters:
-  - name: DATA_WIDTH
-    value: 32
-    dataType: integer        # integer | natural | positive | real | string | boolean
-    description: Data bus width
-```
-
----
-
-## File Sets
+## List project files
 
 ```yaml
 fileSets:
-  - name: RTL_Sources
+  - name: RTL Sources
     files:
-      - path: rtl/core_pkg.vhd
+      - path: rtl/timer.vhd
         type: vhdl
-      - path: rtl/core.vhd         # managed: true (default) — regenerated each time
-        type: vhdl
-      - path: rtl/core_core.vhd    # user implementation — never overwritten
-        type: vhdl
-        managed: false
-      - path: rtl/core_2008_helper.vhd  # uses VHDL-2008 constructs
-        type: vhdl
-        managed: false
         version: "2008"
+      - path: rtl/timer_core.vhd
+        type: vhdl
+        managed: false
 
   - name: Simulation
     files:
-      - path: tb/test.py
+      - path: tb/test_timer.py
         type: python
-
-  - name: Integration
-    files:
-      - path: altera/core_hw.tcl
-        type: tcl
-      - path: xilinx/component.xml
-        type: xml
 ```
 
-### File Properties
+| Field | Default | Purpose |
+|---|---|---|
+| `path` | Required | Path relative to the `.ip.yml` file |
+| `type` | Required | File type |
+| `managed` | `true` | Whether generation may overwrite an existing file |
+| `version` | Tool default | VHDL or Verilog language version |
+| `isIncludeFile` | `false` | Marks an include file |
+| `logicalName` | Empty | HDL library name |
+| `description` | Empty | Human-readable purpose |
 
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `path` | string | required | File path relative to the `.ip.yml` |
-| `type` | string | required | File type (see below) |
-| `managed` | boolean | `true` | Whether `ipcraft generate` may overwrite this file |
-| `description` | string | `""` | Human-readable description |
-| `isIncludeFile` | boolean | `false` | Mark as a VHDL/Verilog include file |
-| `logicalName` | string | `""` | Library name (e.g. VHDL work library) |
-| `version` | string | `""` | HDL standard version for `vhdl`/`verilog` files (e.g. `"2008"`, `"93"`). Unset means the tool default — see below |
+When `managed` is `false`, generation creates a missing file once and preserves
+it on later runs. IPCraft uses this for user-owned implementation files.
 
-### The `version` field and per-toolchain synthesis
+Supported file types are `vhdl`, `verilog`, `systemverilog`, `xdc`, `sdc`,
+`ucf`, `cHeader`, `cSource`, `cppHeader`, `cppSource`, `python`, `makefile`,
+`pdf`, `markdown`, `text`, `tcl`, `yaml`, `json`, `xml`, and `unknown`.
 
-`version` records the HDL language standard a file was written against, so vendor packaging can register it correctly instead of silently falling back to an older standard.
+For VHDL, `version` accepts `87`, `93`, `2002`, `2008`, or `2019`. For
+Verilog, it accepts `95` or `2001`. Vivado can preserve the version per file.
+Quartus uses a project-wide VHDL setting, so a per-file version does not change
+Platform Designer output.
 
-- **VHDL**: `"87"`, `"93"`, `"2002"`, `"2008"`, `"2019"`. Left unset, generated Vivado packaging (`component.xml`) marks the file as VHDL-2008 — the standard IPCraft's own generated RTL and OOC synthesis projects already assume. Set `version: "93"` explicitly to opt a file out and register it as VHDL-93.
-- **Verilog**: `"95"`, `"2001"`.
-- **Vivado**: each file is packaged individually (`spirit:userFileType` carries the version, e.g. `vhdlSource-2008`), so mixed-standard file sets are supported per file.
-- **Platform Designer (Quartus)**: `add_fileset_file` has no per-file language-version kind — the VHDL standard is a single project-wide QSF assignment (`VHDL_INPUT_VERSION`), which IPCraft already sets to `VHDL_2008`. The `version` field has no effect on Quartus/Platform Designer output.
+## Add sub-core dependencies
 
-### The `managed` flag
-
-The `managed` flag controls whether `ipcraft generate` will overwrite a file that already exists on disk.
-
-| `managed` | File exists on disk | Behaviour |
-|-----------|---------------------|-----------|
-| `true` (default) | no | File is **created** |
-| `true` (default) | yes | File is **overwritten** |
-| `false` | no | File is **created** (first run only) |
-| `false` | yes | File is **skipped** — your edits are preserved |
-
-`ipcraft generate` automatically sets `managed: false` on `{name}_core.vhd` (the bus-agnostic core logic stub) so user implementations are never overwritten when registers or bus widths change.
-
-### Supported File Types
-
-`vhdl`, `verilog`, `systemverilog`, `xdc`, `sdc`, `ucf`, `cHeader`, `cSource`,
-`cppHeader`, `cppSource`, `python`, `makefile`, `pdf`, `markdown`, `text`,
-`tcl`, `yaml`, `json`, `xml`, `unknown`.
-
----
-
-## Sub-cores
-
-IP cores can declare dependencies on other IP cores using `subcores`. This is used by platform tools to resolve and include required sub-components.
+Use a VLNV string when normal discovery is enough:
 
 ```yaml
 subcores:
-  - vendor: ipcraft
-    library: primitives
-    name: fifo_sync
-    version: 1.0.0
+  - ipcraft:primitives:fifo_sync:1.0.0
 ```
 
----
+Use an object when the dependency has a project-relative path:
 
-## Templates
+```yaml
+subcores:
+  - vlnv: ipcraft:primitives:fifo_sync:1.0.0
+    path: ../fifo_sync
+```
 
-| Template | Use Case |
-|----------|----------|
-| `minimal.ip.yml` | Bare minimum valid IP core |
-| `basic.ip.yml` | Clock, reset, and simple ports |
-| `axi_slave.ip.yml` | AXI-Lite slave with register map |
-| `avalon_peripheral.ip.yml` | Avalon-MM slave and Avalon-ST interfaces |
+## Set simulation options
 
----
+```yaml
+simulation:
+  topLevel: timer_test_top
+  framework: cocotb
+  engine: ghdl
+  compileArgs:
+    - --std=08
+  simArgs:
+    - --wave=timer.ghw
+  env:
+    TEST_MODE: regression
 
-## Examples
+targets:
+  - vivado
+  - quartus
+```
 
-Reference examples in `examples/`:
+`framework` can be `cocotb` or `vunit`. `engine` can be `ghdl`, `icarus`,
+`verilator`, or `questa`. These values override the matching workspace settings
+for this IP core.
 
-- `minimal/` — Bare minimum IP core (VLNV only)
-- `basic_peripheral/` — AXI4-Lite slave with interrupt and register map
-- `multi_interface_accelerator/` — Multiple interfaces (AXI-L + AXI-S), async clocks, complex memory map
-- `system_controller/` — Many clocks, resets, and diverse bus interfaces
+## Continue with an example
+
+- `templates/minimal.ip.yml` for the smallest file
+- `templates/axi_slave.ip.yml` for a register-based AXI4-Lite core
+- `templates/avalon_peripheral.ip.yml` for Avalon interfaces
+- `examples/comprehensive_axi/` for broad AXI coverage
+- `examples/comprehensive_avalon/` for broad Avalon coverage

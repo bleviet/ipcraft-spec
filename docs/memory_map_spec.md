@@ -1,219 +1,240 @@
 <!-- editorconfig-checker-disable-file -->
-<!-- This file contains YAML examples with 2-space indentation per YAML standard -->
+<!-- YAML examples use two-space indentation. -->
 
-# Memory Map Specification
+# Define a Memory Map
 
-This document defines the YAML format for IPCraft memory map definitions (`*.mm.yml`).
+An `*.mm.yml` file describes one or more memory maps. Each map contains address
+blocks, registers, and optional bit fields. The file root is always a YAML list.
 
-## File Conventions
-
-| Extension | Purpose | Detection |
-|-----------|---------|-----------|
-| `*.mm.yml` | Memory Map definition | Register/address block definitions |
-
----
-
-## Memory Map Structure
-
-A memory map file contains a list of one or more memory map objects.
+## Start with a small map
 
 ```yaml
-- name: CSR_MAP
+- name: CSR
   description: Control and status registers
   addressBlocks:
     - name: REGS
       baseAddress: 0
-      range: 4096
-      usage: register           # register | memory | reserved
+      range: 4K
       defaultRegWidth: 32
       registers:
-        - name: CTRL
+        - name: CONTROL
           offset: 0
-          size: 32
           access: read-write
-          resetValue: 0x00000000
-          description: Control register
           fields:
             - name: ENABLE
-              bits: "[0:0]"
-              access: read-write
-              description: Enable bit
-              enumeratedValues:
-                0: DISABLED
-                1: ENABLED
-
-            - name: MODE
-              bits: "[2:1]"
-              access: read-write
-
+              bits: '[0:0]'
+              resetValue: 0
         - name: STATUS
           offset: 4
           access: read-only
           fields:
             - name: BUSY
-              bits: "[0:0]"
-
-        - name: IRQ_FLAGS
-          offset: 8
-          access: write-1-to-clear
+              bits: '[0:0]'
 ```
 
----
+## Understand the hierarchy
 
-## Address Blocks
+```text
+memory map
+└── address block
+    ├── register
+    │   └── bit field
+    └── register group or array
+        └── child register
+```
 
-Address blocks are contiguous regions within a memory map.
+A single file may contain several top-level memory maps.
 
-| Property | Description |
-|----------|-------------|
-| `name` | Block identifier |
-| `baseAddress` | Starting address of the block |
-| `range` | Size in bytes (e.g., 4096, '4K', '1M') |
-| `usage` | `register` (default), `memory`, or `reserved` |
-| `access` | Default access for the block |
-| `defaultRegWidth` | Default width for registers (usually 32) |
+## Define a memory map
 
----
+| Field | Purpose |
+|---|---|
+| `name` | Required map name; bus interfaces use this value in `memoryMapRef` |
+| `description` | Short explanation of the map |
+| `addressBlocks` | Ordered list of address blocks |
 
-## Registers
+## Add address blocks
 
-| Property | Description |
-|----------|-------------|
-| `name` | Register identifier |
-| `offset` | Byte offset from the block base address |
-| `size` | Width in bits (default: 32) |
-| `access` | Access type (see below) |
-| `resetValue` | Value after hardware reset |
-| `description` | Human-readable description |
-| `fields` | List of bit fields (optional) |
-| `registers` | List of child registers (for grouping) |
+An address block is one contiguous region.
 
-### Register Arrays
+```yaml
+addressBlocks:
+  - name: REGS
+    baseAddress: 0
+    range: 4096
+    usage: register
+    access: read-write
+    defaultRegWidth: 32
+    description: Main register bank
+```
 
-Registers can be replicated using `count` and `stride`.
+| Field | Default | Purpose |
+|---|---|---|
+| `name` | Required | Block name |
+| `baseAddress` | `0` | Start address in the memory map |
+| `range` | Unset | Size as bytes or text such as `4K` or `1M` |
+| `usage` | `register` | `register`, `memory`, or `reserved` |
+| `access` | `read-write` | Default access for registers in the block |
+| `defaultRegWidth` | `32` | Default register width in bits |
+| `description` | Empty | Human-readable purpose |
+| `registers` | Empty | Registers and register groups |
+
+Memory and reserved blocks may omit `registers`.
+
+## Add registers
 
 ```yaml
 registers:
-  - name: TIMER
+  - name: CONTROL
+    offset: 0x10
+    size: 32
+    access: read-write
+    resetValue: 0
+    description: Main control register
+```
+
+| Field | Default | Purpose |
+|---|---|---|
+| `name` | Required | Register name |
+| `offset` | Auto-assigned when omitted | Byte offset from the block base |
+| `size` | `32` | Register width in bits |
+| `access` | `read-write` | Default field access |
+| `resetValue` | `0` | Reset value for the complete register |
+| `description` | Empty | Human-readable purpose |
+| `fields` | Empty | Named bit ranges |
+| `count` | `1` | Number of array elements |
+| `stride` | Unset | Bytes between array elements |
+| `registers` | Empty | Child registers in a group |
+
+Use explicit offsets when software compatibility matters. Omitting an offset
+lets IPCraft place the register after the preceding item.
+
+## Add bit fields
+
+Define a field with either a range string or an offset and width.
+
+```yaml
+fields:
+  - name: MODE
+    bits: '[2:1]'
+    access: read-write
+    resetValue: 0
+    enumeratedValues:
+      0: IDLE
+      1: RUN
+      2: PAUSE
+    description: Operating mode
+
+  - name: PRESCALE
+    offset: 4
+    width: 8
+    access: read-write
+```
+
+| Field | Default | Purpose |
+|---|---|---|
+| `name` | Required | Field name |
+| `bits` | Unset | Inclusive range such as `'[7:0]'` |
+| `offset`, `width` | Unset | Equivalent LSB position and number of bits |
+| `access` | `read-write` | Hardware and software access behavior |
+| `resetValue` | Unset | Field reset value |
+| `enumeratedValues` | Unset | Map numeric values to names |
+| `monitorChangeOf` | Unset | Name of a field to watch for changes |
+| `description` | Empty | Human-readable purpose |
+
+Do not use both range styles on the same field. Keep every field inside the
+register width and avoid overlapping fields unless a consumer explicitly
+supports overlays.
+
+## Choose an access type
+
+| Access | Meaning |
+|---|---|
+| `read-only` | Software can read the value but cannot write it |
+| `write-only` | Software can write the value but does not read it back |
+| `read-write` | Normal stored value |
+| `write-1-to-clear` | Writing one clears the selected bit |
+| `read-write-1-to-clear` | Readable stored value with write-one-to-clear behavior |
+| `write-self-clearing` | A write creates a pulse and the stored bit clears itself |
+| `read-write-self-clearing` | Readable value that clears itself after a write |
+
+A field can override the access inherited from its register.
+
+## Create a register array
+
+Use `count` and `stride` to repeat one register.
+
+```yaml
+registers:
+  - name: CHANNEL_GAIN
+    offset: 0x20
     count: 4
-    stride: 16               # Bytes between array elements
+    stride: 4
+    access: read-write
+    fields:
+      - name: VALUE
+        bits: '[11:0]'
+```
+
+This describes four register instances separated by four bytes. Choose a stride
+large enough for the register width.
+
+## Create an array of register groups
+
+A register can contain child registers. Add `count` and `stride` to repeat the
+whole group.
+
+```yaml
+registers:
+  - name: DMA
+    offset: 0x100
+    count: 2
+    stride: 32
     registers:
-      - name: CTRL
+      - name: SOURCE
         offset: 0
-      - name: STATUS
+      - name: DESTINATION
         offset: 4
-      - name: COMPARE
+      - name: LENGTH
         offset: 8
 ```
 
-This expands to: `TIMER_0_CTRL`, `TIMER_0_STATUS`, `TIMER_1_CTRL`, etc.
+Child offsets are relative to the group instance.
 
-### Register Groups
+## Detect a field change
 
-Registers can contain child registers to create logical groups or nested structures.
-
-```yaml
-registers:
-  - name: CHANNEL_CONFIG
-    registers:
-      - name: ADDR
-        offset: 0
-      - name: SIZE
-        offset: 4
-```
-
----
-
-## Bit Fields
-
-| Property | Description |
-|----------|-------------|
-| `name` | Field identifier |
-| `bits` | Bit range string, e.g., `"[7:0]"` or `"[0:0]"` |
-| `access` | Access type |
-| `resetValue` | Field-specific reset value |
-| `description` | Human-readable description |
-| `enumeratedValues` | Map of integer values to symbolic names |
-| `monitorChangeOf` | Field name in same register to watch for change-of-state (see below) |
-
----
-
-## Access Types
-
-| Type | Description |
-|------|-------------|
-| `read-write` | Normal read/write register |
-| `read-only` | Read-only (status, version) |
-| `write-only` | Write-only (command) |
-| `write-1-to-clear` | Writing 1 clears bits (interrupt flags) |
-| `read-write-1-to-clear` | Read-write with write-1-to-clear behavior |
-
-### Change-of-State W1C (`monitorChangeOf`)
-
-A `write-1-to-clear` field can carry `monitorChangeOf: FIELD_NAME` to reference another field
-in the same register. When present:
-
-- **No external pulse port** is generated for the monitoring field in `t_regs_hw2sw`.
-- The generator creates an internal shadow register for the monitored field's value.
-- A combinatorial comparator detects when the live value differs from the shadow.
-- The change-of-state pulse drives the W1C sticky bit automatically.
-- The monitored field's live value is exposed via a `_val` port in `t_regs_hw2sw`.
-
-**Constraints:** `monitorChangeOf` is only valid on `write-1-to-clear` or `read-write-1-to-clear`
-fields. The referenced field must exist in the same register.
-
-**Example:**
+`monitorChangeOf` creates a sticky change flag without requiring an external
+pulse input.
 
 ```yaml
 - name: SENSOR_STATUS
   offset: 0x40
   access: read-write-1-to-clear
-  description: Sensor status with automatic change detection
   fields:
-    - name: FIFO_OVERFLOW
-      bits: "[0:0]"
-      access: write-1-to-clear
-      description: Sticky bit — set by external FIFO overflow pulse.
-
     - name: TEMP_VALUE
-      bits: "[15:4]"
+      bits: '[15:4]'
       access: read-only
-      description: Live 12-bit ADC temperature reading.
+      description: Live temperature sample
 
     - name: TEMP_UPDATED
-      bits: "[16:16]"
+      bits: '[16:16]'
       access: write-1-to-clear
       monitorChangeOf: TEMP_VALUE
-      description: Sticky bit — auto-sets when TEMP_VALUE changes. No pulse port needed.
+      description: Set when TEMP_VALUE changes
 ```
 
-Generated interface (VHDL):
+The generator stores the previous value of `TEMP_VALUE`, compares it with the
+live value, and sets `TEMP_UPDATED` when they differ. Software clears the sticky
+bit by writing one.
 
-```vhdl
--- t_regs_hw2sw contains:
---   sensor_status_pulse : t_reg_sensor_status_pulse  -- fifo_overflow_pulse only
---   sensor_status_val   : t_reg_sensor_status_val    -- temp_value (live, for CoS monitoring)
--- Internal to register file:
---   shadow register + comparator → drives temp_updated sticky bit automatically
-```
+`monitorChangeOf` is valid only on `write-1-to-clear` or
+`read-write-1-to-clear` fields. The named field must exist in the same register.
 
----
+## Continue with an example
 
-## Templates
-
-| Template | Use Case |
-|----------|----------|
-| `minimal.mm.yml` | Bare minimum memory map |
-| `basic.mm.yml` | Simple memory map |
-| `axi_slave.mm.yml` | AXI-Lite slave registers |
-| `array.mm.yml` | Register arrays with count/stride |
-| `multi_block.mm.yml` | Multiple address blocks |
-
----
-
-## Examples
-
-Reference examples in `examples/`:
-
-- `basic_peripheral/basic_peripheral.mm.yml`
-- `multi_interface_accelerator/accelerator.mm.yml`
+- `templates/minimal.mm.yml` for an empty map
+- `templates/basic.mm.yml` for a small register bank
+- `templates/array.mm.yml` for repeated registers
+- `templates/multi_block.mm.yml` for several address blocks
+- `examples/comprehensive_axi/comprehensive_axi.mm.yml` for broad coverage
+- `examples/comprehensive_avalon/comprehensive_avalon.mm.yml` for an Avalon map
