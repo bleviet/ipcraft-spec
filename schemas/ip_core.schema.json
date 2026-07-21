@@ -295,6 +295,12 @@
           "description": "Logical reset name this interface uses",
           "title": "Associatedreset"
         },
+        "firstSymbolInHighOrderBits": {
+          "default": false,
+          "description": "For Avalon-ST interfaces, place the first symbol in the most-significant bits of the data bus",
+          "title": "First Symbol In High Order Bits",
+          "type": "boolean"
+        },
         "memoryMapRef": {
           "anyOf": [
             {

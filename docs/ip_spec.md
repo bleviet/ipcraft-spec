@@ -170,6 +170,7 @@ busInterfaces:
 | `memoryMapRef` | Name of the memory map served by the interface |
 | `useOptionalPorts` | Optional logical ports to include |
 | `portWidthOverrides` | Logical port widths that differ from the bus definition |
+| `firstSymbolInHighOrderBits` | Avalon-ST symbol order; `true` places the first symbol in the most-significant data bits |
 | `array` | Rules for creating several similar interfaces |
 | `conduitPorts` | User-defined signals for a custom conduit |
 | `description` | Short explanation of the interface |
