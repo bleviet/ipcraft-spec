@@ -15,6 +15,7 @@ AVALON_STREAMING:
     width: 32
     direction: out
     presence: required
+    role: data
   - name: valid
     direction: out
     presence: required

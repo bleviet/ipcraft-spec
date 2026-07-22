@@ -15,6 +15,7 @@ AXI_STREAM:
     width: 32
     direction: out
     presence: required
+    role: data
   - name: TVALID
     direction: out
     presence: required
