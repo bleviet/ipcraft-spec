@@ -34,6 +34,7 @@ AXI4_LITE:
     width: 4
     direction: out
     presence: required
+    role: byteQualifier
   - name: WVALID
     direction: out
     presence: required

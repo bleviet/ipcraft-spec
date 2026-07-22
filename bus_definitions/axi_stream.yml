@@ -26,10 +26,12 @@ AXI_STREAM:
     width: 4
     direction: out
     presence: optional
+    role: byteQualifier
   - name: TKEEP
     width: 4
     direction: out
     presence: optional
+    role: byteQualifier
   - name: TLAST
     direction: out
     presence: optional

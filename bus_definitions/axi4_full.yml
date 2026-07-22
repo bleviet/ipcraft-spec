@@ -58,6 +58,7 @@ AXI4_FULL:
     width: 4
     direction: out
     presence: required
+    role: byteQualifier
   - name: WLAST
     direction: out
     presence: required
