@@ -29,10 +29,12 @@ AXI4_LITE:
     width: 32
     direction: out
     presence: required
+    role: data
   - name: WSTRB
     width: 4
     direction: out
     presence: required
+    role: byteQualifier
   - name: WVALID
     direction: out
     presence: required
@@ -67,6 +69,7 @@ AXI4_LITE:
     width: 32
     direction: in
     presence: required
+    role: data
   - name: RRESP
     width: 2
     direction: in

@@ -15,6 +15,7 @@ AXI_STREAM:
     width: 32
     direction: out
     presence: required
+    role: data
   - name: TVALID
     direction: out
     presence: required
@@ -25,10 +26,12 @@ AXI_STREAM:
     width: 4
     direction: out
     presence: optional
+    role: byteQualifier
   - name: TKEEP
     width: 4
     direction: out
     presence: optional
+    role: byteQualifier
   - name: TLAST
     direction: out
     presence: optional

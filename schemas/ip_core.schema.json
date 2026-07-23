@@ -295,6 +295,12 @@
           "description": "Logical reset name this interface uses",
           "title": "Associatedreset"
         },
+        "firstSymbolInHighOrderBits": {
+          "default": false,
+          "description": "For Avalon-ST interfaces, place the first symbol in the most-significant bits of the data bus",
+          "title": "First Symbol In High Order Bits",
+          "type": "boolean"
+        },
         "memoryMapRef": {
           "anyOf": [
             {
@@ -373,6 +379,10 @@
           "default": null,
           "description": "User-defined signals for conduit (custom) interfaces",
           "title": "ConduitPorts"
+        },
+        "endianness": {
+          "$ref": "#/$defs/Endianness",
+          "description": "Byte order applied to this interface's data port(s) (e.g. WDATA/RDATA). Little-endian is the default; only relevant when the data width is a multiple of 8 bits."
         }
       },
       "required": [
@@ -620,6 +630,15 @@
       ],
       "title": "FileSet",
       "type": "object"
+    },
+    "Endianness": {
+      "description": "Byte order for a vector port or a bus interface's data port(s). Applies only to widths that are a multiple of 8 bits. Little-endian is the default.",
+      "enum": [
+        "little",
+        "big"
+      ],
+      "title": "Endianness",
+      "type": "string"
     },
     "FileType": {
       "description": "File type enumeration.",
@@ -883,6 +902,10 @@
           "description": "Port description",
           "title": "Description",
           "type": "string"
+        },
+        "endianness": {
+          "$ref": "#/$defs/Endianness",
+          "description": "Byte order for this port. Little-endian is the default; only relevant when width is a multiple of 8 bits."
         }
       },
       "required": [

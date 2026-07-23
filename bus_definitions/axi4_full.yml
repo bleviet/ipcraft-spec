@@ -53,10 +53,12 @@ AXI4_FULL:
     width: 32
     direction: out
     presence: required
+    role: data
   - name: WSTRB
     width: 4
     direction: out
     presence: required
+    role: byteQualifier
   - name: WLAST
     direction: out
     presence: required
@@ -126,6 +128,7 @@ AXI4_FULL:
     width: 32
     direction: in
     presence: required
+    role: data
   - name: RRESP
     width: 2
     direction: in

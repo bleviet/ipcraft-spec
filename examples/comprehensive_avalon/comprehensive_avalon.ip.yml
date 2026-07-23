@@ -78,6 +78,7 @@ busInterfaces:
   - name: SRC_ST
     type: ipcraft:busif:avalon_st:1.0
     mode: source
+    firstSymbolInHighOrderBits: true
     physicalPrefix: aso_
     associatedClock: clk
     associatedReset: rst

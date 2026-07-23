@@ -25,10 +25,12 @@ AVALON_MEMORY_MAPPED:
     width: 4
     direction: out
     presence: optional
+    role: byteQualifier
   - name: byteenable_n
     width: 4
     direction: out
     presence: optional
+    role: byteQualifier
   - name: debugaccess
     direction: out
     presence: optional
@@ -39,10 +41,12 @@ AVALON_MEMORY_MAPPED:
     width: 32
     direction: out
     presence: optional
+    role: data
   - name: readdata
     width: 32
     direction: in
     presence: optional
+    role: data
   - name: readdatavalid
     direction: in
     presence: optional
