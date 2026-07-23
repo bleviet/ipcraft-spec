@@ -382,7 +382,6 @@
         },
         "endianness": {
           "$ref": "#/$defs/Endianness",
-          "default": "little",
           "description": "Byte order applied to this interface's data port(s) (e.g. WDATA/RDATA). Little-endian is the default; only relevant when the data width is a multiple of 8 bits."
         }
       },
@@ -906,7 +905,6 @@
         },
         "endianness": {
           "$ref": "#/$defs/Endianness",
-          "default": "little",
           "description": "Byte order for this port. Little-endian is the default; only relevant when width is a multiple of 8 bits."
         }
       },
