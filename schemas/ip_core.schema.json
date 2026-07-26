@@ -1142,6 +1142,32 @@
           "title": "Sensitivity",
           "type": "string"
         },
+        "associatedBusInterface": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Name of the memory-mapped slave bus interface associated with this interrupt",
+          "title": "Associatedbusinterface"
+        },
+        "associatedClock": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Name of the clock signal associated with this interrupt",
+          "title": "Associatedclock"
+        },
         "description": {
           "default": "",
           "description": "Interrupt signal description",
