@@ -134,6 +134,8 @@ interrupts:
     logicalName: IRQ_OUT
     direction: out
     sensitivity: LEVEL_HIGH
+    associatedBusInterface: S_AXI
+    associatedClock: i_clk
     description: Interrupt request
 ```
 
@@ -142,7 +144,9 @@ as `clog2(FIFO_DEPTH)`. Supported functions are `clog2`, `log2`, `ceil`,
 `floor`, `abs`, `min`, and `max`.
 
 Interrupt sensitivity can be `LEVEL_HIGH`, `LEVEL_LOW`, `EDGE_RISING`, or
-`EDGE_FALLING`.
+`EDGE_FALLING`. `associatedBusInterface` names the memory-mapped slave whose
+register map raises the interrupt, while `associatedClock` names its clock
+domain.
 
 ## Add a bus interface
 
