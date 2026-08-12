@@ -6,9 +6,9 @@ smallest starting point for a new core.
 
 ## Open the files
 
-| File | Contents |
-|---|---|
-| `comprehensive_axi.ip.yml` | IP identity, parameters, ports, interfaces, and build targets |
+| File                       | Contents                                                                 |
+| -------------------------- | ------------------------------------------------------------------------ |
+| `comprehensive_axi.ip.yml` | IP identity, parameters, ports, interfaces, and build targets            |
 | `comprehensive_axi.mm.yml` | Control registers, arrays, grouped registers, memory, and reserved space |
 
 Open `comprehensive_axi.ip.yml` with IPCraft for VS Code. Its `memoryMaps`
@@ -16,31 +16,36 @@ section imports the memory map from the same directory.
 
 ## Review the interfaces
 
-| Interface | What it demonstrates |
-|---|---|
-| `S_AXI` | AXI4-Lite register slave with address-width overrides |
-| `M_AXI` | AXI4-Full master with optional burst and ID signals |
-| `M_AXIS` | Two AXI4-Stream masters created from one interface array |
-| `S_AXIS` | AXI4-Stream slave with optional sideband signals |
-| `DBG` | Custom conduit with required and optional user-defined ports |
+| Interface | What it demonstrates                                         |
+| --------- | ------------------------------------------------------------ |
+| `S_AXI`   | AXI4-Lite register slave with address-width overrides        |
+| `M_AXI`   | AXI4-Full master with optional burst and ID signals          |
+| `M_AXIS`  | Two AXI4-Stream masters created from one interface array     |
+| `S_AXIS`  | AXI4-Stream slave with optional sideband signals             |
+| `DBG`     | Custom conduit with required and optional user-defined ports |
 
 The example also contains two clock domains, active-high and active-low resets,
 level and edge interrupts, and parameter-based port widths.
+AXI interfaces are resolved through the same canonical contract used by the
+canvas and generators. Root data widths remain editable, while dependent
+qualifier widths such as `TKEEP`, `TSTRB`, and `WSTRB` are derived and shown as
+read-only formulas in the Inspector. Generation is blocked if a hand-edited
+derived override disagrees with its root width.
 
 ## Review the memory map
 
-| Feature | Location |
-|---|---|
-| Read-only, write-only, and read-write registers | `ID`, `CMD`, `CTRL`, `SCRATCH` |
-| Write-one-to-clear fields | `IRQ_EVENT` |
-| Read-write self-clearing field | `CTRL.SOFT_RST` |
-| Field range and offset/width syntax | `CTRL.MODE`, `CTRL.PRESCALE` |
-| Register and field reset values | `ID`, `SCRATCH`, `CTRL` |
-| Enumerated values | `CTRL.MODE`, `STATUS.FSM_STATE` |
-| Automatic change detection | `IRQ_EVENT.LINK_TOGGLED` |
-| Flat register array | `CH_GAIN` |
-| Array of register groups | `DMA` |
-| Memory and reserved blocks | `BUF_RAM`, `RSVD` |
+| Feature                                         | Location                        |
+| ----------------------------------------------- | ------------------------------- |
+| Read-only, write-only, and read-write registers | `ID`, `CMD`, `CTRL`, `SCRATCH`  |
+| Write-one-to-clear fields                       | `IRQ_EVENT`                     |
+| Read-write self-clearing field                  | `CTRL.SOFT_RST`                 |
+| Field range and offset/width syntax             | `CTRL.MODE`, `CTRL.PRESCALE`    |
+| Register and field reset values                 | `ID`, `SCRATCH`, `CTRL`         |
+| Enumerated values                               | `CTRL.MODE`, `STATUS.FSM_STATE` |
+| Automatic change detection                      | `IRQ_EVENT.LINK_TOGGLED`        |
+| Flat register array                             | `CH_GAIN`                       |
+| Array of register groups                        | `DMA`                           |
+| Memory and reserved blocks                      | `BUF_RAM`, `RSVD`               |
 
 The generated register file currently packs implemented registers in their
 listed order. Explicit gaps remain useful for documentation and software

@@ -109,6 +109,8 @@ busInterfaces:
       ready: rx_ready
     portWidthOverrides:
       data: 16
+    interfaceProperties:
+      dataBitsPerSymbol: 1
 
 memoryMaps:
   import: comprehensive_avalon.mm.yml

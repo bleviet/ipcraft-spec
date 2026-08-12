@@ -254,7 +254,7 @@
         },
         "mode": {
           "$ref": "#/$defs/BusInterfaceMode",
-          "description": "Interface mode: 'master' or 'slave'"
+          "description": "Interface mode declared by the resolved bus contract. Built-ins use master/slave, source/sink, or conduit; custom contracts may declare other mode names."
         },
         "physicalPrefix": {
           "anyOf": [
@@ -332,6 +332,24 @@
           "title": "Portwidthoverrides",
           "type": "object"
         },
+        "interfaceProperties": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "boolean"
+              }
+            ]
+          },
+          "description": "Semantic interface properties. Recognized bus contracts validate the supported keys and values.",
+          "title": "Interfaceproperties",
+          "type": "object"
+        },
         "absentPorts": {
           "description": "Logical port names (uppercase) that are required by the bus spec but absent from the user's HDL source. Populated automatically by the VHDL parser; prevents the generator from emitting ports not present in the entity.",
           "items": {
@@ -376,7 +394,7 @@
         },
         "endianness": {
           "$ref": "#/$defs/Endianness",
-          "description": "Byte order applied to this interface's data port(s) (e.g. WDATA/RDATA). Little-endian is the default; only relevant when the data width is a multiple of 8 bits."
+          "description": "Lane order applied to this interface's data port(s). AXI and Avalon-MM use byte lanes; Avalon-ST uses symbol lanes declared by dataBitsPerSymbol. Little-endian is the default."
         }
       },
       "required": [
@@ -388,14 +406,8 @@
       "type": "object"
     },
     "BusInterfaceMode": {
-      "description": "Enumeration for bus interface modes.",
-      "enum": [
-        "master",
-        "slave",
-        "source",
-        "sink",
-        "conduit"
-      ],
+      "description": "Bus interface mode. Built-ins use master/slave, source/sink, or conduit; custom contracts may declare other mode names.",
+      "minLength": 1,
       "title": "BusInterfaceMode",
       "type": "string"
     },
@@ -626,7 +638,7 @@
       "type": "object"
     },
     "Endianness": {
-      "description": "Byte order for a vector port or a bus interface's data port(s). Applies only to widths that are a multiple of 8 bits. Little-endian is the default.",
+      "description": "Lane order for a vector port or bus-interface data port. Standalone ports, AXI, and Avalon-MM use byte lanes; Avalon-ST uses symbol lanes. Little-endian is the default.",
       "enum": [
         "little",
         "big"

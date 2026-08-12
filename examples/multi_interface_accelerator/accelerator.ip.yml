@@ -55,6 +55,7 @@ busInterfaces:
   memoryMapRef: CSR_MAP
   portWidthOverrides:
     AWADDR: 16
+    ARADDR: 16
 - name: M_AXIS_OUT
   type: ipcraft:busif:axi_stream:1.0
   mode: master
