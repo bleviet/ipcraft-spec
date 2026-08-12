@@ -168,12 +168,13 @@ busInterfaces:
 |---|---|
 | `name` | Required interface name |
 | `type` | Bus definition identifier |
-| `mode` | `master`, `slave`, `source`, `sink`, or `conduit` |
+| `mode` | Mode declared by the resolved bus contract. Built-ins use `master`, `slave`, `source`, `sink`, or `conduit`; custom contracts may declare other names. |
 | `physicalPrefix` | Prefix added to generated HDL port names |
 | `associatedClock`, `associatedReset` | Physical clock and reset names |
 | `memoryMapRef` | Name of the memory map served by the interface |
 | `useOptionalPorts` | Optional logical ports to include |
 | `portWidthOverrides` | Logical port widths that differ from the bus definition |
+| `interfaceProperties` | Contract-defined semantic values such as Avalon-ST symbol layout |
 | `endianness` | Data byte order; for Avalon-ST, `big` places the first symbol in the most-significant data bits |
 | `array` | Rules for creating several similar interfaces |
 | `conduitPorts` | User-defined signals for a custom conduit |
@@ -190,7 +191,8 @@ busInterfaces:
 | `ipcraft:busif:avalon_st:1.0` | `source`, `sink` |
 
 See `bus_definitions/` for logical port names, default widths, directions, and
-optional ports.
+optional ports. See [Bus Interface Conformance](bus-interface-conformance.md)
+for contract rules, aliases, semantic properties, and derived-width examples.
 
 ### Include optional ports
 
