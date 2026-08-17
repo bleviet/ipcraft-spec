@@ -60,13 +60,6 @@ AVALON_MEMORY_MAPPED:
       dividendPort: writedata
       divisor: 8
       severity: error
-    - ruleId: AVALON_MM_BYTEENABLE_N_WIDTH
-      code: AVALON_MM_BYTEENABLE_N_WIDTH
-      kind: portWidthQuotient
-      port: byteenable_n
-      dividendPort: writedata
-      divisor: 8
-      severity: error
   ports:
   - name: clk
     width: 1
@@ -90,12 +83,18 @@ AVALON_MEMORY_MAPPED:
     presence: optional
     role: control
     widthPolicy: fixed
+    polarity:
+      default: activeHigh
+      roles: { activeHigh: read, activeLow: read_n }
   - name: write
     width: 1
     direction: out
     presence: optional
     role: control
     widthPolicy: fixed
+    polarity:
+      default: activeHigh
+      roles: { activeHigh: write, activeLow: write_n }
   - name: byteenable
     width: 4
     direction: out
@@ -106,16 +105,9 @@ AVALON_MEMORY_MAPPED:
       operation: divideBy
       port: writedata
       divisor: 8
-  - name: byteenable_n
-    width: 4
-    direction: out
-    presence: optional
-    role: byteQualifier
-    widthPolicy: derived
-    derivedWidth:
-      operation: divideBy
-      port: writedata
-      divisor: 8
+    polarity:
+      default: activeHigh
+      roles: { activeHigh: byteenable, activeLow: byteenable_n }
   - name: debugaccess
     width: 1
     direction: out
@@ -146,12 +138,9 @@ AVALON_MEMORY_MAPPED:
     presence: optional
     role: control
     widthPolicy: fixed
-  - name: readdatavalid_n
-    width: 1
-    direction: in
-    presence: optional
-    role: control
-    widthPolicy: fixed
+    polarity:
+      default: activeHigh
+      roles: { activeHigh: readdatavalid, activeLow: readdatavalid_n }
   - name: writeresponsevalid
     width: 1
     direction: in
@@ -164,12 +153,9 @@ AVALON_MEMORY_MAPPED:
     presence: optional
     role: control
     widthPolicy: fixed
-  - name: waitrequest_n
-    width: 1
-    direction: in
-    presence: optional
-    role: control
-    widthPolicy: fixed
+    polarity:
+      default: activeHigh
+      roles: { activeHigh: waitrequest, activeLow: waitrequest_n }
   - name: response
     width: 2
     direction: in
@@ -183,18 +169,6 @@ AVALON_MEMORY_MAPPED:
     role: control
     widthPolicy: root
   - name: beginbursttransfer
-    width: 1
-    direction: out
-    presence: optional
-    role: control
-    widthPolicy: fixed
-  - name: read_n
-    width: 1
-    direction: out
-    presence: optional
-    role: control
-    widthPolicy: fixed
-  - name: write_n
     width: 1
     direction: out
     presence: optional

@@ -402,6 +402,23 @@
       },
       "required": ["version", "interfaceKind", "modePolicy", "interfaceProperties", "constraints"]
     },
+    "PortPolarity": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "default": { "enum": ["activeHigh", "activeLow"] },
+        "roles": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "activeHigh": { "$ref": "#/$defs/NonEmptyString" },
+            "activeLow": { "$ref": "#/$defs/NonEmptyString" }
+          },
+          "required": ["activeHigh", "activeLow"]
+        }
+      },
+      "required": ["default", "roles"]
+    },
     "BusContractPort": {
       "type": "object",
       "additionalProperties": false,
@@ -413,6 +430,7 @@
         "direction": { "enum": ["in", "out"] },
         "presence": { "enum": ["required", "optional"] },
         "role": { "$ref": "#/$defs/NonEmptyString" },
+        "polarity": { "$ref": "#/$defs/PortPolarity" },
         "widthPolicy": { "enum": ["root", "derived", "fixed"] },
         "derivedWidth": { "$ref": "#/$defs/DerivedOperation" },
         "overrideConstraintRuleId": {

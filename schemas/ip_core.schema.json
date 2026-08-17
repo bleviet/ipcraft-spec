@@ -332,6 +332,18 @@
           "title": "Portwidthoverrides",
           "type": "object"
         },
+        "portNameOverrides": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Physical port-name overrides keyed by canonical bus port name.",
+          "type": "object"
+        },
+        "portPolarityOverrides": {
+          "type": "object",
+          "description": "Per-port assertion polarity overrides keyed by canonical bus port name.",
+          "additionalProperties": { "enum": ["activeHigh", "activeLow"] }
+        },
         "interfaceProperties": {
           "additionalProperties": {
             "anyOf": [

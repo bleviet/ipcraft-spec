@@ -45,6 +45,19 @@ An explicit derived or fixed override is valid only when it equals the
 contract result. A root edit removes now-redundant or invalid coupled derived
 overrides atomically.
 
+## Port polarity declarations
+
+A port may declare a `polarity` object with a default assertion level and two
+logical roles: `activeHigh` and `activeLow`. The roles identify the physical
+suffixes for both assertion conventions while the canonical port remains a
+single optional activation. A polarity override is keyed by that canonical
+port name through `portPolarityOverrides`.
+
+The built-in Avalon-MM contract declares configurable polarity only for
+`read`, `write`, `byteenable`, `readdatavalid`, and `waitrequest`. Physical
+spelling remains independent: `portNameOverrides` can still select a literal
+physical suffix without changing the port's asserted polarity.
+
 ## AXI4-Stream byte qualifiers
 
 AXI4-Stream data is byte aligned. `TKEEP` and `TSTRB`, when enabled, contain one
