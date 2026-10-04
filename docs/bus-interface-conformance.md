@@ -76,8 +76,10 @@ All bus definitions that IPCraft ships have a complete version-1 contract.
 
 IPCraft matches aliases with these rules:
 
-1. IPCraft removes spaces at the start and end of a short alias. Then it
-   compares the alias without case sensitivity.
+1. IPCraft compares a short alias without case sensitivity. Before the
+   comparison, it removes spaces, underscores (`_`), periods (`.`), and
+   hyphens (`-`). For example, `AVALON_STREAMING`, `avalon-streaming`, and
+   `AvalonStreaming` are the same alias.
 2. A full VLNV alias must match the vendor, the library, and the name exactly.
 3. The version must match exactly. The only exception is an alias that
    declares `version: '*'`. This alias matches all versions.

@@ -36,8 +36,26 @@ it.
 | `simulation` | Testbench framework and simulator overrides |
 | `targets` | Intended synthesis tools, such as Vivado or Quartus |
 | `useBusLibrary` | Project-local directory containing bus definitions |
-| `apiVersion` | Version of the IPCraft file format |
+| `apiVersion` | Version of the IPCraft file format; see [File format versions](#file-format-versions) |
 | `scaffold_pack` | Saved scaffold pack selection; normally managed by the editor |
+
+## File format versions
+
+`apiVersion` gives the version of the IPCraft file format. A file without
+`apiVersion` uses version `1.0`.
+
+| Version | Changes |
+|---|---|
+| `1.0` | First version |
+| `1.1` | Bus interfaces use contracts. Avalon-MM active-low ports such as `read_n` are now a polarity of one port, set with `portPolarityOverrides`. New fields: `portPolarityOverrides`, `portNameOverrides`, and `interfaceProperties`. See [Bus Interface Conformance](bus-interface-conformance.md). |
+
+Rules for tools:
+
+- A tool reads all versions up to the latest version that it supports.
+- A tool does not read a file that declares a newer version. It reports an
+  error.
+- A tool can upgrade a file to the latest version. The upgrade changes the
+  file to the new form and sets `apiVersion`.
 
 ## Set the IP identity
 
