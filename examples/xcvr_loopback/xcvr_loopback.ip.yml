@@ -3,6 +3,7 @@ vlnv:
   library: examples
   name: xcvr_loopback
   version: 1.0.0
+apiVersion: '1.1'
 description: >
   Demonstrates a custom bus interface definition (xcvr) with parameterized widths.
   The bus definition uses constant literal widths; this IP overrides them

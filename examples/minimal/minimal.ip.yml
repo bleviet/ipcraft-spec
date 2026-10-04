@@ -4,5 +4,6 @@ vlnv:
   library: examples
   name: minimal_ip
   version: 1.0.0
+apiVersion: '1.1'
 description: Minimal IP core with only required fields - no interfaces or other optional
   elements
