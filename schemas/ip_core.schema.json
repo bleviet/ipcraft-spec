@@ -239,7 +239,7 @@
       "type": "string"
     },
     "BusInterface": {
-      "additionalProperties": true,
+      "additionalProperties": false,
       "description": "Bus interface definition for an IP core.\n\nRepresents a standardized bus connection (AXI, Avalon, etc.) with\noptional width overrides, clock/reset associations, and array support.",
       "properties": {
         "name": {
@@ -251,6 +251,33 @@
           "description": "Bus type identifier: a full VLNV in vendor:library:name:version format (e.g., 'ipcraft:busif:axi4_lite:1.0'), or a recognized short alias (e.g., 'AXI4L').",
           "title": "Type",
           "type": "string"
+        },
+        "busTypeVlnv": {
+          "description": "IP-XACT bus type VLNV of an imported interface whose type has no bus definition in the library. Written by the component.xml importer; generators use it to re-emit the original bus type.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["vendor", "library", "name", "version"],
+          "properties": {
+            "vendor": { "type": "string" },
+            "library": { "type": "string" },
+            "name": { "type": "string" },
+            "version": { "type": "string" }
+          }
+        },
+        "rawPortMaps": {
+          "description": "Logical-to-physical port maps of an imported interface whose type has no bus definition in the library. Written by the component.xml importer; generators use it instead of a bus definition.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["logical", "physical", "direction", "width"],
+            "properties": {
+              "logical": { "type": "string" },
+              "physical": { "type": "string" },
+              "direction": { "type": "string", "enum": ["in", "out"] },
+              "width": { "type": "integer", "minimum": 1 }
+            }
+          }
         },
         "mode": {
           "$ref": "#/$defs/BusInterfaceMode",
@@ -878,7 +905,7 @@
       "type": "string"
     },
     "Port": {
-      "additionalProperties": true,
+      "additionalProperties": false,
       "description": "Generic port definition for IP cores.\n\nUsed for data and control ports that are not part of clock, reset, or bus interfaces.",
       "properties": {
         "name": {
