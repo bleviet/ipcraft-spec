@@ -34,8 +34,8 @@ busInterfaces:
     associatedReset: reset_n
     memoryMapRef: CSR_MAP
     portWidthOverrides:
-      AWADDR: 12
-      ARADDR: 12
+      AWADDR: 13
+      ARADDR: 13
       WDATA: 32
       RDATA: 32
       WSTRB: 4
