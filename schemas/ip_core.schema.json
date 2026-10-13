@@ -192,6 +192,11 @@
               "type": "integer"
             },
             {
+              "type": "string",
+              "pattern": "^\\$version(\\.(major|feature|minor|patch))?$",
+              "description": "Reference to the owning IP core's vlnv.version, resolved at generation time."
+            },
+            {
               "type": "null"
             }
           ],
@@ -1110,6 +1115,11 @@
               "type": "integer"
             },
             {
+              "type": "string",
+              "pattern": "^\\$version(\\.(major|feature|minor|patch))?$",
+              "description": "Reference to the owning IP core's vlnv.version, resolved at generation time."
+            },
+            {
               "type": "null"
             }
           ],
@@ -1355,6 +1365,13 @@
           "description": "Version string (e.g., '1.2.0')",
           "title": "Version",
           "type": "string"
+        },
+        "versionScheme": {
+          "type": "string",
+          "enum": ["free", "major.minor", "major.minor.patch", "major.feature.minor.patch"],
+          "default": "free",
+          "title": "Versionscheme",
+          "description": "How vlnv.version is structured. 'free' = any text. Numeric schemes = 2, 3 or 4 dot-separated components, each 0..255 (8 bit). Required for $version register references."
         }
       },
       "required": [
@@ -1576,7 +1593,7 @@
       "type": "string",
       "enum": ["1.0", "1.1", "1.2"],
       "default": "1.2",
-      "description": "IPCraft file format version of this IP core file. A file without apiVersion uses version 1.0. Version 1.1 adds bus interface contracts: portPolarityOverrides, portNameOverrides, and interfaceProperties. Version 1.2 adds port field metadata (fields on ports and conduit ports, portFields on bus interfaces). Tools must not read a file that declares a newer version than they support."
+      "description": "IPCraft file format version of this IP core file. A file without apiVersion uses version 1.0. Version 1.1 adds bus interface contracts: portPolarityOverrides, portNameOverrides, and interfaceProperties. Version 1.2 adds port field metadata (fields on ports and conduit ports, portFields on bus interfaces) and vlnv.versionScheme. Tools must not read a file that declares a newer version than they support."
     },
     "useBusLibrary": {
       "type": "string",

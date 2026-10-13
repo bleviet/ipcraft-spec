@@ -52,6 +52,7 @@ A single file may contain several top-level memory maps.
 | `name` | Required map name; bus interfaces use this value in `memoryMapRef` |
 | `description` | Short explanation of the map |
 | `addressBlocks` | Ordered list of address blocks |
+| `versionHistory` | Optional record of released register layouts; see [Record released versions](#record-released-versions) |
 
 ## Add address blocks
 
@@ -99,7 +100,7 @@ registers:
 | `offset` | Auto-assigned when omitted | Byte offset from the block base |
 | `size` | `32` | Register width in bits |
 | `access` | `read-write` | Default field access |
-| `resetValue` | `0` | Reset value for the complete register |
+| `resetValue` | `0` | Reset value for the complete register. A register without fields may use a [`$version` reference](#refer-to-the-ip-version) |
 | `description` | Empty | Human-readable purpose |
 | `fields` | Empty | Named bit ranges |
 | `count` | `1` | Number of array elements |
@@ -137,7 +138,7 @@ fields:
 | `bits` | Unset | Inclusive range such as `'[7:0]'` |
 | `offset`, `width` | Unset | Equivalent LSB position and number of bits |
 | `access` | `read-write` | Hardware and software access behavior |
-| `resetValue` | Unset | Field reset value |
+| `resetValue` | Unset | Field reset value, or a [`$version` reference](#refer-to-the-ip-version) |
 | `enumeratedValues` | Unset | Map numeric values to names |
 | `monitorChangeOf` | Unset | Name of a field to watch for changes |
 | `description` | Empty | Human-readable purpose |
@@ -236,6 +237,97 @@ bit and clears it by writing one.
 `monitorChangeOf` is valid only on `write-1-to-clear` or
 `read-write-1-to-clear` fields. Use `read-write-1-to-clear` when software must
 read the flag; a `write-1-to-clear` flag always reads as zero. The named field must exist in the same register.
+
+## Refer to the IP version
+
+A `resetValue` can be a reference to the `vlnv.version` of the IP core that
+imports this map. The reference stays in the file. The generator replaces it
+with the current version, so the register always holds it.
+
+```yaml
+registers:
+  - name: VERSION
+    offset: 0x0
+    fields:
+      - name: MAJOR
+        bits: '[23:16]'
+        resetValue: $version.major
+      - name: MINOR
+        bits: '[15:8]'
+        resetValue: $version.minor
+      - name: PATCH
+        bits: '[7:0]'
+        resetValue: $version.patch
+```
+
+| Reference | Meaning |
+|---|---|
+| `$version` | The whole version, packed with the major component in the most significant byte, 8 bits per component |
+| `$version.major` | The major component |
+| `$version.feature` | The feature component (`major.feature.minor.patch` only) |
+| `$version.minor` | The minor component |
+| `$version.patch` | The patch component (not in `major.minor`) |
+
+Rules:
+
+- The IP core must set a numeric `vlnv.versionScheme`; see
+  [Choose a version scheme](ip_spec.md#choose-a-version-scheme).
+- A field with a component reference is exactly 8 bits wide. A field with
+  `$version` is exactly `8 * n` bits wide, where `n` is the number of components.
+- A register without fields may use any reference. It must be at least as wide
+  as the reference needs; a wider register holds the value zero-extended.
+- A register with fields uses references on its fields, not on the register.
+- A memory map has one register that holds references, and register arrays do
+  not support them.
+
+A field or register with a reference is a read-only constant in generated
+hardware, whatever its `access` says.
+
+## Record released versions
+
+`versionHistory` records which register layout each released version of the IP
+core used, so a driver can find the layout that matches the hardware it reads.
+It is valid in `*.mm.yml` files only. An inline memory map in an `*.ip.yml` does
+not accept it.
+
+```yaml
+- name: CSR
+  addressBlocks:
+    - name: REGS
+      baseAddress: 0
+      range: 4K
+      registers:
+        - name: VERSION
+          offset: 0
+          resetValue: $version
+  versionHistory:
+    registerSets:
+      rs1-cfcf5f65555a5b01:
+        addressBlocks:
+          - name: REGS
+            baseAddress: 0
+            range: 4K
+            registers:
+              - name: VERSION
+                offset: 0
+                resetValue: $version
+    versions:
+      - version: 1.4.1
+        registerSet: rs1-cfcf5f65555a5b01
+```
+
+| Field | Purpose |
+|---|---|
+| `registerSets` | Frozen copies of `addressBlocks`, keyed by `rs1-` and 16 lowercase hex digits |
+| `versions` | Released versions in release order; each has a non-empty `version` and the `registerSet` key it used |
+
+The key is the first 16 hex digits of a SHA-256 hash of the layout that a driver
+depends on: names, offsets, sizes, bit ranges, access, reset values, and
+`$version` references. Descriptions, comments, and formatting do not change it.
+`rs1` names the version of that hash definition. The last entry of `versions` is
+the latest version. Versions that share a layout share one register set.
+
+The extension writes this block. Edit it by hand only to repair it.
 
 ## Continue with an example
 
