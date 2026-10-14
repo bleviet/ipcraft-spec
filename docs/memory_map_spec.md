@@ -267,13 +267,31 @@ registers:
 | `$version.feature` | The feature component (`major.feature.minor.patch` only) |
 | `$version.minor` | The minor component |
 | `$version.patch` | The patch component (not in `major.minor`) |
+| `$version.crc8` | CRC-8 of the version bytes (8 bits) |
+| `$version.crc16` | CRC-16 of the version bytes (16 bits) |
+
+The version bytes are the components, most significant first, one byte each
+(`1.4.2` is `01 04 02`). With a `free` version they are the UTF-8 bytes of the
+trimmed `vlnv.version` text. A driver recomputes the CRC over the version it
+reads and compares it with the CRC register to check the version register.
+
+| Reference | Algorithm | Parameters | Check value for `123456789` |
+|---|---|---|---|
+| `$version.crc8` | CRC-8/I-432-1 | polynomial `0x07`, initial `0x00`, no reflection, final XOR `0x55` | `0xA1` |
+| `$version.crc16` | CRC-16/IBM-3740 (CCITT-FALSE) | polynomial `0x1021`, initial `0xFFFF`, no reflection, final XOR `0x0000` | `0x29B1` |
+
+The parameters are chosen so that version `0.0` (and `0.0.0`, `0.0.0.0`) never
+gives a CRC of 0: an unprogrammed, all-zero register is not a valid CRC.
 
 Rules:
 
 - The IP core must set a numeric `vlnv.versionScheme`; see
-  [Choose a version scheme](ip_spec.md#choose-a-version-scheme).
+  [Choose a version scheme](ip_spec.md#choose-a-version-scheme). The CRC
+  references also work with a `free` version.
 - A field with a component reference is exactly 8 bits wide. A field with
   `$version` is exactly `8 * n` bits wide, where `n` is the number of components.
+  A field with `$version.crc8` is exactly 8 bits wide, and one with
+  `$version.crc16` exactly 16 bits wide.
 - A register without fields may use any reference. It must be at least as wide
   as the reference needs; a wider register holds the value zero-extended.
 - A register with fields uses references on its fields, not on the register.
@@ -314,12 +332,18 @@ not accept it.
     versions:
       - version: 1.4.1
         registerSet: rs1-cfcf5f65555a5b01
+        crc8: 109
+        crc16: 10057
 ```
 
 | Field | Purpose |
 |---|---|
 | `registerSets` | Frozen copies of `addressBlocks`, keyed by `rs1-` and 16 lowercase hex digits |
-| `versions` | Released versions in release order; each has a non-empty `version` and the `registerSet` key it used |
+| `versions` | Released versions in release order; each has a non-empty `version`, the `registerSet` key it used, and optionally `crc8` and `crc16` |
+
+`crc8` (0 to 255) and `crc16` (0 to 65535) are the [version CRCs](#refer-to-the-ip-version)
+of that version under the version scheme of the IP core when the entry was
+written. Entries written by earlier versions of the extension have no CRCs.
 
 The key is the first 16 hex digits of a SHA-256 hash of the layout that a driver
 depends on: names, offsets, sizes, bit ranges, access, reset values, and

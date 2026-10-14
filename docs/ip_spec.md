@@ -103,8 +103,9 @@ Each number is a whole number from 0 to 255 without leading zeros, so it fits in
 as a decimal number.
 
 A numeric scheme lets a memory map refer to the version with `$version`
-references. A `free` version has no numeric value, so references are not valid
-with it. See [Version references](memory_map_spec.md#refer-to-the-ip-version).
+references. A `free` version has no numeric value, so only the CRC references
+`$version.crc8` and `$version.crc16` are valid with it. See
+[Version references](memory_map_spec.md#refer-to-the-ip-version).
 Declare `apiVersion: "1.2"` in a file that sets `versionScheme`.
 
 ## Add parameters

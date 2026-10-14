@@ -193,7 +193,7 @@
             },
             {
               "type": "string",
-              "pattern": "^\\$version(\\.(major|feature|minor|patch))?$",
+              "pattern": "^\\$version(\\.(major|feature|minor|patch|crc8|crc16))?$",
               "description": "Reference to the owning IP core's vlnv.version, resolved at generation time."
             },
             {
@@ -1116,7 +1116,7 @@
             },
             {
               "type": "string",
-              "pattern": "^\\$version(\\.(major|feature|minor|patch))?$",
+              "pattern": "^\\$version(\\.(major|feature|minor|patch|crc8|crc16))?$",
               "description": "Reference to the owning IP core's vlnv.version, resolved at generation time."
             },
             {
@@ -1371,7 +1371,7 @@
           "enum": ["free", "major.minor", "major.minor.patch", "major.feature.minor.patch"],
           "default": "free",
           "title": "Versionscheme",
-          "description": "How vlnv.version is structured. 'free' = any text. Numeric schemes = 2, 3 or 4 dot-separated components, each 0..255 (8 bit). Required for $version register references."
+          "description": "How vlnv.version is structured. 'free' = any text. Numeric schemes = 2, 3 or 4 dot-separated components, each 0..255 (8 bit). Required for $version, $version.<component> references; $version.crc8 and $version.crc16 also work with 'free'."
         }
       },
       "required": [
