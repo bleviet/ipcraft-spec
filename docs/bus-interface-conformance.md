@@ -310,7 +310,7 @@ conflict. It does not select one of the two values.
 | AXI4-Lite   | `AXI4L_DATA_WIDTH`, `AXI4L_DATA_EQUAL`, `AXI4L_WSTRB_WIDTH`, `AXI4L_ADDRESS_EQUAL`                                             | None                        |
 | AXI4 Full   | `AXI4_DATA_WIDTH`, `AXI4_DATA_EQUAL`, `AXI4_WSTRB_WIDTH`, `AXI4_ID_WIDTHS`, fixed widths, presence dependencies                | None                        |
 | AXI4-Stream | `AXIS_DATA_BYTE_ALIGNED`, `AXIS_TKEEP_WIDTH`, `AXIS_TSTRB_WIDTH`, fixed handshake widths                                       | `AXIS_PREFERRED_DATA_WIDTH` |
-| Avalon-MM   | `AVALON_MM_DATA_WIDTH`, `AVALON_MM_DATA_EQUAL`, `AVALON_MM_BYTEENABLE_WIDTH`, fixed control widths                             | None                        |
+| Avalon-MM   | `AVALON_MM_DATA_WIDTH`, `AVALON_MM_DATA_EQUAL`, `AVALON_MM_BYTEENABLE_WIDTH`, fixed control widths, presence dependencies      | None                        |
 | Avalon-ST   | `AVALON_ST_DATA_LAYOUT`, `AVALON_ST_EMPTY_WIDTH`, `AVALON_ST_PACKET_PORTS`, `AVALON_ST_READY_LATENCY`, `AVALON_ST_MAX_CHANNEL` | None                        |
 
 Each diagnostic contains the YAML path of the problem as an array. The user

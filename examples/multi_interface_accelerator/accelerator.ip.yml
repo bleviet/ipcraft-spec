@@ -68,6 +68,7 @@ busInterfaces:
   associatedClock: i_clk_sys
   associatedReset: i_rst_n_sys
   useOptionalPorts:
+  - TREADY
   - TLAST
   - TUSER
   portWidthOverrides:
@@ -78,6 +79,8 @@ busInterfaces:
   physicalPrefix: s_axis_
   associatedClock: i_clk_sys
   associatedReset: i_rst_n_sys
+  useOptionalPorts:
+  - TREADY
 memoryMaps:
   import: accelerator.mm.yml
 parameters:
