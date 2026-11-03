@@ -130,7 +130,7 @@ AVALON_STREAMING:
   - name: valid
     width: 1
     direction: out
-    presence: required
+    presence: optional
     role: control
     widthPolicy: fixed
   - name: ready

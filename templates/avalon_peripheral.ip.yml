@@ -41,6 +41,7 @@ busInterfaces:
   associatedClock: clk
   associatedReset: reset
   useOptionalPorts:
+  - valid
   - ready
   - startofpacket
   - endofpacket
@@ -51,6 +52,7 @@ busInterfaces:
   associatedClock: clk
   associatedReset: reset
   useOptionalPorts:
+  - valid
   - ready
   - startofpacket
   - endofpacket

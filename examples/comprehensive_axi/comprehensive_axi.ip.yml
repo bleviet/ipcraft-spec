@@ -155,6 +155,7 @@ busInterfaces:
     associatedReset: i_rst_proc
     description: Arrayed streaming outputs (channels 1..2)
     useOptionalPorts:
+      - TREADY
       - TLAST
       - TSTRB
       - TKEEP
@@ -174,6 +175,7 @@ busInterfaces:
     associatedReset: i_rst_proc
     description: Streaming input
     useOptionalPorts:
+      - TREADY
       - TLAST
       - TSTRB
       - TKEEP

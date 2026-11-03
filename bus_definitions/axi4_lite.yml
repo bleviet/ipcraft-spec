@@ -86,7 +86,7 @@ AXI4_LITE:
   - name: AWPROT
     width: 3
     direction: out
-    presence: required
+    presence: optional
     role: control
     widthPolicy: fixed
   - name: WDATA
@@ -156,7 +156,7 @@ AXI4_LITE:
   - name: ARPROT
     width: 3
     direction: out
-    presence: required
+    presence: optional
     role: control
     widthPolicy: fixed
   - name: RDATA

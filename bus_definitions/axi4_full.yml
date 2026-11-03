@@ -70,6 +70,42 @@ AXI4_FULL:
       port: RID
       requires: [RVALID, RRESP]
       severity: error
+    - ruleId: AXI4_AWID_REQUIRES_BID
+      code: AXI4_AWID_REQUIRES_BID
+      kind: portPresenceRequires
+      port: AWID
+      requires: [BID]
+      severity: error
+    - ruleId: AXI4_BID_REQUIRES_AWID
+      code: AXI4_BID_REQUIRES_AWID
+      kind: portPresenceRequires
+      port: BID
+      requires: [AWID]
+      severity: error
+    - ruleId: AXI4_ARID_REQUIRES_RID
+      code: AXI4_ARID_REQUIRES_RID
+      kind: portPresenceRequires
+      port: ARID
+      requires: [RID]
+      severity: error
+    - ruleId: AXI4_RID_REQUIRES_ARID
+      code: AXI4_RID_REQUIRES_ARID
+      kind: portPresenceRequires
+      port: RID
+      requires: [ARID]
+      severity: error
+    - ruleId: AXI4_AWLEN_REQUIRES_WLAST
+      code: AXI4_AWLEN_REQUIRES_WLAST
+      kind: portPresenceRequires
+      port: AWLEN
+      requires: [WLAST]
+      severity: error
+    - ruleId: AXI4_ARLEN_REQUIRES_RLAST
+      code: AXI4_ARLEN_REQUIRES_RLAST
+      kind: portPresenceRequires
+      port: ARLEN
+      requires: [RLAST]
+      severity: error
   ports:
   - name: ACLK
     width: 1
@@ -108,7 +144,7 @@ AXI4_FULL:
   - name: AWPROT
     width: 3
     direction: out
-    presence: required
+    presence: optional
     role: control
     widthPolicy: fixed
   - name: AWLEN
@@ -226,7 +262,7 @@ AXI4_FULL:
   - name: ARPROT
     width: 3
     direction: out
-    presence: required
+    presence: optional
     role: control
     widthPolicy: fixed
   - name: ARLEN

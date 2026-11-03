@@ -60,6 +60,36 @@ AVALON_MEMORY_MAPPED:
       dividendPort: writedata
       divisor: 8
       severity: error
+    - ruleId: AVALON_MM_READ_REQUIRES_READDATA
+      code: AVALON_MM_READ_REQUIRES_READDATA
+      kind: portPresenceRequires
+      port: read
+      requires: [readdata]
+      severity: error
+    - ruleId: AVALON_MM_WRITE_REQUIRES_WRITEDATA
+      code: AVALON_MM_WRITE_REQUIRES_WRITEDATA
+      kind: portPresenceRequires
+      port: write
+      requires: [writedata]
+      severity: error
+    - ruleId: AVALON_MM_READDATAVALID_REQUIRES_READ
+      code: AVALON_MM_READDATAVALID_REQUIRES_READ
+      kind: portPresenceRequires
+      port: readdatavalid
+      requires: [read]
+      severity: error
+    - ruleId: AVALON_MM_WRITERESPONSEVALID_REQUIRES_RESPONSE
+      code: AVALON_MM_WRITERESPONSEVALID_REQUIRES_RESPONSE
+      kind: portPresenceRequires
+      port: writeresponsevalid
+      requires: [response]
+      severity: error
+    - ruleId: AVALON_MM_BEGINBURSTTRANSFER_REQUIRES_BURSTCOUNT
+      code: AVALON_MM_BEGINBURSTTRANSFER_REQUIRES_BURSTCOUNT
+      kind: portPresenceRequires
+      port: beginbursttransfer
+      requires: [burstcount]
+      severity: error
   ports:
   - name: clk
     width: 1

@@ -107,12 +107,16 @@ busInterfaces:
     physicalPrefix: s_axis_data_
     associatedClock: CLK_ETH
     associatedReset: RST_ETH
+    useOptionalPorts:
+      - TREADY
   - name: data_stream_out
     type: ipcraft:busif:axi_stream:1.0
     mode: master
     physicalPrefix: m_axis_data_
     associatedClock: CLK_ETH
     associatedReset: RST_ETH
+    useOptionalPorts:
+      - TREADY
   - name: pcie_interface
     type: ipcraft:busif:axi4_lite:1.0
     mode: master
@@ -125,12 +129,16 @@ busInterfaces:
     physicalPrefix: s_axis_usb_
     associatedClock: CLK_USB
     associatedReset: RST_SYS
+    useOptionalPorts:
+      - TREADY
   - name: usb_data_out
     type: ipcraft:busif:axi_stream:1.0
     mode: master
     physicalPrefix: m_axis_usb_
     associatedClock: CLK_USB
     associatedReset: RST_SYS
+    useOptionalPorts:
+      - TREADY
 parameters:
   - name: DATA_WIDTH
     dataType: integer

@@ -82,7 +82,7 @@ AXI_STREAM:
   - name: TREADY
     width: 1
     direction: in
-    presence: required
+    presence: optional
     role: control
     widthPolicy: fixed
   - name: TSTRB
