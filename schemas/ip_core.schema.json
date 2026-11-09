@@ -366,6 +366,14 @@
           "description": "Physical port-name overrides keyed by canonical bus port name.",
           "type": "object"
         },
+        "portFields": {
+          "type": "object",
+          "description": "Field metadata of bus interface ports, keyed by canonical logical port name (like portWidthOverrides). Bit 0 = LSB of the HDL vector. Applies to every instance of an array interface. Metadata only; generators ignore it.",
+          "additionalProperties": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/PortFieldDef" }
+          }
+        },
         "portPolarityOverrides": {
           "type": "object",
           "description": "Per-port assertion polarity overrides keyed by canonical bus port name.",
@@ -509,6 +517,13 @@
           "default": "required",
           "description": "Whether the port is required or optional in the generated interface",
           "title": "Presence"
+        },
+        "fields": {
+          "description": "Optional named bit ranges of this port (bit 0 = LSB of the HDL vector). Metadata only; generators ignore it.",
+          "items": {
+            "$ref": "#/$defs/PortFieldDef"
+          },
+          "type": "array"
         }
       },
       "required": [
@@ -951,6 +966,13 @@
         "endianness": {
           "$ref": "#/$defs/Endianness",
           "description": "Byte order for this port. Little-endian is the default; only relevant when width is a multiple of 8 bits."
+        },
+        "fields": {
+          "description": "Optional named bit ranges of this port (bit 0 = LSB of the HDL vector). Metadata only; generators ignore it.",
+          "items": {
+            "$ref": "#/$defs/PortFieldDef"
+          },
+          "type": "array"
         }
       },
       "required": [
@@ -958,6 +980,85 @@
         "direction"
       ],
       "title": "Port",
+      "type": "object"
+    },
+    "PortFieldDef": {
+      "additionalProperties": false,
+      "description": "Named bit range of a port. Metadata only; generators ignore it.",
+      "properties": {
+        "name": {
+          "description": "Bit field name",
+          "title": "Name",
+          "type": "string"
+        },
+        "offset": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Starting bit position (LSB = 0)",
+          "title": "Offset"
+        },
+        "width": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Number of bits",
+          "title": "Width"
+        },
+        "bits": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Bit range string e.g. [7:0]",
+          "title": "Bits"
+        },
+        "description": {
+          "default": "",
+          "description": "Field description",
+          "title": "Description",
+          "type": "string"
+        },
+        "enumeratedValues": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Enumeration mapping {value: name}",
+          "title": "Enumeratedvalues"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "PortFieldDef",
       "type": "object"
     },
     "PortDirection": {
@@ -1473,9 +1574,9 @@
     },
     "apiVersion": {
       "type": "string",
-      "enum": ["1.0", "1.1"],
-      "default": "1.1",
-      "description": "IPCraft file format version of this IP core file. A file without apiVersion uses version 1.0. Version 1.1 adds bus interface contracts: portPolarityOverrides, portNameOverrides, and interfaceProperties. Tools must not read a file that declares a newer version than they support."
+      "enum": ["1.0", "1.1", "1.2"],
+      "default": "1.2",
+      "description": "IPCraft file format version of this IP core file. A file without apiVersion uses version 1.0. Version 1.1 adds bus interface contracts: portPolarityOverrides, portNameOverrides, and interfaceProperties. Version 1.2 adds port field metadata (fields on ports and conduit ports, portFields on bus interfaces). Tools must not read a file that declares a newer version than they support."
     },
     "useBusLibrary": {
       "type": "string",
