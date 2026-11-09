@@ -3,7 +3,7 @@ vlnv:
   library: examples
   name: comprehensive_axi
   version: 1.0.0
-apiVersion: '1.1'
+apiVersion: '1.2'
 scaffold_pack: builtin-ipcraft
 description: >
   Comprehensive AXI-family example. Exercises every register-map property
@@ -81,10 +81,29 @@ ports:
     direction: in
     width: 8
     description: General-purpose parallel input
+    fields:
+      - name: mode
+        bits: '[3:0]'
+        description: Mode select switches
+        enumeratedValues:
+          0: OFF
+          1: SLOW
+          2: FAST
+      - name: enable
+        offset: 6
+        width: 2
+        description: Channel enable flags
   - name: o_gpio
     direction: out
     width: DATA_W
     description: Parallel output, width set by the DATA_W parameter
+    fields:
+      - name: value
+        bits: '[15:0]'
+        description: Output value
+      - name: strobe
+        bits: '[16]'
+        description: Output strobe
   - name: o_led
     direction: out
     width: 1
@@ -167,6 +186,19 @@ busInterfaces:
       TSTRB: 8
       TKEEP: 8
       TUSER: 4
+    portFields:
+      TDATA:
+        - name: sample
+          bits: '[31:0]'
+          description: Sample word
+        - name: tag
+          offset: 32
+          width: 8
+          description: Sample tag
+      TUSER:
+        - name: first
+          bits: '[0]'
+          description: First beat of a frame
   - name: S_AXIS
     type: ipcraft:busif:axi_stream:1.0
     mode: slave
@@ -194,6 +226,10 @@ busInterfaces:
         direction: out
         width: DATA_W
         description: Trace word, parameterized width
+        fields:
+          - name: phase
+            bits: '[2:0]'
+            description: Capture phase
       - name: trace_valid
         direction: out
         width: 1

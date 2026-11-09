@@ -48,6 +48,7 @@ it.
 |---|---|
 | `1.0` | First version |
 | `1.1` | Bus interfaces use contracts. Avalon-MM active-low ports such as `read_n` are now a polarity of one port, set with `portPolarityOverrides`. New fields: `portPolarityOverrides`, `portNameOverrides`, and `interfaceProperties`. See [Bus Interface Conformance](bus-interface-conformance.md). |
+| `1.2` | Port field metadata. New fields: `fields` on `ports` and conduit ports, and `portFields` on bus interfaces. See [Describe the fields of a port](#describe-the-fields-of-a-port). |
 
 Rules for tools:
 
@@ -261,6 +262,71 @@ busInterfaces:
 
 Use `useBusLibrary` when the project keeps reusable custom bus definitions in a
 local directory. See `examples/xcvr_loopback/` for a complete example.
+
+## Describe the fields of a port
+
+Use `fields` to name the bit ranges of a packed port, such as a status word or
+an AXI-Stream `TDATA` payload. A file that uses port fields declares
+`apiVersion: '1.2'`. Port fields are metadata only. Generators ignore them, and
+generated HDL does not change.
+
+There are three places for port fields:
+
+| Port kind | Location | Key |
+|---|---|---|
+| Top-level port | `ports[]` | `fields: [...]` |
+| Conduit port | `busInterfaces[].conduitPorts[]` | `fields: [...]` |
+| Bus interface port | `busInterfaces[]` | `portFields: { <logicalName>: [...] }` |
+
+`portFields` is keyed by the logical port name from the bus definition, like
+`portWidthOverrides`. It applies to every instance of an array interface.
+Clocks, resets, and interrupts do not take fields.
+
+```yaml
+ports:
+  - name: o_status
+    direction: out
+    width: 16
+    fields:
+      - name: state
+        bits: "[3:0]"
+        enumeratedValues:
+          0: IDLE
+          1: RUN
+      - name: level
+        offset: 8
+        width: 8
+
+busInterfaces:
+  - name: s_axis
+    type: ipcraft:busif:axi_stream:1.0
+    mode: slave
+    physicalPrefix: s_axis_
+    portFields:
+      TDATA:
+        - name: sample
+          bits: "[23:0]"
+```
+
+A port field uses the bit-field format of a register, without `access` and
+`resetValue`.
+
+| Key | Required | Meaning |
+|---|---|---|
+| `name` | yes | Field name, unique within the port |
+| `bits` | one position form | Inclusive range `"[msb:lsb]"`, or `"[n]"` for one bit |
+| `offset`, `width` | one position form | Start bit (LSB = 0) and number of bits, as an alternative to `bits` |
+| `description` | no | Free text |
+| `enumeratedValues` | no | Map `{value: name}` |
+
+Rules:
+
+- Bit 0 is the LSB of the HDL vector as declared. This does not depend on
+  `endianness`.
+- Fields can leave gaps. Fields must not overlap.
+- Positions are integers. For a port whose width is a parameter, an expression,
+  or comes from a bus definition, positions are checked against the width
+  resolved with the parameter defaults.
 
 ## Connect a memory map
 
