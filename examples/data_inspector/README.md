@@ -9,6 +9,7 @@ Open one in IPCraft for VS Code, then paste or import a sample.
 |---|---|
 | `comprehensive_axi_status.ipci.yml` | Imported register fields, enum decoding, and separate raw and decoded overlays |
 | `split_address.ipci.yml` | Two 32-bit sources joined into one 64-bit address |
+| `port_status.ipci.yml` | Fields copied from IP core ports, with port provenance |
 
 ## Try the status recipe
 

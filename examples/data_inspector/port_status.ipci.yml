@@ -1,0 +1,80 @@
+# Decode the i_gpio input port and the M_AXIS TDATA word of comprehensive_axi.
+# Paste an 8-bit i_gpio value or a 64-bit TDATA value and review the fields.
+version: 1
+name: port-status
+description: Fields copied from IP core port metadata, with port provenance.
+
+sources:
+  - id: gpio
+    name: I_GPIO
+    width: 8
+  - id: tdata
+    name: TDATA
+    width: 64
+
+overlayGroups:
+  - id: default
+    name: Default
+
+fields:
+  - id: gpio-mode
+    sourceId: gpio
+    name: mode
+    msb: 3
+    lsb: 0
+    groupId: default
+    description: Mode select switches
+    enumValues:
+      '0': 'OFF'
+      '1': SLOW
+      '2': FAST
+    importProvenance:
+      sourceFile: examples/comprehensive_axi/comprehensive_axi.ip.yml
+      portName: i_gpio
+    display:
+      interpretation: enum
+  - id: gpio-enable
+    sourceId: gpio
+    name: enable
+    msb: 7
+    lsb: 6
+    groupId: default
+    description: Channel enable flags
+    importProvenance:
+      sourceFile: examples/comprehensive_axi/comprehensive_axi.ip.yml
+      portName: i_gpio
+    display:
+      interpretation: binary
+  - id: tdata-sample
+    sourceId: tdata
+    name: sample
+    msb: 31
+    lsb: 0
+    groupId: default
+    description: Sample word
+    importProvenance:
+      sourceFile: examples/comprehensive_axi/comprehensive_axi.ip.yml
+      busInterface: M_AXIS
+      portName: TDATA
+    display:
+      interpretation: hex
+  - id: tdata-tag
+    sourceId: tdata
+    name: tag
+    msb: 39
+    lsb: 32
+    groupId: default
+    description: Sample tag
+    importProvenance:
+      sourceFile: examples/comprehensive_axi/comprehensive_axi.ip.yml
+      busInterface: M_AXIS
+      portName: TDATA
+    display:
+      interpretation: unsigned
+
+steps: []
+
+view:
+  laneWidth: 16
+  zoom: field
+  selectedGroupId: default

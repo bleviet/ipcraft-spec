@@ -45,7 +45,7 @@
         "width": { "type": "integer", "minimum": 1, "maximum": 4096 }
       }
     },
-    "importProvenance": {
+    "registerProvenance": {
       "type": "object",
       "additionalProperties": false,
       "required": ["sourceFile", "registerName"],
@@ -53,6 +53,22 @@
         "sourceFile": { "type": "string", "minLength": 1 },
         "registerName": { "type": "string", "minLength": 1 }
       }
+    },
+    "portProvenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sourceFile", "portName"],
+      "properties": {
+        "sourceFile": { "type": "string", "minLength": 1 },
+        "portName": { "type": "string", "minLength": 1 },
+        "busInterface": { "type": "string", "minLength": 1 }
+      }
+    },
+    "importProvenance": {
+      "oneOf": [
+        { "$ref": "#/$defs/registerProvenance" },
+        { "$ref": "#/$defs/portProvenance" }
+      ]
     },
     "display": {
       "type": "object",
