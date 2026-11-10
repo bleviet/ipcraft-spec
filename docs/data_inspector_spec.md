@@ -100,12 +100,32 @@ fields:
 | `groupId` | Overlay group containing the field |
 | `description` | Optional explanation |
 | `enumValues` | Map numeric strings to labels |
-| `importProvenance` | Memory-map file and register copied into the recipe |
+| `importProvenance` | Memory-map register or IP core port copied into the recipe |
 | `display` | Interpretation and comparison settings |
 
 `display.interpretation` can be `hex`, `binary`, `unsigned`, `signed`, `enum`,
 `float`, or `fixedPoint`. A fixed-point field also uses `fractionalBits`.
 `expectedValue` adds a comparison without changing the sample.
+
+`importProvenance` records where an imported field came from. It has one of two
+forms. A register names the memory-map file and the register:
+
+```yaml
+importProvenance:
+  sourceFile: maps/uart.mm.yml
+  registerName: CONTROL
+```
+
+A port names the IP core file and the port. A top-level port uses `portName`
+only. A conduit port or a bus interface port also names the bus interface, and
+a bus interface port uses the logical port name in the bus contract casing:
+
+```yaml
+importProvenance:
+  sourceFile: cores/stream.ip.yml
+  busInterface: m_axis
+  portName: TDATA
+```
 
 ## Add operations
 
@@ -159,3 +179,5 @@ view:
   register and displays an enum.
 - `examples/data_inspector/split_address.ipci.yml` combines two 32-bit sources
   into one 64-bit address.
+- `examples/data_inspector/port_status.ipci.yml` decodes fields copied from IP
+  core ports and records port provenance, including a bus interface port.
