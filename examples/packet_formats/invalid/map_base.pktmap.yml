@@ -1,0 +1,6 @@
+pktVersion: 1
+name: bad
+base: ../link.pkt.yml#link_event
+selector: src_port
+sources:
+  0: { name: other, format: ../event.pkt.yml#event }

@@ -5,7 +5,9 @@ const root = __dirname;
 module.exports = {
   schemas: {
     ipCore: path.join(root, 'schemas', 'ip_core.schema.json'),
-    memoryMap: path.join(root, 'schemas', 'memory_map.schema.json')
+    memoryMap: path.join(root, 'schemas', 'memory_map.schema.json'),
+    packetFormat: path.join(root, 'schemas', 'packet_format.schema.json'),
+    packetMap: path.join(root, 'schemas', 'packet_map.schema.json')
   },
   busDefinitions: {
     axi4_full: path.join(root, 'bus_definitions', 'axi4_full.yml'),

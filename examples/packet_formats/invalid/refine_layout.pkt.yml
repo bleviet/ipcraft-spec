@@ -1,0 +1,8 @@
+pktVersion: 1
+imports: [../event.pkt.yml]
+packetFormats:
+  - name: bad
+    extends: event
+    refine:
+      timestamp:
+        fields: [ { name: extra, bits: "[60:50]" } ]

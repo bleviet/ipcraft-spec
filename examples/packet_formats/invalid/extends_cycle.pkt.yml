@@ -1,0 +1,4 @@
+pktVersion: 1
+packetFormats:
+  - { name: a, extends: b }
+  - { name: b, extends: a }

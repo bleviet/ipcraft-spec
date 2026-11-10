@@ -49,6 +49,7 @@ it.
 | `1.0` | First version |
 | `1.1` | Bus interfaces use contracts. Avalon-MM active-low ports such as `read_n` are now a polarity of one port, set with `portPolarityOverrides`. New fields: `portPolarityOverrides`, `portNameOverrides`, and `interfaceProperties`. See [Bus Interface Conformance](bus-interface-conformance.md). |
 | `1.2` | Port field metadata and version scheme. New fields: `fields` on `ports` and conduit ports, `portFields` on bus interfaces (see [Describe the fields of a port](#describe-the-fields-of-a-port)), and `vlnv.versionScheme`, which says how `vlnv.version` is structured (see [Choose a version scheme](#choose-a-version-scheme)). |
+| `1.3` | Packet formats. New field: `packetFormatRef` on bus interfaces of a streaming bus type (see [Assign a packet format](#assign-a-packet-format)). |
 
 Rules for tools:
 
@@ -359,6 +360,26 @@ Rules:
 - Positions are integers. For a port whose width is a parameter, an expression,
   or comes from a bus definition, positions are checked against the width
   resolved with the parameter defaults.
+
+## Assign a packet format
+
+A bus interface of a streaming bus type (AXI4-Stream, Avalon-ST, or a custom bus
+whose contract declares `interfaceKind: streaming`) can name the format of the
+packets it carries. The format lives in a separate `*.pkt.yml` file, see
+[Define a Stream Packet Format](packet_format_spec.md).
+
+```yaml
+busInterfaces:
+  - name: m_axis
+    type: ipcraft:busif:axi_stream:1.0
+    mode: master
+    portWidthOverrides: { TDATA: 64 }
+    packetFormatRef: packets/telegram.pkt.yml#telegram
+```
+
+The reference is `<path relative to the .ip.yml>#<format name>`. The format's
+`dataWidth` must equal the resolved data width of the interface. When the
+interface also has `portFields`, the packet format is authoritative.
 
 ## Connect a memory map
 

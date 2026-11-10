@@ -12,6 +12,8 @@ without relying on the visual editor.
 | `*.ip.yml` | Describe an FPGA IP core and its interfaces | `schemas/ip_core.schema.json` |
 | `*.mm.yml` | Describe address blocks, registers, and fields | `schemas/memory_map.schema.json` |
 | `*.ipci.yml` | Save a reusable Data Inspector layout | `schemas/data_inspector.schema.json` |
+| `*.pkt.yml` | Describe the packets of a stream interface (AXI4-Stream, Avalon-ST) | `schemas/packet_format.schema.json` |
+| `*.pktmap.yml` | Bind a selector value (e.g. a source port) to a packet format | `schemas/packet_map.schema.json` |
 
 The JSON schemas are the source of truth. The documents explain the common
 fields and show readable examples.
@@ -40,6 +42,7 @@ fields and show readable examples.
 - [Define an IP core](docs/ip_spec.md)
 - [Define a memory map](docs/memory_map_spec.md)
 - [Define a Data Inspector recipe](docs/data_inspector_spec.md)
+- [Define a stream packet format](docs/packet_format_spec.md)
 
 ## Enable YAML validation in VS Code
 
@@ -52,7 +55,9 @@ then add this configuration to `.vscode/settings.json`:
   "yaml.schemas": {
     "./schemas/ip_core.schema.json": "*.ip.yml",
     "./schemas/memory_map.schema.json": "*.mm.yml",
-    "./schemas/data_inspector.schema.json": "*.ipci.yml"
+    "./schemas/data_inspector.schema.json": "*.ipci.yml",
+    "./schemas/packet_format.schema.json": "*.pkt.yml",
+    "./schemas/packet_map.schema.json": "*.pktmap.yml"
   }
 }
 ```
@@ -69,6 +74,7 @@ YAML. IPCraft for VS Code adds visual editors on top of the same schemas.
 | `examples/comprehensive_axi/` | AXI interfaces and broad schema coverage |
 | `examples/comprehensive_avalon/` | Avalon interfaces and register generation |
 | `examples/data_inspector/` | Reusable decode and transform recipes |
+| `examples/packet_formats/` | Stream packet formats, a binding, resolved JSON and conformance vectors |
 | `examples/daq_controller/` | A data-acquisition controller |
 | `examples/multi_interface_accelerator/` | Several interfaces and clock domains |
 | `examples/system_controller/` | A larger system-level IP core |
@@ -81,7 +87,7 @@ in this repository.
 
 | Directory | Contents |
 |---|---|
-| `schemas/` | JSON schemas for the three IPCraft file types |
+| `schemas/` | JSON schemas for the IPCraft file types |
 | `bus_definitions/` | Built-in AXI and Avalon interface definitions |
 | `templates/` | Small files to copy into a new project |
 | `examples/` | Complete files that exercise common and advanced features |

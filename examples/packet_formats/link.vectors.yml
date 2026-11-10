@@ -1,0 +1,38 @@
+# Conformance vectors: event (base) and link_event (refined) decode the same beat.
+# data = data4 0x4433072A | timestamp 0x0A00123456789ABC | data1 0x11 | ts_flag 1, payload 0x72A, id 5
+input: link.pkt.yml
+resolved: link.resolved.json
+cases:
+  - name: base format
+    format: event
+    beats:
+      - { data: 0x4433072A0A00123456789ABC00000011872A0005, TUSER: 1 }
+    decoded:
+      id: 5
+      payload: 0x72A
+      ts_flag: { raw: 1, value: true }
+      data1: 0x11
+      timestamp:
+        raw: 0x0A00123456789ABC
+        qualifier: { raw: 0x0A, text: INVALID_EXT|INVALID_INT }
+        time: 0x123456789ABC
+      data4: 0x4433072A
+      prio: { raw: 1, text: NORMAL }
+  - name: refined format adds sub-fields, keeps the layout
+    format: link_event
+    beats:
+      - { data: 0x4433072A0A00123456789ABC00000011872A0005, TUSER: 1 }
+    decoded:
+      id: 5
+      payload: { raw: 0x72A, link_id: 0x2A, lane: 7 }
+      data4: { raw: 0x4433072A, link_id: 0x2A, lane: 7, count: 0x33, addr: 0x44 }
+      prio: { raw: 1, text: NORMAL }
+  - name: flags enum with no bit set has no text, signal names are case-insensitive
+    format: event
+    beats:
+      - { TDATA: 0x10001, tuser: 3 }
+    decoded:
+      id: 1
+      payload: 1
+      timestamp: { raw: 0, qualifier: 0, time: 0 }
+      prio: { raw: 3, text: RESERVED }

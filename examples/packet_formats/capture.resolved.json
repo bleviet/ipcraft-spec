@@ -1,0 +1,577 @@
+{
+  "resolvedPktVersion": 1,
+  "formats": {
+    "event": {
+      "name": "event",
+      "description": "Event, one beat",
+      "dataWidth": 160,
+      "busTypes": [],
+      "extends": [],
+      "beats": [
+        {
+          "name": "event",
+          "description": "",
+          "count": 1,
+          "signals": {
+            "data": [
+              {
+                "name": "id",
+                "path": "id",
+                "lsb": 0,
+                "width": 16,
+                "type": "uint",
+                "description": "Event ID",
+                "constraints": {
+                  "min": 1
+                }
+              },
+              {
+                "name": "payload",
+                "path": "payload",
+                "lsb": 16,
+                "width": 15,
+                "type": "uint",
+                "description": "Producer-specific payload"
+              },
+              {
+                "name": "ts_flag",
+                "path": "ts_flag",
+                "lsb": 31,
+                "width": 1,
+                "type": "bool",
+                "description": "Timestamp request"
+              },
+              {
+                "name": "data1",
+                "path": "data1",
+                "lsb": 32,
+                "width": 32,
+                "type": "uint",
+                "description": "Free data word"
+              },
+              {
+                "name": "timestamp",
+                "path": "timestamp",
+                "lsb": 64,
+                "width": 64,
+                "type": "uint",
+                "description": "",
+                "fields": [
+                  {
+                    "name": "qualifier",
+                    "path": "timestamp.qualifier",
+                    "lsb": 120,
+                    "width": 8,
+                    "type": "enum",
+                    "description": "",
+                    "enum": {
+                      "name": "ts_qualifier_t",
+                      "flags": true,
+                      "description": "Timestamp qualifier; no bit set = valid",
+                      "values": {
+                        "1": {
+                          "name": "NOT_SYNC_EXT",
+                          "description": "external time not synchronized"
+                        },
+                        "2": {
+                          "name": "INVALID_EXT",
+                          "description": ""
+                        },
+                        "4": {
+                          "name": "NOT_SYNC_INT",
+                          "description": ""
+                        },
+                        "8": {
+                          "name": "INVALID_INT",
+                          "description": ""
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "name": "time",
+                    "path": "timestamp.time",
+                    "lsb": 64,
+                    "width": 56,
+                    "type": "uint",
+                    "description": "Microseconds since 1970",
+                    "unit": "us"
+                  }
+                ]
+              },
+              {
+                "name": "data4",
+                "path": "data4",
+                "lsb": 128,
+                "width": 32,
+                "type": "uint",
+                "description": "Free data word"
+              }
+            ],
+            "TUSER": [
+              {
+                "name": "prio",
+                "path": "prio",
+                "lsb": 0,
+                "width": 2,
+                "type": "enum",
+                "description": "",
+                "enum": {
+                  "name": "prio_t",
+                  "flags": false,
+                  "description": "",
+                  "values": {
+                    "0": {
+                      "name": "HIGH",
+                      "description": ""
+                    },
+                    "1": {
+                      "name": "NORMAL",
+                      "description": ""
+                    },
+                    "2": {
+                      "name": "LOW",
+                      "description": ""
+                    },
+                    "3": {
+                      "name": "RESERVED",
+                      "description": ""
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "capture_record": {
+      "name": "capture_record",
+      "description": "Record of a capture buffer, 32 bytes little endian",
+      "dataWidth": 256,
+      "busTypes": [],
+      "extends": [],
+      "beats": [
+        {
+          "name": "record",
+          "description": "",
+          "count": 1,
+          "signals": {
+            "data": [
+              {
+                "name": "event",
+                "path": "event",
+                "lsb": 0,
+                "width": 160,
+                "type": "uint",
+                "description": "",
+                "format": "event",
+                "fields": [
+                  {
+                    "name": "id",
+                    "path": "event.id",
+                    "lsb": 0,
+                    "width": 16,
+                    "type": "uint",
+                    "description": "Event ID",
+                    "constraints": {
+                      "min": 1
+                    }
+                  },
+                  {
+                    "name": "payload",
+                    "path": "event.payload",
+                    "lsb": 16,
+                    "width": 15,
+                    "type": "uint",
+                    "description": "Producer-specific payload"
+                  },
+                  {
+                    "name": "ts_flag",
+                    "path": "event.ts_flag",
+                    "lsb": 31,
+                    "width": 1,
+                    "type": "bool",
+                    "description": "Timestamp request"
+                  },
+                  {
+                    "name": "data1",
+                    "path": "event.data1",
+                    "lsb": 32,
+                    "width": 32,
+                    "type": "uint",
+                    "description": "Free data word"
+                  },
+                  {
+                    "name": "timestamp",
+                    "path": "event.timestamp",
+                    "lsb": 64,
+                    "width": 64,
+                    "type": "uint",
+                    "description": "",
+                    "fields": [
+                      {
+                        "name": "qualifier",
+                        "path": "event.timestamp.qualifier",
+                        "lsb": 120,
+                        "width": 8,
+                        "type": "enum",
+                        "description": "",
+                        "enum": {
+                          "name": "ts_qualifier_t",
+                          "flags": true,
+                          "description": "Timestamp qualifier; no bit set = valid",
+                          "values": {
+                            "1": {
+                              "name": "NOT_SYNC_EXT",
+                              "description": "external time not synchronized"
+                            },
+                            "2": {
+                              "name": "INVALID_EXT",
+                              "description": ""
+                            },
+                            "4": {
+                              "name": "NOT_SYNC_INT",
+                              "description": ""
+                            },
+                            "8": {
+                              "name": "INVALID_INT",
+                              "description": ""
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "name": "time",
+                        "path": "event.timestamp.time",
+                        "lsb": 64,
+                        "width": 56,
+                        "type": "uint",
+                        "description": "Microseconds since 1970",
+                        "unit": "us"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "data4",
+                    "path": "event.data4",
+                    "lsb": 128,
+                    "width": 32,
+                    "type": "uint",
+                    "description": "Free data word"
+                  }
+                ]
+              },
+              {
+                "name": "src_port",
+                "path": "src_port",
+                "lsb": 160,
+                "width": 8,
+                "type": "uint",
+                "description": "Router input, 0xFF = unknown"
+              },
+              {
+                "name": "flags",
+                "path": "flags",
+                "lsb": 168,
+                "width": 8,
+                "type": "enum",
+                "description": "",
+                "enum": {
+                  "name": "record_flags_t",
+                  "flags": true,
+                  "description": "",
+                  "values": {
+                    "1": {
+                      "name": "VALID",
+                      "description": ""
+                    },
+                    "2": {
+                      "name": "TRIGGER",
+                      "description": ""
+                    },
+                    "4": {
+                      "name": "LOST_BEFORE",
+                      "description": ""
+                    },
+                    "8": {
+                      "name": "POST",
+                      "description": ""
+                    }
+                  }
+                }
+              },
+              {
+                "name": "prio",
+                "path": "prio",
+                "lsb": 176,
+                "width": 2,
+                "type": "enum",
+                "description": "",
+                "enum": {
+                  "name": "prio_t",
+                  "flags": false,
+                  "description": "",
+                  "values": {
+                    "0": {
+                      "name": "HIGH",
+                      "description": ""
+                    },
+                    "1": {
+                      "name": "NORMAL",
+                      "description": ""
+                    },
+                    "2": {
+                      "name": "LOW",
+                      "description": ""
+                    },
+                    "3": {
+                      "name": "RESERVED",
+                      "description": ""
+                    }
+                  }
+                }
+              },
+              {
+                "name": "seq",
+                "path": "seq",
+                "lsb": 192,
+                "width": 32,
+                "type": "uint",
+                "description": ""
+              },
+              {
+                "name": "arrival",
+                "path": "arrival",
+                "lsb": 224,
+                "width": 32,
+                "type": "uint",
+                "description": "Arrival time, low 32 bits",
+                "unit": "us"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "link_event": {
+      "name": "link_event",
+      "description": "Event raised per frame sent on a link",
+      "dataWidth": 160,
+      "busTypes": [],
+      "extends": [
+        "event"
+      ],
+      "beats": [
+        {
+          "name": "event",
+          "description": "",
+          "count": 1,
+          "signals": {
+            "data": [
+              {
+                "name": "id",
+                "path": "id",
+                "lsb": 0,
+                "width": 16,
+                "type": "uint",
+                "description": "Event ID",
+                "constraints": {
+                  "min": 1
+                }
+              },
+              {
+                "name": "payload",
+                "path": "payload",
+                "lsb": 16,
+                "width": 15,
+                "type": "uint",
+                "description": "Link and lane of the frame",
+                "fields": [
+                  {
+                    "name": "link_id",
+                    "path": "payload.link_id",
+                    "lsb": 16,
+                    "width": 8,
+                    "type": "uint",
+                    "description": ""
+                  },
+                  {
+                    "name": "lane",
+                    "path": "payload.lane",
+                    "lsb": 24,
+                    "width": 7,
+                    "type": "uint",
+                    "description": ""
+                  }
+                ]
+              },
+              {
+                "name": "ts_flag",
+                "path": "ts_flag",
+                "lsb": 31,
+                "width": 1,
+                "type": "bool",
+                "description": "Timestamp request"
+              },
+              {
+                "name": "data1",
+                "path": "data1",
+                "lsb": 32,
+                "width": 32,
+                "type": "uint",
+                "description": "Frame sequence number"
+              },
+              {
+                "name": "timestamp",
+                "path": "timestamp",
+                "lsb": 64,
+                "width": 64,
+                "type": "uint",
+                "description": "",
+                "fields": [
+                  {
+                    "name": "qualifier",
+                    "path": "timestamp.qualifier",
+                    "lsb": 120,
+                    "width": 8,
+                    "type": "enum",
+                    "description": "",
+                    "enum": {
+                      "name": "ts_qualifier_t",
+                      "flags": true,
+                      "description": "Timestamp qualifier; no bit set = valid",
+                      "values": {
+                        "1": {
+                          "name": "NOT_SYNC_EXT",
+                          "description": "external time not synchronized"
+                        },
+                        "2": {
+                          "name": "INVALID_EXT",
+                          "description": ""
+                        },
+                        "4": {
+                          "name": "NOT_SYNC_INT",
+                          "description": ""
+                        },
+                        "8": {
+                          "name": "INVALID_INT",
+                          "description": ""
+                        }
+                      }
+                    },
+                    "constraints": {
+                      "const": 10
+                    }
+                  },
+                  {
+                    "name": "time",
+                    "path": "timestamp.time",
+                    "lsb": 64,
+                    "width": 56,
+                    "type": "uint",
+                    "description": "Microseconds since 1970",
+                    "unit": "us"
+                  }
+                ]
+              },
+              {
+                "name": "data4",
+                "path": "data4",
+                "lsb": 128,
+                "width": 32,
+                "type": "uint",
+                "description": "Free data word",
+                "fields": [
+                  {
+                    "name": "link_id",
+                    "path": "data4.link_id",
+                    "lsb": 128,
+                    "width": 8,
+                    "type": "uint",
+                    "description": ""
+                  },
+                  {
+                    "name": "lane",
+                    "path": "data4.lane",
+                    "lsb": 136,
+                    "width": 8,
+                    "type": "uint",
+                    "description": ""
+                  },
+                  {
+                    "name": "count",
+                    "path": "data4.count",
+                    "lsb": 144,
+                    "width": 8,
+                    "type": "uint",
+                    "description": ""
+                  },
+                  {
+                    "name": "addr",
+                    "path": "data4.addr",
+                    "lsb": 152,
+                    "width": 8,
+                    "type": "uint",
+                    "description": ""
+                  }
+                ]
+              }
+            ],
+            "TUSER": [
+              {
+                "name": "prio",
+                "path": "prio",
+                "lsb": 0,
+                "width": 2,
+                "type": "enum",
+                "description": "",
+                "enum": {
+                  "name": "prio_t",
+                  "flags": false,
+                  "description": "",
+                  "values": {
+                    "0": {
+                      "name": "HIGH",
+                      "description": ""
+                    },
+                    "1": {
+                      "name": "NORMAL",
+                      "description": ""
+                    },
+                    "2": {
+                      "name": "LOW",
+                      "description": ""
+                    },
+                    "3": {
+                      "name": "RESERVED",
+                      "description": ""
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "map": {
+    "name": "capture",
+    "description": "Inputs of the capture router",
+    "selector": "src_port",
+    "base": "event",
+    "sources": {
+      "0": {
+        "name": "generator",
+        "format": "event",
+        "description": ""
+      },
+      "1": {
+        "name": "link_tx",
+        "format": "link_event",
+        "description": "Link transmitter"
+      }
+    }
+  }
+}

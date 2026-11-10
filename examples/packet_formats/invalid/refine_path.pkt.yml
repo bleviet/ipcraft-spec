@@ -1,0 +1,7 @@
+pktVersion: 1
+imports: [../event.pkt.yml]
+packetFormats:
+  - name: bad
+    extends: event
+    refine:
+      nothing: { description: no such field }
