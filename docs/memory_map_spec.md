@@ -153,12 +153,18 @@ supports overlays.
 | `read-only` | Software can read the value but cannot write it |
 | `write-only` | Software can write the value but does not read it back |
 | `read-write` | Normal stored value |
-| `write-1-to-clear` | Writing one clears the selected bit |
-| `read-write-1-to-clear` | Readable stored value with write-one-to-clear behavior |
+| `write-1-to-clear` | Hardware sets the bit, writing one clears it, and reads return zero |
+| `read-write-1-to-clear` | Hardware sets the bit, software reads it, and writing one clears it |
 | `write-self-clearing` | A write creates a pulse and the stored bit clears itself |
 | `read-write-self-clearing` | Readable value that clears itself after a write |
 
 A field can override the access inherited from its register.
+
+The two write-one-to-clear types differ only in what a read returns. Use
+`read-write-1-to-clear` for a sticky flag that software polls, reads, and then
+clears, such as an interrupt status or change flag. Use `write-1-to-clear` when
+software only acknowledges an event and never needs to read it, for example
+because an interrupt line already signals it.
 
 ## Create a register array
 
@@ -218,17 +224,18 @@ pulse input.
 
     - name: TEMP_UPDATED
       bits: '[16:16]'
-      access: write-1-to-clear
+      access: read-write-1-to-clear
       monitorChangeOf: TEMP_VALUE
       description: Set when TEMP_VALUE changes
 ```
 
 The generator stores the previous value of `TEMP_VALUE`, compares it with the
-live value, and sets `TEMP_UPDATED` when they differ. Software clears the sticky
-bit by writing one.
+live value, and sets `TEMP_UPDATED` when they differ. Software reads the sticky
+bit and clears it by writing one.
 
 `monitorChangeOf` is valid only on `write-1-to-clear` or
-`read-write-1-to-clear` fields. The named field must exist in the same register.
+`read-write-1-to-clear` fields. Use `read-write-1-to-clear` when software must
+read the flag; a `write-1-to-clear` flag always reads as zero. The named field must exist in the same register.
 
 ## Continue with an example
 
