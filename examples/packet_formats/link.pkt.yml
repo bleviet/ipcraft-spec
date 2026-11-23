@@ -1,0 +1,22 @@
+# Refinement: same layout as `event`, with the payload and data words of one producer.
+pktVersion: 1
+imports: [event.pkt.yml]
+packetFormats:
+  - name: link_event
+    extends: event
+    description: Event raised per frame sent on a link
+    refine:
+      payload:
+        description: Link and lane of the frame
+        fields:
+          - { name: link_id, bits: "[7:0]" }
+          - { name: lane, bits: "[14:8]" }
+      data1: { description: Frame sequence number }
+      data4:
+        fields:
+          - { name: link_id, bits: "[7:0]" }
+          - { name: lane, bits: "[15:8]" }
+          - { name: count, bits: "[23:16]" }
+          - { name: addr, bits: "[31:24]" }
+      timestamp.qualifier:
+        constraints: { const: 0x0A }

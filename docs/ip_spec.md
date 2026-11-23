@@ -48,7 +48,8 @@ it.
 |---|---|
 | `1.0` | First version |
 | `1.1` | Bus interfaces use contracts. Avalon-MM active-low ports such as `read_n` are now a polarity of one port, set with `portPolarityOverrides`. New fields: `portPolarityOverrides`, `portNameOverrides`, and `interfaceProperties`. See [Bus Interface Conformance](bus-interface-conformance.md). |
-| `1.2` | Port field metadata. New fields: `fields` on `ports` and conduit ports, and `portFields` on bus interfaces. See [Describe the fields of a port](#describe-the-fields-of-a-port). |
+| `1.2` | Port field metadata. New fields: `fields` on `ports` and conduit ports, and `portFields` on bus interfaces (see [Describe the fields of a port](#describe-the-fields-of-a-port)). |
+| `1.3` | Version scheme, version references and packet formats. New fields: `vlnv.versionScheme`, which says how `vlnv.version` is structured (see [Choose a version scheme](#choose-a-version-scheme)); `$version` reset values and `versionHistory` in the memory maps of the core (see [Version references](memory_map_spec.md#refer-to-the-ip-version)); and `packetFormatRef` on bus interfaces of a streaming bus type (see [Assign a packet format](#assign-a-packet-format)). |
 
 Rules for tools:
 
@@ -75,6 +76,43 @@ author: Hardware Team
 
 All four `vlnv` fields are required. Use names that remain valid in generated
 HDL and vendor projects.
+
+## Choose a version scheme
+
+`version` is text. The optional `versionScheme` field says how that text is
+structured, so a register can hold it as a number.
+
+```yaml
+apiVersion: "1.3"
+vlnv:
+  vendor: my-company.com
+  library: peripherals
+  name: timer_core
+  version: 1.2.0
+  versionScheme: major.minor.patch
+```
+
+| `versionScheme` | `version` must be | Components |
+|---|---|---|
+| `free` (default when absent) | Any non-empty text | None |
+| `major.minor` | Two numbers, such as `1.2` | `major`, `minor` |
+| `major.minor.patch` | Three numbers, such as `1.2.0` | `major`, `minor`, `patch` |
+| `major.feature.minor.patch` | Four numbers, such as `1.2.0.1` | `major`, `feature`, `minor`, `patch` |
+
+Each number is a whole number from 0 to 255 without leading zeros, so it fits in
+8 bits. Quote a two-component version such as `"1.10"`; unquoted, YAML reads it
+as a decimal number.
+
+A numeric scheme lets a memory map refer to the version with `$version`
+references. A `free` version has no numeric value, so only the CRC references
+`$version.crc8` and `$version.crc16` are valid with it. See
+[Version references](memory_map_spec.md#refer-to-the-ip-version).
+Declare `apiVersion: "1.3"` in a file that sets `versionScheme`, and in every
+`.ip.yml` whose memory maps, inline or imported, use `$version` references or a
+`versionHistory`. A memory map file has no `apiVersion` of its own, so the
+core's version is what makes a tool that does not know these keys refuse the
+core instead of reading the references as `0`. A tool refuses to generate a
+versioned memory map whose core declares an older version.
 
 ## Add parameters
 
@@ -328,6 +366,26 @@ Rules:
   or comes from a bus definition, positions are checked against the width
   resolved with the parameter defaults.
 
+## Assign a packet format
+
+A bus interface of a streaming bus type (AXI4-Stream, Avalon-ST, or a custom bus
+whose contract declares `interfaceKind: streaming`) can name the format of the
+packets it carries. The format lives in a separate `*.pkt.yml` file, see
+[Define a Stream Packet Format](packet_format_spec.md).
+
+```yaml
+busInterfaces:
+  - name: m_axis
+    type: ipcraft:busif:axi_stream:1.0
+    mode: master
+    portWidthOverrides: { TDATA: 64 }
+    packetFormatRef: packets/telegram.pkt.yml#telegram
+```
+
+The reference is `<path relative to the .ip.yml>#<format name>`. The format's
+`dataWidth` must equal the resolved data width of the interface. When the
+interface also has `portFields`, the packet format is authoritative.
+
 ## Connect a memory map
 
 Keep a register map in a separate file for most projects:
@@ -351,6 +409,9 @@ memoryMaps:
 
 `memoryMapRef` on a bus interface must match the imported or inline map name.
 See [Define a memory map](memory_map_spec.md) for register details.
+
+Inline maps accept `$version` references in `resetValue`. They do not accept
+`versionHistory`; use an imported file for a version history.
 
 ## List project files
 

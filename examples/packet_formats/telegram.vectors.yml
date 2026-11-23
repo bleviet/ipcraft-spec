@@ -1,0 +1,41 @@
+# Conformance vectors: counted and open-ended beat sections, arrays, scaling, inline enums, bytes.
+input: telegram.pkt.yml
+resolved: telegram.resolved.json
+cases:
+  - name: header, then ceil(3 / 2) = 2 body beats; signed scaled array elements
+    format: telegram
+    beats: [0x00031123, 0xFFFF0004, 0x00000002]
+    decoded:
+      tid: 0x123
+      kind: { raw: 1, text: CONTROL }
+      elements: 3
+      element:
+        - [ { raw: 4, value: 2.0 }, { raw: 0xFFFF, value: -0.5 } ]
+        - [ { raw: 2, value: 1.0 }, { raw: 0, value: 0.0 } ]
+  - name: missing body beat is flagged, not an error
+    format: telegram
+    beats: [0x00031123, 0xFFFF0004]
+    truncated: true
+    decoded:
+      elements: 3
+      element:
+        - [ { raw: 4, value: 2.0 }, { raw: 0xFFFF, value: -0.5 } ]
+  - name: beats after the last section are trailing
+    format: telegram
+    beats: [0x00000001, 0x00000005]
+    trailing: 1
+    decoded:
+      tid: 1
+      elements: 0
+      element: []
+  - name: untilLast takes every remaining beat; sideband on TUSER
+    format: blob
+    beats:
+      - { data: 0x444342410000CAFE, TUSER: 1 }
+      - { data: 7 }
+      - { data: 8 }
+    decoded:
+      magic: 0xCAFE
+      tag: { raw: 0x44434241 }
+      first: { raw: 1, value: true }
+      word: [7, 8]

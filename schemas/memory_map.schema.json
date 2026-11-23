@@ -152,6 +152,11 @@
                 "type": "integer"
               },
               {
+                "type": "string",
+                "pattern": "^\\$version(\\.(major|feature|minor|patch|crc8|crc16))?$",
+                "description": "Reference to the owning IP core's vlnv.version, resolved at generation time."
+              },
+              {
                 "type": "null"
               }
             ],
@@ -250,6 +255,11 @@
                 "type": "integer"
               },
               {
+                "type": "string",
+                "pattern": "^\\$version(\\.(major|feature|minor|patch|crc8|crc16))?$",
+                "description": "Reference to the owning IP core's vlnv.version, resolved at generation time."
+              },
+              {
                 "type": "null"
               }
             ],
@@ -334,6 +344,63 @@
         },
         "title": "Addressblocks",
         "type": "array"
+      },
+      "versionHistory": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["registerSets", "versions"],
+        "description": "Released register sets. addressBlocks is the staging set being edited.",
+        "properties": {
+          "registerSets": {
+            "type": "object",
+            "additionalProperties": false,
+            "patternProperties": {
+              "^rs1-[0-9a-f]{16}$": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["addressBlocks"],
+                "properties": {
+                  "addressBlocks": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/$defs/AddressBlock"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "versions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["version", "registerSet"],
+              "properties": {
+                "version": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "registerSet": {
+                  "type": "string",
+                  "pattern": "^rs1-[0-9a-f]{16}$"
+                },
+                "crc8": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 255,
+                  "description": "CRC-8/I-432-1 of the version bytes under the core's version scheme, recorded when the entry was written. Absent in entries written before it existed."
+                },
+                "crc16": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 65535,
+                  "description": "CRC-16/IBM-3740 of the version bytes under the core's version scheme, recorded when the entry was written. Absent in entries written before it existed."
+                }
+              }
+            }
+          }
+        }
       }
     },
     "required": [

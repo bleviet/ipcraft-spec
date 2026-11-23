@@ -1,0 +1,33 @@
+# One-beat event: a 160-bit data word plus a priority on TUSER.
+pktVersion: 1
+description: Events of an event router
+enums:
+  prio_t: { 0: HIGH, 1: NORMAL, 2: LOW, 3: RESERVED }
+  ts_qualifier_t:
+    flags: true
+    description: Timestamp qualifier; no bit set = valid
+    values:
+      0x01: { name: NOT_SYNC_EXT, description: external time not synchronized }
+      0x02: INVALID_EXT
+      0x04: NOT_SYNC_INT
+      0x08: INVALID_INT
+packetFormats:
+  - name: event
+    description: Event, one beat
+    dataWidth: 160
+    beats:
+      - name: event
+        signals:
+          data:
+            - { name: id, bits: "[15:0]", description: Event ID, constraints: { min: 1 } }
+            - { name: payload, bits: "[30:16]", description: Producer-specific payload }
+            - { name: ts_flag, bits: "[31]", type: bool, description: Timestamp request }
+            - { name: data1, bits: "[63:32]", description: Free data word }
+            - name: timestamp
+              bits: "[127:64]"
+              fields:
+                - { name: qualifier, bits: "[63:56]", enum: ts_qualifier_t }
+                - { name: time, bits: "[55:0]", unit: us, description: Microseconds since 1970 }
+            - { name: data4, bits: "[159:128]", description: Free data word }
+          TUSER:
+            - { name: prio, bits: "[1:0]", enum: prio_t }

@@ -1,0 +1,23 @@
+# Conformance vectors: composition (a record that embeds an event) and a binding by src_port.
+input: capture.pktmap.yml
+resolved: capture.resolved.json
+cases:
+  - name: composed event fields carry the record's absolute bits
+    format: capture_record
+    beats:
+      - 0x0000006400000007000303014433072A0A00123456789ABC00000011872A0005
+    decoded:
+      event:
+        raw: 0x4433072A0A00123456789ABC00000011872A0005
+        id: 5
+        payload: 0x72A
+        timestamp: { raw: 0x0A00123456789ABC, qualifier: { raw: 0x0A }, time: 0x123456789ABC }
+      src_port: 1
+      flags: { raw: 3, text: VALID|TRIGGER }
+      prio: { raw: 3, text: RESERVED }
+      seq: 7
+      arrival: 100
+map:
+  - { key: 0, name: generator, format: event }
+  - { key: 1, name: link_tx, format: link_event }
+  - { key: 9, name: null, format: event }

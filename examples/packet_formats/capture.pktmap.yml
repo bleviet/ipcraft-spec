@@ -1,0 +1,10 @@
+# Binding: which producer's format applies to a captured event, selected by src_port.
+pktVersion: 1
+name: capture
+description: Inputs of the capture router
+base: event.pkt.yml#event
+selector: src_port
+formats: [record.pkt.yml#capture_record]
+sources:
+  0: { name: generator }
+  1: { name: link_tx, format: link.pkt.yml#link_event, description: Link transmitter }

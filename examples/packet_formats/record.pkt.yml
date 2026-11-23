@@ -1,0 +1,21 @@
+# Composition: a 256-bit capture record that embeds an event.
+pktVersion: 1
+imports: [event.pkt.yml]
+enums:
+  record_flags_t:
+    flags: true
+    values: { 0x01: VALID, 0x02: TRIGGER, 0x04: LOST_BEFORE, 0x08: POST }
+packetFormats:
+  - name: capture_record
+    description: Record of a capture buffer, 32 bytes little endian
+    dataWidth: 256
+    beats:
+      - name: record
+        signals:
+          data:
+            - { name: event, bits: "[159:0]", format: event }
+            - { name: src_port, bits: "[167:160]", description: "Router input, 0xFF = unknown" }
+            - { name: flags, bits: "[175:168]", enum: record_flags_t }
+            - { name: prio, bits: "[177:176]", enum: prio_t }
+            - { name: seq, bits: "[223:192]" }
+            - { name: arrival, bits: "[255:224]", unit: us, description: "Arrival time, low 32 bits" }

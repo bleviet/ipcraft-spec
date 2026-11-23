@@ -1,0 +1,42 @@
+# Multi-beat frames: a header, a counted body and an open-ended trailer.
+pktVersion: 1
+packetFormats:
+  - name: telegram
+    description: Header beat, then elements, two per beat
+    dataWidth: 32
+    busTypes: [axi_stream, avalon_st]
+    beats:
+      - name: header
+        signals:
+          data:
+            - { name: tid, bits: "[11:0]", description: Telegram id }
+            - { name: kind, bits: "[15:12]", enumeratedValues: { 0: DATA, 1: CONTROL } }
+            - { name: elements, bits: "[31:16]", description: Number of elements }
+      - name: body
+        count: { field: elements, perBeat: 2 }
+        signals:
+          data:
+            - name: element
+              offset: 0
+              width: 16
+              type: int
+              scale: 0.5
+              unit: V
+              array: { count: 2 }
+  - name: blob
+    description: Length-free frame, closed by TLAST
+    dataWidth: 64
+    busTypes: [axi_stream]
+    beats:
+      - name: head
+        signals:
+          data:
+            - { name: magic, bits: "[31:0]", constraints: { const: 0xCAFE } }
+            - { name: tag, bits: "[63:32]", type: bytes }
+          TUSER:
+            - { name: first, bits: "[0]", type: bool }
+      - name: rest
+        count: untilLast
+        signals:
+          data:
+            - { name: word, bits: "[63:0]" }

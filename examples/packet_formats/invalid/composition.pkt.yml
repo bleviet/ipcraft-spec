@@ -1,0 +1,8 @@
+pktVersion: 1
+imports: [../event.pkt.yml]
+packetFormats:
+  - name: bad
+    dataWidth: 256
+    beats:
+      - name: b
+        signals: { data: [ { name: e, bits: "[127:0]", format: event } ] }

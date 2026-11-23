@@ -1,0 +1,16 @@
+# Files that every implementation must reject, with the error code (docs/packet_format_spec.md, "Validation errors").
+errors:
+  - { input: overlap.pkt.yml, error: FIELD_OVERLAP }
+  - { input: range.pkt.yml, error: FIELD_RANGE }
+  - { input: bits.pkt.yml, error: BITS }
+  - { input: duplicate.pkt.yml, error: DUPLICATE_NAME }
+  - { input: version.pkt.yml, error: PKT_VERSION }
+  - { input: unknown_enum.pkt.yml, error: UNKNOWN_REF }
+  - { input: refine_layout.pkt.yml, error: REFINE }
+  - { input: refine_path.pkt.yml, error: UNKNOWN_REF }
+  - { input: extends_cycle.pkt.yml, error: EXTENDS_CYCLE }
+  - { input: composition.pkt.yml, error: COMPOSITION }
+  - { input: count_ref.pkt.yml, error: COUNT }
+  - { input: until_last.pkt.yml, error: COUNT }
+  - { input: map_base.pktmap.yml, error: MAP_BASE }
+  - { input: schema.pkt.yml, error: SCHEMA }

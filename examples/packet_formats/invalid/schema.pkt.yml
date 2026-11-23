@@ -1,0 +1,6 @@
+pktVersion: 1
+packetFormats:
+  - name: bad
+    dataWidth: 16
+    colour: red
+    beats: [ { name: b } ]

@@ -1,0 +1,158 @@
+{
+  "resolvedPktVersion": 1,
+  "formats": {
+    "telegram": {
+      "name": "telegram",
+      "description": "Header beat, then elements, two per beat",
+      "dataWidth": 32,
+      "busTypes": [
+        "axi_stream",
+        "avalon_st"
+      ],
+      "extends": [],
+      "beats": [
+        {
+          "name": "header",
+          "description": "",
+          "count": 1,
+          "signals": {
+            "data": [
+              {
+                "name": "tid",
+                "path": "tid",
+                "lsb": 0,
+                "width": 12,
+                "type": "uint",
+                "description": "Telegram id"
+              },
+              {
+                "name": "kind",
+                "path": "kind",
+                "lsb": 12,
+                "width": 4,
+                "type": "enum",
+                "description": "",
+                "enum": {
+                  "name": "",
+                  "flags": false,
+                  "description": "",
+                  "values": {
+                    "0": {
+                      "name": "DATA",
+                      "description": ""
+                    },
+                    "1": {
+                      "name": "CONTROL",
+                      "description": ""
+                    }
+                  }
+                }
+              },
+              {
+                "name": "elements",
+                "path": "elements",
+                "lsb": 16,
+                "width": 16,
+                "type": "uint",
+                "description": "Number of elements"
+              }
+            ]
+          }
+        },
+        {
+          "name": "body",
+          "description": "",
+          "count": {
+            "field": "elements",
+            "perBeat": 2,
+            "add": 0
+          },
+          "signals": {
+            "data": [
+              {
+                "name": "element",
+                "path": "element",
+                "lsb": 0,
+                "width": 16,
+                "type": "int",
+                "description": "",
+                "unit": "V",
+                "scale": 0.5,
+                "array": {
+                  "count": 2,
+                  "stride": 16
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "blob": {
+      "name": "blob",
+      "description": "Length-free frame, closed by TLAST",
+      "dataWidth": 64,
+      "busTypes": [
+        "axi_stream"
+      ],
+      "extends": [],
+      "beats": [
+        {
+          "name": "head",
+          "description": "",
+          "count": 1,
+          "signals": {
+            "data": [
+              {
+                "name": "magic",
+                "path": "magic",
+                "lsb": 0,
+                "width": 32,
+                "type": "uint",
+                "description": "",
+                "constraints": {
+                  "const": 51966
+                }
+              },
+              {
+                "name": "tag",
+                "path": "tag",
+                "lsb": 32,
+                "width": 32,
+                "type": "bytes",
+                "description": ""
+              }
+            ],
+            "TUSER": [
+              {
+                "name": "first",
+                "path": "first",
+                "lsb": 0,
+                "width": 1,
+                "type": "bool",
+                "description": ""
+              }
+            ]
+          }
+        },
+        {
+          "name": "rest",
+          "description": "",
+          "count": "untilLast",
+          "signals": {
+            "data": [
+              {
+                "name": "word",
+                "path": "word",
+                "lsb": 0,
+                "width": 64,
+                "type": "uint",
+                "description": ""
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ipcraft.dev/schemas/packet_map.schema.json",
+  "title": "IPCraft Stream Packet Binding",
+  "description": "Maps the value that identifies the producer of a packet in a merged stream to its packet format (*.pktmap.yml). See docs/packet_format_spec.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "patternProperties": { "^x-": {} },
+  "required": ["pktVersion", "name", "base", "selector", "sources"],
+  "properties": {
+    "pktVersion": { "type": "integer", "minimum": 1 },
+    "name": { "type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$" },
+    "description": { "type": "string" },
+    "base": { "$ref": "#/$defs/formatRef" },
+    "selector": { "type": "string", "minLength": 1 },
+    "formats": { "type": "array", "items": { "$ref": "#/$defs/formatRef" } },
+    "sources": {
+      "type": "object",
+      "propertyNames": { "pattern": "^(0[xX][0-9A-Fa-f_]+|[0-9_]+)$" },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "patternProperties": { "^x-": {} },
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "format": { "$ref": "#/$defs/formatRef" },
+          "description": { "type": "string" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "formatRef": {
+      "type": "string",
+      "description": "<path relative to this file>#<format name>",
+      "pattern": "^[^#]+#[A-Za-z_][A-Za-z0-9_]*$"
+    }
+  }
+}

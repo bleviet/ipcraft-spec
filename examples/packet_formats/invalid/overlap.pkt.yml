@@ -1,0 +1,7 @@
+pktVersion: 1
+packetFormats:
+  - name: bad
+    dataWidth: 16
+    beats:
+      - name: b
+        signals: { data: [ { name: a, bits: "[7:0]" }, { name: b, bits: "[8:4]" } ] }

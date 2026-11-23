@@ -1,0 +1,7 @@
+pktVersion: 1
+packetFormats:
+  - name: bad
+    dataWidth: 16
+    beats:
+      - { name: body, count: untilLast }
+      - { name: tail }

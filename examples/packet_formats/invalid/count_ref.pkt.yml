@@ -1,0 +1,9 @@
+pktVersion: 1
+packetFormats:
+  - name: bad
+    dataWidth: 16
+    beats:
+      - name: body
+        count: { field: n }
+      - name: tail
+        signals: { data: [ { name: n, bits: "[7:0]" } ] }
