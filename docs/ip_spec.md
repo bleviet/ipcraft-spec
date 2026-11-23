@@ -48,8 +48,8 @@ it.
 |---|---|
 | `1.0` | First version |
 | `1.1` | Bus interfaces use contracts. Avalon-MM active-low ports such as `read_n` are now a polarity of one port, set with `portPolarityOverrides`. New fields: `portPolarityOverrides`, `portNameOverrides`, and `interfaceProperties`. See [Bus Interface Conformance](bus-interface-conformance.md). |
-| `1.2` | Port field metadata and version scheme. New fields: `fields` on `ports` and conduit ports, `portFields` on bus interfaces (see [Describe the fields of a port](#describe-the-fields-of-a-port)), and `vlnv.versionScheme`, which says how `vlnv.version` is structured (see [Choose a version scheme](#choose-a-version-scheme)). |
-| `1.3` | Packet formats. New field: `packetFormatRef` on bus interfaces of a streaming bus type (see [Assign a packet format](#assign-a-packet-format)). |
+| `1.2` | Port field metadata. New fields: `fields` on `ports` and conduit ports, and `portFields` on bus interfaces (see [Describe the fields of a port](#describe-the-fields-of-a-port)). |
+| `1.3` | Version scheme, version references and packet formats. New fields: `vlnv.versionScheme`, which says how `vlnv.version` is structured (see [Choose a version scheme](#choose-a-version-scheme)); `$version` reset values and `versionHistory` in the memory maps of the core (see [Version references](memory_map_spec.md#refer-to-the-ip-version)); and `packetFormatRef` on bus interfaces of a streaming bus type (see [Assign a packet format](#assign-a-packet-format)). |
 
 Rules for tools:
 
@@ -83,7 +83,7 @@ HDL and vendor projects.
 structured, so a register can hold it as a number.
 
 ```yaml
-apiVersion: "1.2"
+apiVersion: "1.3"
 vlnv:
   vendor: my-company.com
   library: peripherals
@@ -107,7 +107,12 @@ A numeric scheme lets a memory map refer to the version with `$version`
 references. A `free` version has no numeric value, so only the CRC references
 `$version.crc8` and `$version.crc16` are valid with it. See
 [Version references](memory_map_spec.md#refer-to-the-ip-version).
-Declare `apiVersion: "1.2"` in a file that sets `versionScheme`.
+Declare `apiVersion: "1.3"` in a file that sets `versionScheme`, and in every
+`.ip.yml` whose memory maps, inline or imported, use `$version` references or a
+`versionHistory`. A memory map file has no `apiVersion` of its own, so the
+core's version is what makes a tool that does not know these keys refuse the
+core instead of reading the references as `0`. A tool refuses to generate a
+versioned memory map whose core declares an older version.
 
 ## Add parameters
 

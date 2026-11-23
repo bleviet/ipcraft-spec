@@ -244,6 +244,10 @@ A `resetValue` can be a reference to the `vlnv.version` of the IP core that
 imports this map. The reference stays in the file. The generator replaces it
 with the current version, so the register always holds it.
 
+The IP core must declare `apiVersion: "1.3"` or newer when one of its memory
+maps uses a reference or a `versionHistory`; see
+[File format versions](ip_spec.md#file-format-versions).
+
 ```yaml
 registers:
   - name: VERSION
